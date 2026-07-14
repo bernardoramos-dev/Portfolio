@@ -58,17 +58,21 @@ export function initSceneTransitions() {
     hudTrack.style.transform = `scaleY(${Math.max(0.08, progress)})`;
   }
 
-  const io = new IntersectionObserver((entries) => {
-    const visible = entries
-      .filter((entry) => entry.isIntersecting)
-      .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-    if (!visible) return;
-    const scene = scenes.find((item) => item.el === visible.target);
-    if (scene) setActiveScene(scene, visible.intersectionRatio);
-  }, { threshold: [0.18, 0.32, 0.48, 0.64, 0.8], rootMargin: "-18% 0px -24% 0px" });
-  scenes.forEach((scene) => io.observe(scene.el));
-
+  /* exactly one system drives "active scene" at a time — running both an
+     IntersectionObserver and a ScrollTrigger per scene used different
+     thresholds and disagreed near section boundaries, flickering the
+     HUD label. ScrollTrigger is the real driver whenever it's available;
+     the observer is only the no-GSAP / reduced-motion fallback. */
   if (!env.gsap || !env.ScrollTrigger || env.reduce) {
+    const io = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (!visible) return;
+      const scene = scenes.find((item) => item.el === visible.target);
+      if (scene) setActiveScene(scene, visible.intersectionRatio);
+    }, { threshold: [0.18, 0.32, 0.48, 0.64, 0.8], rootMargin: "-18% 0px -24% 0px" });
+    scenes.forEach((scene) => io.observe(scene.el));
     if (scenes[0]) setActiveScene(scenes[0], 0.12);
     return;
   }

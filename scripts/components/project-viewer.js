@@ -499,6 +499,10 @@ export function initProjectViewer() {
       }
     }, 450);
     if (lastFocus && lastFocus !== document.body && lastFocus.focus) lastFocus.focus();
+    /* unlocking scroll can change the viewport width (scrollbar returns),
+       which shifts every pinned/scrubbed trigger position underneath —
+       recalc once the layout has settled back */
+    setTimeout(() => env.ScrollTrigger?.refresh(), 480);
   }
 
   closeBtn?.addEventListener("click", close);

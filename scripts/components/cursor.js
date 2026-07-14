@@ -17,13 +17,24 @@ export function initCursor() {
   const xTo = env.gsap.quickTo(cursor, "x", { duration: 0.32, ease: "power3.out" });
   const yTo = env.gsap.quickTo(cursor, "y", { duration: 0.32, ease: "power3.out" });
 
-  let seen = false;
+  let visible = false;
+  const show = () => { if (!visible) { visible = true; document.body.classList.add("has-cursor"); } };
+  const hide = () => { if (visible) { visible = false; document.body.classList.remove("has-cursor"); } };
+
   window.addEventListener("pointermove", (event) => {
     if (event.pointerType !== "mouse") return;
     xTo(event.clientX);
     yTo(event.clientY);
-    if (!seen) { seen = true; document.body.classList.add("has-cursor"); }
+    show();
   }, { passive: true });
+
+  /* the ring must not sit frozen at the last known position once the
+     pointer leaves the viewport (browser chrome, devtools, an iframe) —
+     relatedTarget is null exactly when the mouse has left the document */
+  document.addEventListener("mouseout", (event) => {
+    if (!event.relatedTarget) hide();
+  });
+  window.addEventListener("blur", hide);
 
   document.addEventListener("pointerover", (event) => {
     const target = event.target.closest("[data-cursor]");
