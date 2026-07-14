@@ -123,6 +123,7 @@ export function initLabReel() {
     hovered: null,
     visible: true,
     moved: false,
+    pointerId: 0,
     startX: 0,
     lastX: 0,
     raf: 0
@@ -191,24 +192,33 @@ export function initLabReel() {
   function start() { if (!state.raf && state.visible) frame(); }
   function stop() { cancelAnimationFrame(state.raf); state.raf = 0; }
 
-  /* drag to spin */
+  /* drag to spin — pointer capture is only grabbed once a real drag is
+     confirmed (see pointermove below). Capturing on every pointerdown,
+     including plain clicks, was interfering with the browser's normal
+     click dispatch on these 3D-transformed faces on desktop (mouse) —
+     touch happened to tolerate it, which is why this only broke clicks
+     with a mouse, never with a finger. */
   cyl.addEventListener("pointerdown", (event) => {
     if (event.button !== 0 && event.pointerType === "mouse") return;
     state.dragging = true;
     state.moved = false;
+    state.pointerId = event.pointerId;
     state.startX = state.lastX = event.clientX;
     state.velocity = 0;
-    grabPointer(cyl, event.pointerId);
-    cyl.classList.add("is-dragging");
   });
   cyl.addEventListener("pointermove", (event) => {
     if (!state.dragging) return;
     const dx = event.clientX - state.lastX;
     state.lastX = event.clientX;
     /* a real drag moves tens of pixels; a click on a trackpad or mouse
-       commonly jitters a few px between down/up — 6px was swallowing
-       those as "drags" and silently blocking the open-video click */
-    if (Math.abs(event.clientX - state.startX) > 14) state.moved = true;
+       commonly jitters a few px between down/up — grabbing capture only
+       here, past the threshold, keeps plain clicks completely untouched */
+    if (!state.moved && Math.abs(event.clientX - state.startX) > 10) {
+      state.moved = true;
+      grabPointer(cyl, state.pointerId);
+      cyl.classList.add("is-dragging");
+    }
+    if (!state.moved) return;
     const delta = dx * 0.34;
     state.rotation += delta;
     state.velocity = delta;
@@ -216,7 +226,7 @@ export function initLabReel() {
   const endDrag = (event) => {
     if (!state.dragging) return;
     state.dragging = false;
-    freePointer(cyl, event.pointerId);
+    if (state.moved) freePointer(cyl, event.pointerId);
     cyl.classList.remove("is-dragging");
   };
   cyl.addEventListener("pointerup", endDrag);
@@ -232,7 +242,7 @@ export function initLabReel() {
   cyl.addEventListener("pointerleave", () => { state.hovering = false; clearHover(); });
   faces.forEach((face) => {
     face.addEventListener("pointerenter", () => {
-      if (state.seeking || state.dragging) return;
+      if (state.dragging) return;
       clearHover();
       state.hovered = face;
       face.style.transform = faceTransform(face, 90, 1.05);
@@ -249,8 +259,8 @@ export function initLabReel() {
   cyl.setAttribute("role", "group");
   cyl.setAttribute("aria-label", "Vídeos em carrossel 3D — arraste para girar");
   cyl.addEventListener("keydown", (event) => {
-    if (event.key === "ArrowRight") { state.seeking = false; state.velocity = -step * 0.5; }
-    if (event.key === "ArrowLeft") { state.seeking = false; state.velocity = step * 0.5; }
+    if (event.key === "ArrowRight") state.velocity = -step * 0.5;
+    if (event.key === "ArrowLeft") state.velocity = step * 0.5;
   });
 
   /* visibility gating */
