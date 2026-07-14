@@ -100,8 +100,9 @@ export function initLabReel() {
     update();
   }
 
-  /* mobile / reduced-motion fallback: a direct horizontal strip */
-  if (env.reduce || env.touch || matchMedia("(max-width: 720px)").matches) {
+  /* reduced-motion fallback only — touch/mobile gets the real cylinder too,
+     dragged and idly rotated via pointer events (works with touch natively) */
+  if (env.reduce) {
     initStaticStrip(source);
     return;
   }

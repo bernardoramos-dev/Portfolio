@@ -77,6 +77,9 @@ function panelsMarkup() {
           ${projects.map(panel).join("")}
         </div>
         <div class="work-panels__progress" aria-hidden="true"><i data-work-progress></i></div>
+        <p class="work-swipe-hint" aria-hidden="true">Arraste para o lado
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+        </p>
       </div>
     </div>
   </div>`;
@@ -228,6 +231,20 @@ export function initProjectGallery() {
         setActive(i);
       });
     });
+
+    /* one-time gentle nudge the first time the strip comes into view,
+       so it reads as swipeable instead of a static row of cards */
+    if (!env.reduce && N > 1) {
+      const nudge = new IntersectionObserver((entries) => {
+        if (!entries[0].isIntersecting) return;
+        nudge.disconnect();
+        setTimeout(() => {
+          strip.scrollTo({ left: 48, behavior: "smooth" });
+          setTimeout(() => strip.scrollTo({ left: 0, behavior: "smooth" }), 560);
+        }, 550);
+      }, { threshold: 0.55 });
+      nudge.observe(strip);
+    }
   }
 
   document.addEventListener("visibilitychange", () => {

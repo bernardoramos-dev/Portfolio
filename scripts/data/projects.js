@@ -12,11 +12,11 @@ const allProjects = [
     type: "Plataforma B2B · Sistema corporativo",
     featured: true,
     shortDescription:
-      "Uma central de trade criada para transformar fluxos fragmentados em uma operação centralizada e rastreável.",
+      "O painel que tira a operação comercial da bagunça de planilha e e-mail e coloca tudo num fluxo só, rastreável do início ao fim.",
     problem:
-      "Solicitações, ajustes e aprovações de uma rede comercial distribuídos entre planilhas soltas e e-mail.",
+      "Cada solicitação, ajuste e aprovação da rede comercial vivia espalhada entre planilhas soltas e e-mails perdidos, sem um histórico confiável de quem aprovou o quê.",
     solution:
-      "Uma plataforma com busca por CNPJ, validação, solicitações de inclusão e exclusão, aprovação, auditoria, importação de base e exportação Excel.",
+      "Uma plataforma única: busca por CNPJ, validação automática, fluxo de inclusão e exclusão, aprovação com auditoria completa, importação de base e exportação em Excel.",
     capabilities: ["Busca por CNPJ", "Fluxos de aprovação", "Auditoria", "Upload de base", "Exportação Excel"],
     brand: {
       mood: "operacao",
@@ -59,11 +59,11 @@ const allProjects = [
     type: "Plataforma de dados · Música",
     featured: true,
     shortDescription:
-      "Conecta gravadoras e fãs por dados primários consentidos (LGPD).",
+      "A ponte entre gravadoras e fãs, construída sobre dados que o próprio fã decide compartilhar, dentro das regras da LGPD.",
     problem:
-      "Gravadoras enxergam streams, mas não conhecem os fãs por trás dos números.",
+      "Gravadoras sabem quantos streams um artista tem, mas não sabem quem são as pessoas por trás desse número.",
     solution:
-      "Uma plataforma com feed em tempo real, perfis, pesquisas, programa de embaixadores e painel B2B para gravadoras.",
+      "Um app de fã com feed em tempo real, perfis e pesquisas, um programa de embaixadores pra premiar quem mais engaja, e um painel B2B pra gravadora acompanhar tudo isso em números.",
     capabilities: ["Feed em tempo real", "Perfis de fã", "Pesquisas", "Programa de embaixadores", "Painel B2B"],
     brand: {
       mood: "palco",
@@ -103,11 +103,11 @@ const allProjects = [
     type: "E-commerce premium",
     featured: true,
     shortDescription:
-      "Boutique digital de objetos de design autoral, bem longe do template genérico.",
+      "Uma boutique digital pra objetos de design autoral, sem cara de loja pronta: a peça é única, a vitrine também tinha que ser.",
     problem:
-      "Objetos de design autoral vendidos em vitrines que não comunicam o valor das peças.",
+      "Peças de design autoral vendidas numa vitrine genérica, que não dava ao objeto o destaque que ele merecia.",
     solution:
-      "Homepage cinematográfica, catálogo com filtros, página de produto, carrinho, wishlist, checkout via WhatsApp e admin com CRUD.",
+      "Homepage cinematográfica, catálogo com filtros, página de produto dedicada, carrinho, lista de desejos, checkout direto pelo WhatsApp e um admin completo por trás de tudo.",
     capabilities: ["Catálogo com filtros", "Carrinho e wishlist", "Checkout WhatsApp", "Admin CRUD"],
     brand: {
       mood: "galeria",
@@ -144,11 +144,11 @@ const allProjects = [
     type: "SaaS · Skills de IA",
     featured: true,
     shortDescription:
-      "Plataforma para criar e vender skills de IA, cada uma resolvendo um problema concreto.",
+      "Um SaaS pra criar e vender skills de IA, cada uma resolvendo um problema específico, não uma promessa vaga de \"inteligência artificial\".",
     problem:
-      "Capacidades de IA vendidas como promessas vagas, sem produto nem entrega clara.",
+      "IA vendida como conceito abstrato, sem um lugar onde cada capacidade vire produto de verdade, com entrega clara.",
     solution:
-      "Um produto com galeria de skills, preços, painel do criador, chat de geração e admin.",
+      "Uma galeria de skills com preço definido, painel pro criador publicar e acompanhar as suas, chat de geração pra testar na hora, e um admin completo por trás de tudo.",
     capabilities: ["Galeria de skills", "Chat de geração", "Painel do criador", "Preços", "Admin"],
     brand: {
       mood: "blueprint",
@@ -189,11 +189,11 @@ const allProjects = [
     category: "marcas",
     type: "Identidade de marca",
     shortDescription:
-      "Brandbook completo e presença digital entregues como um sistema coeso.",
+      "Identidade de marca e presença digital entregues como um sistema só, não um PDF de 40 páginas que ninguém abre depois.",
     problem:
-      "Uma consultoria sem identidade consistente entre apresentação, narrativa e presença digital.",
+      "A consultoria tinha identidade visual, discurso e presença digital que não conversavam entre si: cada material parecia de uma marca diferente.",
     solution:
-      "Identidade, narrativa e playbook entregues como um sistema navegável que o cliente percorre sozinho.",
+      "Um brandbook navegável que junta identidade, narrativa e regras de uso num só lugar, pra o cliente consultar sozinho sempre que precisar.",
     capabilities: ["Identidade visual", "Brandbook", "Narrativa", "Presença digital"],
     brand: {
       mood: "editorial",
@@ -227,11 +227,11 @@ const allProjects = [
     category: "marcas",
     type: "Design system · Social",
     shortDescription:
-      "Design system para carrosséis de alta conversão, demonstrado num gerador ao vivo.",
+      "Um sistema de identidade que vira gerador de carrossel: entra o briefing, sai a peça pronta, sempre na mesma linguagem visual.",
     problem:
-      "Conteúdo social produzido sem sistema: cada peça reinventa cor, tipo e layout.",
+      "Cada post social era feito do zero, cor, tipografia e layout reinventados a cada peça, sem nenhuma consistência de marca.",
     solution:
-      "Cores, tipografia, layouts e regras de composição empacotados num design system interativo.",
+      "Cores, tipografia, layouts e regras de composição empacotados num design system interativo, que transforma briefing em peça pronta pra publicar.",
     capabilities: ["Design system", "Brandbook", "Gerador interativo"],
     brand: {
       mood: "sistema",
@@ -265,12 +265,12 @@ const allProjects = [
     category: "produtos",
     type: "Landing de produto artesanal",
     shortDescription:
-      "Uma landing simples de venda direta para um amigurumi artesanal, com CTA de WhatsApp e cálculo de quantidade.",
+      "Uma landing enxuta pra vender um amigurumi artesanal direto pelo WhatsApp, com a peça em destaque e o preço calculado na hora.",
     problem:
-      "Um produto físico precisava de uma página direta, emocional e funcional para transformar interesse em conversa de compra.",
+      "Um produto feito à mão precisava de uma página que vendesse pelo afeto da peça e puxasse rápido pra conversa de compra, sem parecer um catálogo genérico.",
     solution:
-      "Uma página one-product com foto protagonista, preço dinâmico, seletor de quantidade e checkout via WhatsApp.",
-    capabilities: ["Produto fisico", "WhatsApp checkout", "Preco dinamico", "Landing simples"],
+      "Uma página de produto único, com a foto em destaque, preço que se ajusta pela quantidade escolhida, e botão direto pro WhatsApp pra fechar o pedido.",
+    capabilities: ["Produto físico", "Checkout via WhatsApp", "Preço dinâmico", "Landing simples"],
     brand: {
       mood: "artesanal",
       bg: "#f5f1e8",
@@ -303,9 +303,9 @@ export const projects = allProjects
     if (normalized.id === "prisma") {
       Object.assign(normalized, {
         type: "Sistema de identidade visual / Conteúdo",
-        shortDescription: "Sistema de identidade visual que gera conteúdo pronto com regras de cor, tipo, layout e composição.",
-        problem: "Conteúdo social produzido sem consistência: cada peça reinventa cor, tipo, hierarquia e acabamento.",
-        solution: "Um sistema de identidade com gerador interativo para transformar briefing em peças prontas, mantendo a mesma linguagem visual.",
+        shortDescription: "Um sistema de identidade visual que vira gerador: entra o briefing, sai a peça pronta, sempre na mesma linguagem visual.",
+        problem: "Cada post social nascia do zero, cor, tipografia, hierarquia e acabamento reinventados a cada peça.",
+        solution: "Um sistema de identidade com gerador interativo, que transforma briefing em peça pronta sem perder a consistência visual.",
         capabilities: ["Identidade visual", "Sistema de templates", "Gerador de conteúdo", "Regras de composição"]
       });
     }
