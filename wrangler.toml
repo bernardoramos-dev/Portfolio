@@ -1,9 +1,0 @@
-name = "portfolio"
-
-[build]
-command = "npm run build"
-cwd = "./"
-watch_paths = ["src/**/*.js", "src/**/*.css", "assets/**/*"]
-
-[build.upload]
-dir = "dist"
