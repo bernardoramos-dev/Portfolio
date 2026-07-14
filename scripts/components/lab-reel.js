@@ -30,16 +30,20 @@ export function initLabReel() {
   const grabPointer = (el, id) => { try { el.setPointerCapture?.(id); } catch { /* ignore */ } };
   const freePointer = (el, id) => { try { el.releasePointerCapture?.(id); } catch { /* ignore */ } };
 
+  /* pure position indicator — not interactive. It used to double as a
+     seek control, but tapping/dragging it to jump the cylinder was the
+     source of most of the "carousel breaks" reports, so now it only
+     ever reflects state, it never sets it. */
   function createScrubber(total) {
     const root = document.createElement("div");
     root.className = "lab-scrub";
     root.innerHTML = `
-      <button class="lab-scrub__track" type="button" aria-label="Controlar posição dos vídeos">
+      <div class="lab-scrub__track" role="status" aria-label="Posição no carrossel de vídeos">
         <span class="lab-scrub__rail"><i><b></b></i></span>
         <span class="lab-scrub__readout">
           <em data-lab-current>01</em><span>/</span><em>${String(total).padStart(2, "0")}</em>
         </span>
-      </button>`;
+      </div>`;
     const track = root.querySelector(".lab-scrub__track");
     const current = root.querySelector("[data-lab-current]");
     return {
@@ -57,11 +61,6 @@ export function initLabReel() {
     };
   }
 
-  function pointerProgress(event, track) {
-    const rect = track.getBoundingClientRect();
-    return Math.max(0, Math.min(1, (event.clientX - rect.left) / Math.max(1, rect.width)));
-  }
-
   function initStaticStrip(items) {
     cyl.classList.add("is-static");
     cyl.removeAttribute("data-cursor");
@@ -74,27 +73,6 @@ export function initLabReel() {
       const index = Math.round(progress * (items.length - 1));
       scrub.set(progress, index);
     }
-    function seek(progress) {
-      const max = Math.max(0, cyl.scrollWidth - cyl.clientWidth);
-      cyl.scrollTo({ left: progress * max, behavior: env.reduce ? "auto" : "smooth" });
-      scrub.pulse();
-    }
-
-    scrub.track.addEventListener("pointerdown", (event) => {
-      event.preventDefault();
-      grabPointer(scrub.track, event.pointerId);
-      seek(pointerProgress(event, scrub.track));
-      const move = (e) => seek(pointerProgress(e, scrub.track));
-      const up = () => {
-        scrub.track.removeEventListener("pointermove", move);
-        scrub.track.removeEventListener("pointerup", up);
-        scrub.track.removeEventListener("pointercancel", up);
-      };
-      scrub.track.addEventListener("pointermove", move);
-      scrub.track.addEventListener("pointerup", up);
-      scrub.track.addEventListener("pointercancel", up);
-    });
-
     cyl.addEventListener("scroll", update, { passive: true });
     items.forEach((item) => item.querySelector("video") && prepare(item.querySelector("video")));
     update();
@@ -145,11 +123,6 @@ export function initLabReel() {
     hovered: null,
     visible: true,
     moved: false,
-    seeking: false,
-    seekFrom: 0,
-    seekTo: 0,
-    seekStart: 0,
-    seekDuration: 680,
     startX: 0,
     lastX: 0,
     raf: 0
@@ -195,40 +168,19 @@ export function initLabReel() {
     const progress = faceCount > 1 ? Math.min(1, wrapped / ((faceCount - 1) * step)) : 0;
     scrub.set(progress, index);
   }
-  function seekToProgress(progress) {
-    const idx = Math.round(Math.max(0, Math.min(1, progress)) * (faceCount - 1));
-    /* after minutes of idle auto-rotation state.rotation can have drifted to
-       thousands of degrees — always seek along the SHORTEST angular path,
-       never let it sweep multiple full laps (that read as a broken freeze) */
-    const target = (-idx * step) - state.scrollRot;
-    const shortest = (((target - state.rotation) % 360) + 540) % 360 - 180;
-    state.seeking = true;
-    state.seekFrom = state.rotation;
-    state.seekTo = state.rotation + shortest;
-    state.seekStart = performance.now();
-    state.velocity = 0;
-    cyl.classList.add("is-seeking");
-  }
-
   function frame() {
-    if (state.seeking) {
-      const p = Math.min(1, (performance.now() - state.seekStart) / state.seekDuration);
-      const eased = 1 - Math.pow(1 - p, 3);
-      state.rotation = state.seekFrom + ((state.seekTo - state.seekFrom) * eased);
-      if (p >= 1) {
-        state.seeking = false;
-        cyl.classList.remove("is-seeking");
-        state.hovering = false;
-        state.velocity = -AUTO_SPEED * 1.8;
-        scrub.pulse();
-      }
-    } else if (!state.dragging) {
+    if (!state.dragging) {
       state.rotation += state.velocity;
       state.velocity *= 0.94;
       if (Math.abs(state.velocity) < 0.02) {
         state.velocity = 0;
         if (!state.hovering) state.rotation += AUTO_SPEED;
       }
+    }
+    /* keep the accumulator bounded so it never drifts into huge numbers
+       over a long idle session (harmless for CSS, but tidy) */
+    if (state.rotation > 100000 || state.rotation < -100000) {
+      state.rotation = ((state.rotation % 360) + 360) % 360;
     }
     state.total = state.rotation + state.scrollRot;
     stage.style.transform = `rotateY(${state.total}deg)`;
@@ -243,8 +195,6 @@ export function initLabReel() {
   cyl.addEventListener("pointerdown", (event) => {
     if (event.button !== 0 && event.pointerType === "mouse") return;
     state.dragging = true;
-    state.seeking = false;
-    cyl.classList.remove("is-seeking");
     state.moved = false;
     state.startX = state.lastX = event.clientX;
     state.velocity = 0;
@@ -271,28 +221,6 @@ export function initLabReel() {
   };
   cyl.addEventListener("pointerup", endDrag);
   cyl.addEventListener("pointercancel", endDrag);
-
-  scrub.track.addEventListener("pointerdown", (event) => {
-    event.preventDefault();
-    clearHover();
-    state.hovering = false;
-    state.dragging = false;
-    state.moved = false;
-    grabPointer(scrub.track, event.pointerId);
-    seekToProgress(pointerProgress(event, scrub.track));
-    const move = (e) => seekToProgress(pointerProgress(e, scrub.track));
-    const up = () => {
-      freePointer(scrub.track, event.pointerId);
-      clearHover();
-      state.hovering = false;
-      scrub.track.removeEventListener("pointermove", move);
-      scrub.track.removeEventListener("pointerup", up);
-      scrub.track.removeEventListener("pointercancel", up);
-    };
-    scrub.track.addEventListener("pointermove", move);
-    scrub.track.addEventListener("pointerup", up);
-    scrub.track.addEventListener("pointercancel", up);
-  });
 
   /* swallow the click that ends a drag so it doesn't open the player */
   cyl.addEventListener("click", (event) => {

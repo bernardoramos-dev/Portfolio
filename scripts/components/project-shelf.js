@@ -158,32 +158,36 @@ export function initProjectGallery() {
     }, 0);
   }
 
-  /* HOVER wins: hovering a panel highlights exactly that panel; leaving
-     the strip hands control back to the scroll position. */
-  panels.forEach((el, i) => {
-    el.addEventListener("pointerenter", () => {
-      hovering = true;
-      scrollActive = i;
-      setActive(i);
-      syncScrollToPanel(i);
-      if (progress) progress.style.transform = `scaleX(${N > 1 ? i / (N - 1) : 1})`;
-    });
-  });
-  strip.addEventListener("pointerleave", () => {
-    hovering = false;
-    clearTimeout(hoverSyncTimer);
-    setActive(scrollActive);
-  });
-  strip.addEventListener("wheel", () => {
-    if (!desktop) return;
-    hovering = false;
-    clearTimeout(hoverSyncTimer);
-    setActive(scrollActive);
-  }, { passive: true });
-
   const { gsap, ScrollTrigger } = env;
   const desktop = !env.touch && !env.reduce && gsap && ScrollTrigger &&
     matchMedia("(min-width: 900px)").matches;
+
+  /* HOVER wins: hovering a panel highlights exactly that panel; leaving
+     the strip hands control back to the scroll position. Mouse-only —
+     touch fires pointerenter too, and it was fighting the swipe-scroll
+     handler below for control of "active", causing the counter to lag
+     a card behind on real phones. */
+  if (desktop) {
+    panels.forEach((el, i) => {
+      el.addEventListener("pointerenter", () => {
+        hovering = true;
+        scrollActive = i;
+        setActive(i);
+        syncScrollToPanel(i);
+        if (progress) progress.style.transform = `scaleX(${N > 1 ? i / (N - 1) : 1})`;
+      });
+    });
+    strip.addEventListener("pointerleave", () => {
+      hovering = false;
+      clearTimeout(hoverSyncTimer);
+      setActive(scrollActive);
+    });
+    strip.addEventListener("wheel", () => {
+      hovering = false;
+      clearTimeout(hoverSyncTimer);
+      setActive(scrollActive);
+    }, { passive: true });
+  }
 
   if (desktop && scrollEl) {
     /* sticky + scrub — the panels stay centred while a tall scroll track

@@ -1319,8 +1319,6 @@
   mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
 }
 .lab-cylinder.is-dragging { cursor: grabbing; }
-.lab-cylinder.is-seeking .lab-cylinder__stage { transition: filter 220ms ease; filter: saturate(1.12) contrast(1.05); }
-.lab-cylinder.is-seeking .lab-item { transition-property: opacity, border-color, box-shadow; }
 .lab-cylinder__stage {
   position: absolute;
   inset: 0;
@@ -1421,7 +1419,7 @@
   border: 0;
   color: var(--white);
   background: transparent;
-  cursor: pointer;
+  cursor: default;
 }
 .lab-scrub__rail {
   position: relative;
@@ -1464,14 +1462,6 @@
   transform: translate(50%, -50%) rotate(calc(var(--lab-progress) * 1turn));
   box-shadow: 0 0 0 6px rgba(255,255,255,0.035), 0 10px 28px rgba(0,0,0,0.42);
   transition: transform 220ms var(--ease-out-expo), box-shadow 220ms ease;
-}
-.lab-scrub__track:hover .lab-scrub__rail b,
-.lab-scrub__track:focus-visible .lab-scrub__rail b {
-  box-shadow: 0 0 0 9px rgba(255,255,255,0.06), 0 0 34px rgba(255,255,255,0.24), 0 10px 28px rgba(0,0,0,0.42);
-}
-.lab-scrub__track:focus-visible {
-  outline: 1px solid rgba(255,255,255,0.34);
-  outline-offset: 7px;
 }
 .lab-scrub__readout {
   min-width: 68px;
