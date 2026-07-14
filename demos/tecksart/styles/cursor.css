@@ -1,0 +1,83 @@
+/* ================================================================
+ TECKSART V4 — Custom Cursor
+ ================================================================ */
+
+@media (pointer: coarse) {.cursor,.cursor-follower { display: none; }
+}
+
+@media (pointer: fine) {
+ * { cursor: none!important; }
+}.cursor {
+ position: fixed;
+ pointer-events: none;
+ z-index: var(--z-cursor);
+ mix-blend-mode: difference;
+ top: 0;
+ left: 0;
+}.cursor-dot {
+ position: fixed;
+ width: 6px;
+ height: 6px;
+ background: var(--c-white);
+ border-radius: 50%;
+ pointer-events: none;
+ z-index: var(--z-cursor);
+ transform: translate(-50%, -50%);
+ transition: transform 0.06s linear, width 0.3s var(--ease-out), height 0.3s var(--ease-out), opacity 0.3s;
+ top: 0;
+ left: 0;
+}.cursor-ring {
+ position: fixed;
+ width: 36px;
+ height: 36px;
+ border: 1px solid rgba(244,244,244,0.35);
+ border-radius: 50%;
+ pointer-events: none;
+ z-index: calc(var(--z-cursor) - 1);
+ transform: translate(-50%, -50%);
+ transition: width 0.3s var(--ease-out),
+ height 0.3s var(--ease-out),
+ opacity 0.3s,
+ background 0.3s var(--ease-out),
+ border-color 0.3s;
+ top: 0;
+ left: 0;
+}
+
+/* States */.cursor-dot.is-hovering {
+ width: 4px;
+ height: 4px;
+ opacity: 0.6;
+}.cursor-ring.is-hovering {
+ width: 56px;
+ height: 56px;
+ border-color: rgba(244,244,244,0.5);
+}.cursor-dot.is-clicking {
+ transform: translate(-50%, -50%) scale(0.6);
+}.cursor-ring.is-clicking {
+ width: 28px;
+ height: 28px;
+}.cursor-dot.is-hidden,.cursor-ring.is-hidden {
+ opacity: 0;
+}
+
+/* Label state for drag areas */.cursor-label {
+ position: fixed;
+ pointer-events: none;
+ z-index: var(--z-cursor);
+ font-family: var(--font-mono);
+ font-size: var(--fs-xs);
+ letter-spacing: var(--ls-wider);
+ text-transform: uppercase;
+ color: var(--c-white);
+ background: rgba(0,0,0,0.8);
+ border: 1px solid var(--c-border);
+ padding: var(--sp-2) var(--sp-3);
+ border-radius: var(--radius-full);
+ white-space: nowrap;
+ opacity: 0;
+ transform: translate(-50%, calc(-50% - 30px));
+ transition: opacity 0.25s var(--ease-out);
+ top: 0;
+ left: 0;
+}.cursor-label.is-visible { opacity: 1; }

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Agente - Vant</title>
+<meta name="description" content="Chat demonstrativo do Vant para transformar briefing em apresentação.">
+<link rel="icon" href="static/img/favicon.svg">
+<link rel="stylesheet" href="../../assets/vendor/inter.css">
+<link rel="stylesheet" href="static/css/vant.css">
+<script src="../../scripts/core/form-accessibility.js?v=20260711-2" defer></script>
+</head>
+<body>
+<div class="chat-page chat-page-demo">
+  <div class="chat-scroll" id="scroll"><div class="chat-inner" id="inner">
+    <div class="chat-hello" id="hello"><div class="eyebrow" style="margin:0 auto 18px">Agente Vant</div><h1>Me diga o tema. Eu monto a apresentação.</h1><p>Esta demo funciona localmente: ela cria um roteiro, escolhe uma identidade e entrega um deck navegável.</p></div>
+  </div></div>
+  <div class="composer-wrap"><div class="composer"><div class="glowring"></div><div class="glowring g2"></div><div class="glowring g3"></div><div class="composer-inner"><textarea id="ta" rows="1" placeholder="Ex.: pitch de fintech para investidores, visual azul"></textarea><button class="send-btn" id="send" aria-label="Enviar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></div></div>
+  <div class="quick-row" id="quick"><button class="quick" data-q="Pitch da minha fintech para investidores">Pitch fintech</button><button class="quick" data-q="Plano de marketing 2026 para lancamento">Marketing 2026</button><button class="quick" data-q="Aula sobre como apresentar melhor">Aula premium</button><button class="quick" data-q="Resultados do trimestre para board">Resultados board</button></div></div>
+</div>
+<script src="static/js/vant.js"></script>
+<script>
+const $ = s => document.querySelector(s); const inner=$('#inner'), scrollEl=$('#scroll'), ta=$('#ta'), send=$('#send'); let examples=[];
+function rola(){ scrollEl.scrollTop = scrollEl.scrollHeight; }
+function bot(html){ const el=document.createElement('div'); el.className='msg bot'; el.innerHTML='<div class="av"><img src="static/img/logo.png" alt="Vant"></div><div class="bubble">'+html+'</div>'; inner.appendChild(el); rola(); return el.querySelector('.bubble'); }
+function user(text){ const el=document.createElement('div'); el.className='msg user'; el.innerHTML='<div class="av">B</div><div class="bubble">'+Vant.esc(text)+'</div>'; inner.appendChild(el); rola(); }
+function pick(text){ const t=text.toLowerCase(); if(t.includes('marketing')) return examples.find(e=>e.categoria==='Marketing'); if(t.includes('aula')) return examples.find(e=>e.categoria==='Educacao'); if(t.includes('resultado')||t.includes('board')) return examples.find(e=>e.categoria==='Resultados'); if(t.includes('impacto')||t.includes('esg')) return examples.find(e=>e.categoria==='ESG'); if(t.includes('ia')||t.includes('tech')) return examples.find(e=>e.categoria==='Tecnologia'); return examples[0]; }
+function thinking(){ const el=document.createElement('div'); el.className='msg bot thinking'; el.innerHTML='<div class="av"><img src="static/img/logo.png" alt="Vant"></div><div class="think-box"><div class="think-content"><div class="think-step active"><span class="ti"></span><span>Lendo o briefing</span></div><div class="think-step"><span class="ti"></span><span>Definindo narrativa</span></div><div class="think-step"><span class="ti"></span><span>Aplicando identidade visual</span></div></div></div>'; inner.appendChild(el); rola(); return el; }
+async function enviar(){ const text=ta.value.trim(); if(!text) return; $('#hello')?.remove(); ta.value=''; ta.style.height='auto'; send.disabled=true; user(text); const t=thinking(); await new Promise(r=>setTimeout(r,950)); t.remove(); const ex=pick(text); const url='exemplos/'+ex.arquivo; const b=bot('<p>Pronto. Estruturei uma apresentacao em <strong>'+ex.n_slides+' slides</strong> usando a identidade <strong>'+Vant.esc(ex.cor_nome)+'</strong>.</p><div class="result-card"><div class="result-frame"><iframe src="'+url+'" loading="lazy"></iframe></div><div class="result-actions"><a class="btn btn-accent btn-sm" href="'+url+'" target="_blank" rel="noopener">Abrir deck</a><a class="btn btn-ghost btn-sm" href="galeria.html">Ver galeria</a></div></div>'); send.disabled=false; ta.focus(); }
+ta.addEventListener('input',()=>{ ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight,160)+'px'; }); ta.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); enviar(); }}); send.onclick=enviar; document.querySelectorAll('.quick').forEach(b=>b.onclick=()=>{ ta.value=b.dataset.q; enviar(); });
+(async()=>{ Vant.montarBg(); await Vant.montarNav(); examples=await fetch('exemplos/index.json').then(r=>r.json()); })();
+</script>
+</body>
+</html>

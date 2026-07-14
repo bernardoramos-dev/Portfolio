@@ -1,0 +1,432 @@
+/* ================================================================
+ TECKSART V4 — Animation System
+ ================================================================ */
+
+/* ── Loading Screen ── */.loading-screen {
+ position: fixed;
+ inset: 0;
+ background: #000;
+ z-index: var(--z-loading);
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ overflow: hidden;
+}
+
+/* Exit transition — JS adds.is-exiting then.is-hidden */.loading-screen.is-exiting {
+ transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+ opacity: 0;
+}.loading-screen.is-hidden {
+ opacity: 0;
+ visibility: hidden;
+ pointer-events: none;
+}
+
+/* Particles video background */.loading-video {
+ position: absolute;
+ inset: 0;
+ width: 100%;
+ height: 100%;
+ object-fit: cover;
+ opacity: 0;
+ transition: opacity 1s ease;
+}.loading-video.is-ready { opacity: 1; }
+
+/* Darkening overlay on top of video */.loading-video-overlay {
+ position: absolute;
+ inset: 0;
+ background: rgba(0, 0, 0, 0.68);
+ pointer-events: none;
+ transition: background 1s ease;
+}.loading-video-overlay.is-darkening {
+ background: rgba(0, 0, 0, 0.97);
+}
+
+/* Center content */.loading-center {
+ position: relative;
+ z-index: 2;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ gap: var(--sp-10);
+}
+
+/* Logo wrapper — animates in and then out */.loading-logo-wrap {
+ opacity: 0;
+ transform: scale(0.92);
+ transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1),
+ transform 1s cubic-bezier(0.4, 0, 0.2, 1),
+ filter 1s cubic-bezier(0.4, 0, 0.2, 1);
+ filter: blur(12px);
+}.loading-logo-wrap.is-visible {
+ opacity: 1;
+ transform: scale(1);
+ filter: blur(0px);
+}.loading-logo-wrap.is-exiting {
+ opacity: 0;
+ transform: scale(1.06);
+ filter: blur(4px);
+ transition: opacity 0.8s cubic-bezier(0.4, 0, 0.6, 1),
+ transform 0.8s cubic-bezier(0.4, 0, 0.6, 1),
+ filter 0.8s cubic-bezier(0.4, 0, 0.6, 1);
+}.loading-logo-img {
+ width: min(380px, 55vw);
+ height: auto;
+ object-fit: contain;
+ display: block;
+}
+
+/* Progress */.loading-progress {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ gap: var(--sp-3);
+ width: min(220px, 50vw);
+ opacity: 0;
+ transition: opacity 0.6s ease;
+}.loading-progress.is-visible { opacity: 1; }.loading-bar {
+ width: 100%;
+ height: 1px;
+ background: rgba(255,255,255,0.15);
+ overflow: hidden;
+ position: relative;
+}.loading-bar-fill {
+ height: 100%;
+ background: rgba(255,255,255,0.8);
+ transform: scaleX(0);
+ transform-origin: left;
+ transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}.loading-pct {
+ font-family: var(--font-mono);
+ font-size: var(--fs-2xs);
+ letter-spacing: var(--ls-widest);
+ color: rgba(255,255,255,0.4);
+ text-transform: uppercase;
+}
+
+/* ── GSAP Reveal targets (initial state set by JS) ── */.reveal,.reveal-line,.reveal-stagger > * {
+ will-change: transform, opacity;
+}
+
+/* ── Manifesto word highlight ── */.manifesto-word {
+ display: inline;
+ color: var(--c-steel-dim);
+ transition: color 0.15s ease;
+}.manifesto-word.is-lit {
+ color: var(--c-white);
+}
+
+/* ── Horizontal scroll section ── */.process-section {
+ position: relative;
+}.process-sticky {
+ position: sticky;
+ top: 0;
+ height: 100dvh;
+ overflow: hidden;
+ display: flex;
+ align-items: center;
+}.process-track {
+ display: flex;
+ will-change: transform;
+}.process-panel {
+ width: 100vw;
+ height: 100dvh;
+ flex-shrink: 0;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ position: relative;
+ overflow: hidden;
+}
+
+/* Giant background number */.process-panel-bg-num {
+ position: absolute;
+ font-family: var(--font-mono);
+ font-size: min(45vw, 480px);
+ font-weight: var(--fw-bold);
+ color: rgba(255, 255, 255, 0.028);
+ line-height: 1;
+ user-select: none;
+ letter-spacing: -0.06em;
+ pointer-events: none;
+ transition: color 0.6s ease;
+}.process-panel.is-active.process-panel-bg-num {
+ color: rgba(255, 255, 255, 0.042);
+}
+
+/* Centered content */.process-panel-content {
+ position: relative;
+ z-index: 2;
+ max-width: 680px;
+ width: 100%;
+ padding: 0 var(--gutter);
+ text-align: center;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ gap: var(--sp-6);
+}
+
+/* Step counter line */.process-step-num {
+ font-family: var(--font-mono);
+ font-size: var(--fs-xs);
+ letter-spacing: var(--ls-widest);
+ text-transform: uppercase;
+ color: var(--c-steel-dim);
+ display: flex;
+ align-items: center;
+ gap: var(--sp-4);
+ opacity: 0;
+ transform: translateY(10px);
+ transition: opacity 0.6s ease, transform 0.6s ease;
+}.process-step-num::before,.process-step-num::after {
+ content: '';
+ display: block;
+ width: 40px;
+ height: 1px;
+ background: var(--c-border);
+}.process-panel.is-active.process-step-num {
+ opacity: 1;
+ transform: none;
+ transition-delay: 0.1s;
+}.process-step-title {
+ font-size: clamp(3.5rem, 7vw, 6rem);
+ font-weight: var(--fw-semibold);
+ letter-spacing: -0.04em;
+ line-height: 0.95;
+ color: var(--c-white);
+ overflow: hidden;
+}
+
+/* Per-letter animation */.process-letter {
+ display: inline-block;
+ opacity: 0;
+ transform: translateY(40px) skewX(-8deg);
+ transition: opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+ transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}.process-panel.is-active.process-letter {
+ opacity: 1;
+ transform: translateY(0) skewX(0deg);
+}.process-step-body {
+ font-family: var(--font-secondary);
+ font-size: var(--fs-base);
+ line-height: var(--lh-loose);
+ color: var(--c-steel);
+ max-width: 520px;
+ opacity: 0;
+ transform: translateY(16px);
+ transition: opacity 0.7s ease, transform 0.7s ease;
+ transition-delay: 0.35s;
+}.process-panel.is-active.process-step-body {
+ opacity: 1;
+ transform: none;
+}
+
+/* Progress dots */.process-dots {
+ position: absolute;
+ bottom: var(--sp-10);
+ left: 50%;
+ transform: translateX(-50%);
+ display: flex;
+ gap: var(--sp-3);
+ z-index: 10;
+}.process-dot {
+ width: 24px;
+ height: 1px;
+ background: var(--c-border);
+ transition: background 0.4s ease, width 0.4s ease;
+}.process-dot.is-active {
+ background: var(--c-white);
+ width: 40px;
+}
+
+/* Mobile: disable horizontal scroll, stack vertically */
+@media (max-width: 768px) {.process-section { height: auto!important; }.process-sticky { position: relative; height: auto; }.process-track {
+ flex-direction: column;
+ transform: none!important;
+ }.process-panel {
+ width: 100%;
+ height: auto;
+ min-height: 80vw;
+ padding: var(--sp-16) var(--gutter);
+ }.process-panel-bg-num { font-size: min(60vw, 220px); }.process-step-title { font-size: clamp(2.5rem, 10vw, 3.5rem); }.process-panel.is-active.process-letter { opacity: 1; transform: none; }.process-panel.is-active.process-step-num { opacity: 1; transform: none; }.process-panel.is-active.process-step-body { opacity: 1; transform: none; }.process-dots { display: none; }
+}
+
+/* ── Parallax layers ── */
+[data-parallax] {
+ will-change: transform;
+}
+
+/* ── Stagger grids ── */.stagger-grid > * {
+ opacity: 0;
+ transform: translateY(24px);
+}
+
+/* ── Hover underline ── */.hover-underline {
+ position: relative;
+ display: inline-block;
+}.hover-underline::after {
+ content: '';
+ position: absolute;
+ bottom: -2px;
+ left: 0;
+ width: 0;
+ height: 1px;
+ background: currentColor;
+ transition: width 0.4s var(--ease-out);
+}.hover-underline:hover::after { width: 100%; }
+
+/* ── Split text (GSAP target) ── */.split-text.line,.split-text.word {
+ display: inline-block;
+ overflow: hidden;
+}
+
+/* ── Button ripple ── */.btn-ripple {
+ position: relative;
+ overflow: hidden;
+}.btn-ripple::after {
+ content: '';
+ position: absolute;
+ inset: 0;
+ background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+ transform: scale(0);
+ opacity: 0;
+ transition: transform 0.6s var(--ease-out), opacity 0.6s;
+}.btn-ripple:active::after {
+ transform: scale(4);
+ opacity: 1;
+}
+
+/* ── Scroll indicator ── */.scroll-indicator {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ gap: var(--sp-2);
+ flex-shrink: 0;
+}.scroll-indicator-line {
+ width: 1px;
+ height: 48px;
+ background: linear-gradient(to bottom, var(--c-steel), transparent);
+ animation: scrollPulse 2s ease-in-out infinite;
+ transform-origin: top;
+}.scroll-indicator-label {
+ font-family: var(--font-mono);
+ font-size: var(--fs-2xs);
+ letter-spacing: var(--ls-widest);
+ text-transform: uppercase;
+ color: var(--c-steel-dim);
+ writing-mode: vertical-rl;
+}
+
+@keyframes scrollPulse {
+ 0%, 100% { transform: scaleY(1); opacity: 0.4; }
+ 50% { transform: scaleY(0.6); opacity: 0.8; }
+}
+
+/* ── Ambient glow ── */.ambient-glow {
+ position: absolute;
+ border-radius: 50%;
+ filter: blur(120px);
+ pointer-events: none;
+}.ambient-glow--hero {
+ width: 600px;
+ height: 400px;
+ background: radial-gradient(circle, rgba(244,244,244,0.04) 0%, transparent 70%);
+ top: 20%;
+ left: 50%;
+ transform: translateX(-50%);
+}
+
+/* ── Checkout success animation ── */
+@keyframes successReveal {
+ 0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+ 60% { transform: scale(1.03) translateY(-2px); }
+ 100% { opacity: 1; transform: scale(1) translateY(0); }
+}.success-animation {
+ animation: successReveal 0.8s var(--ease-spring) forwards;
+}
+
+@keyframes successRing {
+ 0% { transform: scale(0.5); opacity: 0; }
+ 100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes particleFloat {
+ 0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 1; }
+ 100% { transform: translateY(-200px) translateX(var(--x)) rotate(var(--r)); opacity: 0; }
+}
+
+/* ── Drop reveal ── */.drop-label-animate {
+ overflow: hidden;
+}.drop-label-animate span {
+ display: block;
+ transform: translateY(100%);
+ transition: transform 0.8s var(--ease-out);
+}.drop-label-animate.is-visible span {
+ transform: translateY(0);
+}
+
+/* ── Silver laser sweep ── */
+@keyframes laserSweep {
+ 0% { transform: translateX(0); opacity: 0; }
+ 3% { opacity: 1; }
+ 97% { opacity: 1; }
+ 100% { transform: translateX(calc(100vw + 240px)); opacity: 0; }
+}.silver-laser {
+ position: relative;
+}.silver-laser::before {
+ content: '';
+ position: absolute;
+ top: 0;
+ left: -240px;
+ width: 240px;
+ height: 1px;
+ background: linear-gradient(
+ to right,
+ transparent 0%,
+ rgba(160, 160, 160, 0.2) 20%,
+ rgba(200, 200, 200, 0.7) 45%,
+ rgba(255, 255, 255, 0.95) 50%,
+ rgba(200, 200, 200, 0.7) 55%,
+ rgba(160, 160, 160, 0.2) 80%,
+ transparent 100%
+ );
+ animation: laserSweep var(--laser-dur, 14s) ease-in-out var(--laser-delay, 0s) infinite;
+ pointer-events: none;
+ z-index: 5;
+}
+
+/* Vertical laser variant */
+@keyframes laserSweepV {
+ 0% { transform: translateY(0); opacity: 0; }
+ 3% { opacity: 1; }
+ 97% { opacity: 1; }
+ 100% { transform: translateY(calc(100% + 240px)); opacity: 0; }
+}.silver-laser-v::after {
+ content: '';
+ position: absolute;
+ left: 0;
+ top: -240px;
+ width: 1px;
+ height: 240px;
+ background: linear-gradient(
+ to bottom,
+ transparent 0%,
+ rgba(180, 180, 180, 0.4) 30%,
+ rgba(255, 255, 255, 0.85) 50%,
+ rgba(180, 180, 180, 0.4) 70%,
+ transparent 100%
+ );
+ animation: laserSweepV var(--laser-dur, 18s) ease-in-out var(--laser-delay, 0s) infinite;
+ pointer-events: none;
+ z-index: 5;
+}
+
+/* ── Stats counter ── */.stat-number {
+ font-family: var(--font-mono);
+ font-size: clamp(2.5rem, 6vw, 5rem);
+ font-weight: var(--fw-bold);
+ letter-spacing: var(--ls-tight);
+ color: var(--c-white);
+ line-height: 1;
+}

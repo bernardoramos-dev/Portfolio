@@ -1,0 +1,826 @@
+[
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779166029499,
+ "server_time": "2026-05-19T01:47:09.514932"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779166118129,
+ "server_time": "2026-05-19T01:48:38.183169"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "catalog",
+ "drop": "all"
+ },
+ "ts": 1779166135471,
+ "server_time": "2026-05-19T01:48:55.753647"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "cart_open",
+ "data": {},
+ "ts": 1779166138373,
+ "server_time": "2026-05-19T01:48:58.727619"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "add_to_cart",
+ "data": {
+ "product_id": "lampada-chrome-01"
+ },
+ "ts": 1779166138374,
+ "server_time": "2026-05-19T01:48:58.771804"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "checkout_open",
+ "data": {
+ "items": 1
+ },
+ "ts": 1779166140696,
+ "server_time": "2026-05-19T01:49:00.717963"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "purchase",
+ "data": {
+ "total": 289.9,
+ "method": "pix"
+ },
+ "ts": 1779166157528,
+ "server_time": "2026-05-19T01:49:17.783839"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779166170865,
+ "server_time": "2026-05-19T01:49:30.943906"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "cart_open",
+ "data": {},
+ "ts": 1779166173920,
+ "server_time": "2026-05-19T01:49:33.942115"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "catalog",
+ "drop": "all"
+ },
+ "ts": 1779166178670,
+ "server_time": "2026-05-19T01:49:38.938423"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "catalog",
+ "drop": "void"
+ },
+ "ts": 1779166184710,
+ "server_time": "2026-05-19T01:49:44.963533"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "catalog",
+ "drop": "signal"
+ },
+ "ts": 1779166187328,
+ "server_time": "2026-05-19T01:49:47.594880"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779166188883,
+ "server_time": "2026-05-19T01:49:48.965096"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "newsletter_subscribe",
+ "data": {
+ "email": "clara.mendes@exemplo.com"
+ },
+ "ts": 1779166197943,
+ "server_time": "2026-05-19T01:49:58.195310"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779166268343,
+ "server_time": "2026-05-19T01:51:08.430015"
+ },
+ {
+ "session": "s_1779151305609",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779167544367,
+ "server_time": "2026-05-19T02:12:24.694870"
+ },
+ {
+ "session": "s_1779151305609",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779167870576,
+ "server_time": "2026-05-19T02:17:50.912483"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779168568325,
+ "server_time": "2026-05-19T02:29:29.564574"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "catalog",
+ "drop": "all"
+ },
+ "ts": 1779168692516,
+ "server_time": "2026-05-19T02:31:32.747837"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "product_view",
+ "data": {
+ "product_id": "vaso-obsidiana-01"
+ },
+ "ts": 1779168695991,
+ "server_time": "2026-05-19T02:31:36.239023"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "cart_open",
+ "data": {},
+ "ts": 1779168702773,
+ "server_time": "2026-05-19T02:31:42.795479"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "add_to_cart",
+ "data": {
+ "product_id": "vaso-obsidiana-01",
+ "qty": 1
+ },
+ "ts": 1779168702774,
+ "server_time": "2026-05-19T02:31:43.098725"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "checkout_open",
+ "data": {
+ "items": 1
+ },
+ "ts": 1779168710402,
+ "server_time": "2026-05-19T02:31:50.435021"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "purchase",
+ "data": {
+ "total": 180.405,
+ "method": "pix"
+ },
+ "ts": 1779168784767,
+ "server_time": "2026-05-19T02:33:04.942472"
+ },
+ {
+ "session": "s_1779151305609",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779169616790,
+ "server_time": "2026-05-19T02:46:56.985286"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779169801416,
+ "server_time": "2026-05-19T02:50:01.530768"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779169810094,
+ "server_time": "2026-05-19T02:50:10.129088"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779169815222,
+ "server_time": "2026-05-19T02:50:15.488677"
+ },
+ {
+ "session": "s_1779151305609",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779169979532,
+ "server_time": "2026-05-19T02:52:59.718864"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779170178553,
+ "server_time": "2026-05-19T02:56:18.612419"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "catalog",
+ "drop": "signal"
+ },
+ "ts": 1779170225860,
+ "server_time": "2026-05-19T02:57:06.312150"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "product_view",
+ "data": {
+ "product_id": "luminaria-chrome-01"
+ },
+ "ts": 1779170229064,
+ "server_time": "2026-05-19T02:57:09.320769"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "cart_open",
+ "data": {},
+ "ts": 1779170231936,
+ "server_time": "2026-05-19T02:57:11.951958"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "add_to_cart",
+ "data": {
+ "product_id": "luminaria-chrome-01",
+ "qty": 1
+ },
+ "ts": 1779170231937,
+ "server_time": "2026-05-19T02:57:12.265766"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "checkout_open",
+ "data": {
+ "items": 1
+ },
+ "ts": 1779170239484,
+ "server_time": "2026-05-19T02:57:19.504684"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "purchase",
+ "data": {
+ "total": 332.405,
+ "method": "pix"
+ },
+ "ts": 1779170278931,
+ "server_time": "2026-05-19T02:57:59.186737"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779170288079,
+ "server_time": "2026-05-19T02:58:08.258267"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "catalog",
+ "drop": "signal"
+ },
+ "ts": 1779170806799,
+ "server_time": "2026-05-19T03:06:47.052928"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779170972169,
+ "server_time": "2026-05-19T03:09:32.225945"
+ },
+ {
+ "session": "s_1779151305609",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779171580748,
+ "server_time": "2026-05-19T03:19:41.009368"
+ },
+ {
+ "session": "s_1779151305609",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779171707677,
+ "server_time": "2026-05-19T03:21:47.908445"
+ },
+ {
+ "session": "s_1779151305609",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779171779346,
+ "server_time": "2026-05-19T03:22:59.507150"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779171871151,
+ "server_time": "2026-05-19T03:24:31.758698"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779172009919,
+ "server_time": "2026-05-19T03:26:50.108255"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "cart_open",
+ "data": {},
+ "ts": 1779172044097,
+ "server_time": "2026-05-19T03:27:24.427117"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779218499281,
+ "server_time": "2026-05-19T16:21:39.341841"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779218510737,
+ "server_time": "2026-05-19T16:21:51.000686"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779219005466,
+ "server_time": "2026-05-19T16:30:05.721691"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779226638744,
+ "server_time": "2026-05-19T18:37:18.828782"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779229511657,
+ "server_time": "2026-05-19T19:25:11.913261"
+ },
+ {
+ "session": "s_1779229512329",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779229512330,
+ "server_time": "2026-05-19T19:25:12.493622"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779230223119,
+ "server_time": "2026-05-19T19:37:03.348055"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779230359789,
+ "server_time": "2026-05-19T19:39:19.803656"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779230985408,
+ "server_time": "2026-05-19T19:49:45.605343"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "catalog",
+ "drop": "all"
+ },
+ "ts": 1779231023157,
+ "server_time": "2026-05-19T19:50:23.416976"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779231038289,
+ "server_time": "2026-05-19T19:50:38.538816"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779232181923,
+ "server_time": "2026-05-19T20:09:42.238628"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779232191530,
+ "server_time": "2026-05-19T20:09:51.817472"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779232207698,
+ "server_time": "2026-05-19T20:10:07.983784"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779232288691,
+ "server_time": "2026-05-19T20:11:28.974531"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779242353387,
+ "server_time": "2026-05-19T22:59:13.722621"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779315362259,
+ "server_time": "2026-05-20T19:16:02.449789"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779315378592,
+ "server_time": "2026-05-20T19:16:18.243694"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "catalog",
+ "drop": "void"
+ },
+ "ts": 1779315421317,
+ "server_time": "2026-05-20T19:17:01.583653"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "cart_open",
+ "data": {},
+ "ts": 1779315423504,
+ "server_time": "2026-05-20T19:17:03.516168"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "add_to_cart",
+ "data": {
+ "product_id": "vaso-obsidiana-01"
+ },
+ "ts": 1779315423505,
+ "server_time": "2026-05-20T19:17:03.829456"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "checkout_open",
+ "data": {
+ "items": 1
+ },
+ "ts": 1779315425510,
+ "server_time": "2026-05-20T19:17:05.834759"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779330472778,
+ "server_time": "2026-05-20T23:27:53.037133"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779330489033,
+ "server_time": "2026-05-20T23:28:10.390367"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779330499745,
+ "server_time": "2026-05-20T23:28:21.091362"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "catalog",
+ "drop": "signal"
+ },
+ "ts": 1779330626746,
+ "server_time": "2026-05-20T23:30:26.978233"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "cart_open",
+ "data": {},
+ "ts": 1779330639659,
+ "server_time": "2026-05-20T23:30:39.687837"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "add_to_cart",
+ "data": {
+ "product_id": "lampada-chrome-01"
+ },
+ "ts": 1779330639660,
+ "server_time": "2026-05-20T23:30:39.993695"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "checkout_open",
+ "data": {
+ "items": 1
+ },
+ "ts": 1779330666746,
+ "server_time": "2026-05-20T23:31:06.779439"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "purchase",
+ "data": {
+ "total": 275.405,
+ "method": "pix"
+ },
+ "ts": 1779330689276,
+ "server_time": "2026-05-20T23:31:29.526704"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779330902187,
+ "server_time": "2026-05-20T23:35:02.390840"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779371975113,
+ "server_time": "2026-05-21T10:59:35.340956"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "cart_open",
+ "data": {},
+ "ts": 1779372026732,
+ "server_time": "2026-05-21T11:00:26.771125"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "add_to_cart",
+ "data": {
+ "product_id": "vaso-obsidiana-01"
+ },
+ "ts": 1779372026733,
+ "server_time": "2026-05-21T11:00:27.086805"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "checkout_open",
+ "data": {
+ "items": 1
+ },
+ "ts": 1779372037659,
+ "server_time": "2026-05-21T11:00:37.687660"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779373048533,
+ "server_time": "2026-05-21T11:17:28.836131"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779380937277,
+ "server_time": "2026-05-21T13:28:57.364715"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779380973400,
+ "server_time": "2026-05-21T13:29:33.685441"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "cart_open",
+ "data": {},
+ "ts": 1779380996183,
+ "server_time": "2026-05-21T13:29:56.216696"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "checkout_open",
+ "data": {
+ "items": 1
+ },
+ "ts": 1779381010579,
+ "server_time": "2026-05-21T13:30:10.601941"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779381144127,
+ "server_time": "2026-05-21T13:32:24.182950"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779404643509,
+ "server_time": "2026-05-21T20:04:03.762361"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779404773322,
+ "server_time": "2026-05-21T20:06:13.574692"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "cart_open",
+ "data": {},
+ "ts": 1779404825104,
+ "server_time": "2026-05-21T20:07:05.432563"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "checkout_open",
+ "data": {
+ "items": 1
+ },
+ "ts": 1779404839545,
+ "server_time": "2026-05-21T20:07:19.881879"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1779404860507,
+ "server_time": "2026-05-21T20:07:40.763615"
+ },
+ {
+ "session": "s_1779166029499",
+ "event": "page_view",
+ "data": {
+ "page": "home"
+ },
+ "ts": 1782267401067,
+ "server_time": "2026-06-23T23:16:41.136675"
+ }
+]

@@ -1,0 +1,49 @@
+{
+ "coupons": [
+ {
+ "id": "coupon-001",
+ "code": "VOID001",
+ "type": "percentage",
+ "value": 10,
+ "description": "Desconto de lançamento DROP_001 VOID",
+ "collection": "void",
+ "campaign": "launch",
+ "maxUses": 100,
+ "currentUses": 0,
+ "minOrderValue": 0,
+ "expiresAt": "2025-12-31",
+ "active": true,
+ "createdAt": "2025-05-18T00:00:00.000Z"
+ },
+ {
+ "id": "coupon-002",
+ "code": "WELCOME",
+ "type": "percentage",
+ "value": 5,
+ "description": "Desconto de boas-vindas",
+ "collection": null,
+ "campaign": "welcome",
+ "maxUses": null,
+ "currentUses": 0,
+ "minOrderValue": 0,
+ "expiresAt": null,
+ "active": true,
+ "createdAt": "2025-05-18T00:00:00.000Z"
+ },
+ {
+ "id": "coupon-003",
+ "code": "FRETE500",
+ "type": "shipping",
+ "value": 0,
+ "description": "Frete grátis",
+ "collection": null,
+ "campaign": "shipping",
+ "maxUses": 50,
+ "currentUses": 0,
+ "minOrderValue": 300,
+ "expiresAt": "2025-07-01",
+ "active": true,
+ "createdAt": "2025-05-18T00:00:00.000Z"
+ }
+ ]
+}

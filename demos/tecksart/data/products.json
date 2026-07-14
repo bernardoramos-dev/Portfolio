@@ -1,0 +1,285 @@
+{
+ "products": [
+ {
+ "id": "vaso-obsidiana-01",
+ "name": "Vaso Obsidiana",
+ "subtitle": "Edição I",
+ "slug": "vaso-obsidiana-01",
+ "drop": "void",
+ "collection": "Forma",
+ "category": "decoracao",
+ "price": 189.9,
+ "priceFormatted": "R$ 189,90",
+ "status": "available",
+ "badge": "DROP_001",
+ "edition": "01 / 50",
+ "featured": true,
+ "images": [
+ "/demos/tecksart/assets/images/products/vaso.webp",
+ "/demos/tecksart/assets/images/products/vaso.webp",
+ "/demos/tecksart/assets/images/products/vaso.webp"
+ ],
+ "description": "Geometria pura em forma de objeto. O Vaso Obsidiana redefine a função - não apenas contém, mas existe. Cada ângulo calculado, cada superfície intencionada.",
+ "manifesto": "Uma forma que não precisa de justificativa além da própria existência.",
+ "details": [
+ "Acabamento fosco premium",
+ "Resistente a UV e umidade",
+ "Base nivelada com precisão",
+ "Edição limitada numerada"
+ ],
+ "dimensions": "12 x 12 x 28 cm",
+ "material": "Polímero de alta resistência",
+ "weight": "380g",
+ "tags": [
+ "vaso",
+ "geometrico",
+ "minimalista",
+ "void"
+ ],
+ "relatedIds": [
+ "bowl-prata-01",
+ "luminaria-chrome-01"
+ ]
+ },
+ {
+ "id": "baleia-forma-01",
+ "name": "Baleia Forma",
+ "subtitle": "Arte Funcional",
+ "slug": "baleia-forma-01",
+ "drop": "void",
+ "collection": "Figura",
+ "category": "decoracao",
+ "price": 149.9,
+ "priceFormatted": "R$ 149,90",
+ "status": "available",
+ "badge": null,
+ "edition": "03 / 50",
+ "featured": true,
+ "images": [
+ "/demos/tecksart/assets/images/products/baleia.webp"
+ ],
+ "description": "Uma interpretação contemporânea da forma natural. A Baleia existe entre o objeto funcional e a escultura - silhueta reconhecível, execução inesperada.",
+ "manifesto": "Natureza reinterpretada em materialidade contemporânea.",
+ "details": [
+ "Superfície texturizada",
+ "Design escultural autoral",
+ "Peça de colecionador",
+ "Certificado de autenticidade"
+ ],
+ "dimensions": "22 x 8 x 10 cm",
+ "material": "Polímero premium",
+ "weight": "290g",
+ "tags": [
+ "escultura",
+ "animal",
+ "arte"
+ ],
+ "relatedIds": [
+ "elefante-matt-01",
+ "vaso-obsidiana-01"
+ ],
+ "updated_at": "2026-05-19T02:33:35.625901"
+ },
+ {
+ "id": "bowl-prata-01",
+ "name": "Bowl Prata",
+ "subtitle": "Série Mineral",
+ "slug": "bowl-prata-01",
+ "drop": "void",
+ "collection": "Vessel",
+ "category": "decoracao",
+ "price": 219.9,
+ "priceFormatted": "R$ 219,90",
+ "status": "available",
+ "badge": "Destaque",
+ "edition": "02 / 30",
+ "featured": true,
+ "images": [
+ "/demos/tecksart/assets/images/products/bowl.webp",
+ "/demos/tecksart/assets/images/products/bowl.webp",
+ "/demos/tecksart/assets/images/products/bowl.webp"
+ ],
+ "description": "Concavidade como intenção. O Bowl Prata convida o olho a descansar - uma forma que não precisa de justificativa além da própria existência.",
+ "manifesto": "O vazio no centro é parte do design.",
+ "details": [
+ "Acabamento metálico",
+ "Fundo antiderrapante",
+ "Uso decorativo ou funcional",
+ "Superfície polida - mão"
+ ],
+ "dimensions": "24 x 24 x 8 cm",
+ "material": "Polímero metalizado",
+ "weight": "420g",
+ "tags": [
+ "bowl",
+ "mineral",
+ "prata"
+ ],
+ "relatedIds": [
+ "vaso-obsidiana-01",
+ "luminaria-chrome-01"
+ ]
+ },
+ {
+ "id": "elefante-matt-01",
+ "name": "Elefante Matt",
+ "subtitle": "Série Wild",
+ "slug": "elefante-matt-01",
+ "drop": "void",
+ "collection": "Figura",
+ "category": "decoracao",
+ "price": 129.9,
+ "priceFormatted": "R$ 129,90",
+ "status": "available",
+ "badge": null,
+ "edition": "05 / 50",
+ "featured": false,
+ "images": [
+ "/demos/tecksart/assets/images/products/elefantinho.webp",
+ "/demos/tecksart/assets/images/products/elefantinho.webp",
+ "/demos/tecksart/assets/images/products/elefantinho.webp"
+ ],
+ "description": "Força em miniatura. O Elefante Matt captura movimento em silêncio - cada detalhe anatomicamente preciso, acabamento deliberadamente opaco.",
+ "manifesto": "Silêncio em forma animal.",
+ "details": [
+ "Acabamento fosco premium",
+ "Detalhamento de alta precisão",
+ "Peça autoral numerada",
+ "Embalagem colecionável"
+ ],
+ "dimensions": "15 x 7 x 11 cm",
+ "material": "Polímero de alta resolução",
+ "weight": "180g",
+ "tags": [
+ "escultura",
+ "animal",
+ "fosco"
+ ],
+ "relatedIds": [
+ "baleia-forma-01",
+ "bowl-prata-01"
+ ]
+ },
+ {
+ "id": "lampada-chrome-01",
+ "name": "Lâmpada Chrome",
+ "subtitle": "Série Light",
+ "slug": "lampada-chrome-01",
+ "drop": "signal",
+ "collection": "Luz",
+ "category": "iluminacao",
+ "price": 289.9,
+ "priceFormatted": "R$ 289,90",
+ "status": "available",
+ "badge": "Premium",
+ "edition": "01 / 20",
+ "featured": true,
+ "images": [
+ "/demos/tecksart/assets/images/products/lampada.webp",
+ "/demos/tecksart/assets/images/products/lampada.webp",
+ "/demos/tecksart/assets/images/products/lampada.webp"
+ ],
+ "description": "Luz como design. A Lâmpada Chrome não ilumina apenas um ambiente - define ele. Forma que cria atmosfera, tecnologia que desaparece na estética.",
+ "manifesto": "O objeto existe para criar atmosfera, não apenas luz.",
+ "details": [
+ "Compatível com LED E27",
+ "Design paramétrico",
+ "Dissipação térmica otimizada",
+ "Acabamento cromado premium"
+ ],
+ "dimensions": "14 x 14 x 22 cm",
+ "material": "Polímero técnico + metal",
+ "weight": "320g",
+ "tags": [
+ "luminária",
+ "luz",
+ "chrome",
+ "premium"
+ ],
+ "relatedIds": [
+ "luminaria-chrome-01",
+ "bowl-prata-01"
+ ]
+ },
+ {
+ "id": "luminaria-chrome-01",
+ "name": "Luminária Arc",
+ "subtitle": "Edição Chrome",
+ "slug": "luminaria-chrome-01",
+ "drop": "signal",
+ "collection": "Luz",
+ "category": "iluminacao",
+ "price": 349.9,
+ "priceFormatted": "R$ 349,90",
+ "status": "available",
+ "badge": "Exclusivo",
+ "edition": "01 / 15",
+ "featured": true,
+ "images": [
+ "/demos/tecksart/assets/images/products/luminaria.webp",
+ "/demos/tecksart/assets/images/products/luminaria.webp",
+ "/demos/tecksart/assets/images/products/luminaria.webp"
+ ],
+ "description": "Arquitetura em escala doméstica. A Luminária Arc redefine o espaço onde existe - não apenas ilumina, mas esculpe a luz em volume e direção.",
+ "manifesto": "Luz que esculpe o espaço.",
+ "details": [
+ "Estrutura articulada",
+ "LED integrado 12W",
+ "3 temperaturas de cor",
+ "Dimmer integrado"
+ ],
+ "dimensions": "18 x 18 x 45 cm",
+ "material": "Polímero técnico de alta resistência",
+ "weight": "680g",
+ "tags": [
+ "luminária",
+ "arc",
+ "exclusivo"
+ ],
+ "relatedIds": [
+ "lampada-chrome-01",
+ "vaso-obsidiana-01"
+ ]
+ }
+ ],
+ "collections": [
+ {
+ "id": "forma",
+ "name": "Forma",
+ "description": "Geometria como linguagem. Objetos que existem além da função.",
+ "productIds": [
+ "vaso-obsidiana-01",
+ "bowl-prata-01"
+ ]
+ },
+ {
+ "id": "figura",
+ "name": "Figura",
+ "description": "Natureza reinterpretada. Formas orgânicas em materialidade contemporânea.",
+ "productIds": [
+ "baleia-forma-01",
+ "elefante-matt-01"
+ ]
+ },
+ {
+ "id": "luz",
+ "name": "Luz",
+ "description": "Iluminação como escultura. Onde a técnica encontra o belo.",
+ "productIds": [
+ "lampada-chrome-01",
+ "luminaria-chrome-01"
+ ]
+ }
+ ],
+ "settings": {
+ "currency": "BRL",
+ "currencySymbol": "R$",
+ "whatsappNumber": "+5521900000000",
+ "email": "contato@tecksart.com.br",
+ "instagram": "@tecksart",
+ "tiktok": "@tecksart",
+ "freeShippingAbove": 500,
+ "shippingMessage": "Frete grátis acima de R$ 500",
+ "adminContact": "admin@tecksart.com.br"
+ }
+}

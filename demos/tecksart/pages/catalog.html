@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Catálogo - Tecksart</title>
+ <meta name="description" content="Catálogo completo de objetos de design autoral Tecksart. Esculturas funcionais, ilumina??o e decora??o em edi??o limitada." />
+ <meta property="og:title" content="Catálogo - Tecksart" />
+ <meta property="og:description" content="Objetos de design autoral. Edição limitada." />
+ <meta property="og:type" content="website" />
+ <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23000'/><text x='50%25' y='70%25' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='22' fill='%23fff'>T</text></svg>" />
+ <link rel="preconnect" href="https://fonts.googleapis.com" />
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+ <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+ <link rel="stylesheet" href="../styles/tokens.css" />
+ <link rel="stylesheet" href="../styles/global.css" />
+ <link rel="stylesheet" href="../styles/cursor.css" />
+ <link rel="stylesheet" href="../styles/animations.css" />
+ <link rel="stylesheet" href="../styles/catalog.css" />
+ <link rel="stylesheet" href="../styles/checkout.css" />
+ <script src="../scripts/api-shim.js"></script>
+<script src="../../../scripts/core/form-accessibility.js?v=20260711-2" defer></script>
+</head>
+<body>
+
+ <div class="grain" aria-hidden="true"></div>
+ <div class="cursor-dot" aria-hidden="true"></div>
+ <div class="cursor-ring" aria-hidden="true"></div>
+
+ <!-- Cart Overlay + Drawer -->
+ <div class="cart-overlay" aria-hidden="true"></div>
+ <aside class="cart-drawer" aria-label="Carrinho">
+ <div class="cart-header">
+ <span class="cart-title">Carrinho</span>
+ <button class="cart-close" aria-label="Fechar"></button>
+ </div>
+ <div class="cart-shipping-bar">
+ <span>Faltam R$ 500,00 para frete grátis</span>
+ <div class="cart-shipping-track"><div class="cart-shipping-fill"></div></div>
+ </div>
+ <div class="cart-items"></div>
+ <div class="cart-empty">
+ <span class="cart-empty-icon"></span>
+ <span style="font-family:var(--font-mono);font-size:var(--fs-xs);letter-spacing:var(--ls-wider);text-transform:uppercase;color:var(--c-steel-dim)">Vazio</span>
+ </div>
+ <footer class="cart-footer">
+ <div class="cart-coupon-row">
+ <input class="cart-coupon-input" type="text" placeholder="CUPOM" />
+ <button class="btn btn--dark btn--sm cart-coupon-apply">Aplicar</button>
+ </div>
+ <div class="cart-subtotal">
+ <span class="cart-subtotal-label">Total</span>
+ <span class="cart-subtotal-value">R$ 0,00</span>
+ </div>
+ <button class="btn btn--primary cart-checkout-btn">Finalizar Compra</button>
+ <button class="btn btn--ghost" style="justify-content:center" onclick="Cart.closeDrawer()">Continuar comprando</button>
+ </footer>
+ </aside>
+
+ <!-- Checkout Overlay (embedded) -->
+ <div id="checkout-overlay" class="checkout-overlay" role="dialog">
+ <div class="checkout-header">
+ <div class="checkout-logo"><img src="../assets/images/brand/logo-white.png" alt="Tecksart" /></div>
+ <div class="checkout-steps">
+ <span class="checkout-step is-active">Endereo</span>
+ <div class="checkout-step-sep"></div>
+ <span class="checkout-step">Pagamento</span>
+ <div class="checkout-step-sep"></div>
+ <span class="checkout-step">Confirmao</span>
+ </div>
+ <button id="checkout-close" class="checkout-close" type="button" aria-label="Fechar checkout"></button>
+ </div>
+ <div class="checkout-body">
+ <div class="checkout-main">
+ <div class="checkout-panel is-active" data-step="1">
+ <h2 class="checkout-panel-title">Endereo de entrega</h2>
+ <div class="checkout-form">
+ <div class="form-row">
+ <div class="form-group"><label class="form-label">Nome completo</label><input class="form-input" id="checkout-name" type="text" placeholder="Seu nome" /></div>
+ <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="checkout-email" type="email" placeholder="seu@email.com" /></div>
+ </div>
+ <div class="form-group"><label class="form-label">Telefone</label><input class="form-input" id="checkout-phone" type="tel" placeholder="(00) 00000-0000" /></div>
+ <div class="form-row">
+ <div class="form-group"><label class="form-label">CEP</label><input class="form-input" id="checkout-cep" type="text" placeholder="00000-000" maxlength="9" /></div>
+ <div class="form-group"><label class="form-label">Estado</label><input class="form-input" id="checkout-state" type="text" placeholder="SP" maxlength="2" /></div>
+ </div>
+ <div class="form-group"><label class="form-label">Logradouro</label><input class="form-input" id="checkout-address" type="text" placeholder="Rua, Avenida..." /></div>
+ <div class="form-row">
+ <div class="form-group"><label class="form-label">Nmero</label><input class="form-input" id="checkout-number" type="text" placeholder="123" /></div>
+ <div class="form-group"><label class="form-label">Complemento</label><input class="form-input" id="checkout-complement" type="text" placeholder="Apto..." /></div>
+ </div>
+ <div class="form-group"><label class="form-label">Cidade</label><input class="form-input" id="checkout-city" type="text" placeholder="So Paulo" /></div>
+ </div>
+ <button id="checkout-to-payment" class="btn btn--primary checkout-continue">Continuar para pagamento </button>
+ </div>
+ <div class="checkout-panel" data-step="2">
+ <h2 class="checkout-panel-title">Pagamento</h2>
+ <div class="payment-methods">
+ <div class="payment-method is-selected" data-method="pix">
+ <div class="payment-method-radio"></div>
+ <div class="payment-method-icon">PIX</div>
+ <div class="payment-method-info"><p class="payment-method-name">PIX</p><p class="payment-method-sub">Instantneo</p></div>
+ </div>
+ <div class="payment-method" data-method="whatsapp">
+ <div class="payment-method-radio"></div>
+ <div class="payment-method-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0.16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
+ <div class="payment-method-info"><p class="payment-method-name">WhatsApp</p><p class="payment-method-sub">Combinamos</p></div>
+ </div>
+ </div>
+ <div id="payment-detail" style="margin-top:var(--sp-6)"></div>
+ <div class="checkout-nav-row">
+ <button id="checkout-back-to-address" class="btn btn--ghost checkout-back"> Voltar</button>
+ <button id="checkout-to-confirm" class="btn btn--primary checkout-continue">Revisar </button>
+ </div>
+ </div>
+ <div class="checkout-panel" data-step="3">
+ <h2 class="checkout-panel-title">Confirmar pedido</h2>
+ <div id="confirm-summary"></div>
+ <div class="checkout-nav-row" style="margin-top:var(--sp-8)">
+ <button id="checkout-back-to-payment" class="btn btn--ghost checkout-back"> Voltar</button>
+ <button id="checkout-place-order" class="btn btn--primary checkout-continue">Confirmar </button>
+ </div>
+ </div>
+ <div id="checkout-success" class="checkout-success">
+ <div class="success-icon">&</div>
+ <h2 class="success-title">Pedido confirmado.</h2>
+ <p class="success-subtitle">Você receberá as instruções de pagamento por email em breve.</p>
+ <span class="success-order-id">Pedido # - </span>
+ <button class="btn btn--ghost" onclick="Checkout.close()">Continuar explorando</button>
+ </div>
+ </div>
+ <div class="checkout-sidebar">
+ <p class="order-summary-title">Resumo</p>
+ <div class="order-items"></div>
+ <div class="order-divider"></div>
+ <div class="order-line"><span class="order-line-label">Subtotal</span><span class="order-line-value order-subtotal">R$ 0,00</span></div>
+ <div class="order-line order-discount-row" style="display:none"><span class="order-line-label">Desconto</span><span class="order-line-value">- R$ 0,00</span></div>
+ <div class="order-divider"></div>
+ <div class="order-line order-line--total"><span class="order-line-label">Total</span><span class="order-line-value order-total">R$ 0,00</span></div>
+ </div>
+ </div>
+ </div>
+
+ <!-- Header -->
+ <header class="site-header">
+ <a href="../index.html" class="header-logo" aria-label="Tecksart">
+ <img class="header-logo-symbol" src="../assets/images/brand/logo-white.png" alt="" aria-hidden="true" />
+ <img class="header-logo-wordmark" src="../assets/images/brand/symbol.png" alt="Tecksart" />
+ </a>
+ <nav class="header-nav">
+ <a href="catalog.html">Catálogo</a>
+ <a href="catalog.html?drop=void">DROP_001</a>
+ <a href="catalog.html?drop=signal">DROP_002</a>
+ <a href="../index.html#sobre">Sobre</a>
+ </nav>
+ <div class="header-actions">
+ <a href="account.html" class="header-btn header-account-btn" id="header-account-btn" aria-label="Minha conta">
+ <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+ </a>
+ <button id="cart-btn" class="header-btn" aria-label="Carrinho">
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+ <span class="cart-count" style="display:none">0</span>
+ </button>
+ <button class="header-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+ </div>
+ </header>
+ <nav class="mobile-nav">
+ <a href="catalog.html">Catálogo</a>
+ <a href="catalog.html?drop=void">DROP_001 - VOID</a>
+ <a href="catalog.html?drop=signal">DROP_002 - SIGNAL</a>
+ <a href="../index.html#sobre">Sobre</a>
+ <a href="account.html">Minha conta</a>
+ <button class="mobile-nav-cart-btn" onclick="document.querySelector('.mobile-nav').classList.remove('is-open'); document.querySelector('.header-hamburger')?.classList.remove('is-open'); document.body.style.overflow=''; Cart.openDrawer();">
+ Carrinho <span class="cart-count" style="display:none">0</span>
+ </button>
+ </nav>
+
+ <main class="catalog-page">
+ <div class="catalog-hero">
+ <div class="catalog-hero-inner">
+ <div>
+ <h1 id="catalog-title">Catálogo</h1>
+ <p class="catalog-hero-sub" id="catalog-sub">Todos os objetos. Todas as colees.</p>
+ </div>
+ <span class="catalog-count" id="catalog-count"> - peças</span>
+ </div>
+ </div>
+
+ <div class="catalog-filters">
+ <span class="filter-label">Filtrar</span>
+ <button class="filter-btn is-active" data-filter="all">Todos</button>
+ <button class="filter-btn" data-filter="void">DROP_001 VOID</button>
+ <button class="filter-btn" data-filter="signal">DROP_002 SIGNAL</button>
+ <div class="filter-divider"></div>
+ <button class="filter-btn" data-filter-cat="decoracao">Decoração</button>
+ <button class="filter-btn" data-filter-cat="iluminacao">Iluminação</button>
+ </div>
+
+ <div class="catalog-body">
+ <div class="catalog-toolbar">
+ <span class="catalog-result-count" id="result-count">6 peças</span>
+ <div class="catalog-sort">
+ <span class="sort-label">Ordenar</span>
+ <select class="sort-select" id="sort-select">
+ <option value="default">Padro</option>
+ <option value="price-asc">Menor preo</option>
+ <option value="price-desc">Maior preo</option>
+ <option value="name">Nome</option>
+ </select>
+ </div>
+ </div>
+ <div class="catalog-grid" id="catalog-grid">
+ <!-- Populated by JS -->
+ </div>
+ </div>
+ </main>
+
+ <!-- Footer -->
+ <footer class="site-footer" aria-label="Rodap">
+ <div class="container">
+ <div class="footer-inner">
+ <div class="footer-brand">
+ <img src="../assets/images/brand/logo-white.png" alt="Tecksart" class="footer-logo" />
+ <p class="footer-tagline">Objetos de design autoral. Peças que existem por si s.</p>
+ <div class="footer-social">
+ <a href="https://instagram.com/tecksart" target="_blank" rel="noopener">Instagram</a>
+ <a href="https://tiktok.com/@tecksart" target="_blank" rel="noopener">TikTok</a>
+ </div>
+ </div>
+ <div>
+ <p class="footer-col-title">Drops</p>
+ <ul class="footer-links">
+ <li><a href="catalog.html?drop=void">DROP_001 - VOID</a></li>
+ <li><a href="catalog.html?drop=signal">DROP_002 - SIGNAL</a></li>
+ <li><a href="catalog.html">Ver tudo</a></li>
+ </ul>
+ </div>
+ <div>
+ <p class="footer-col-title">Informaes</p>
+ <ul class="footer-links">
+ <li><a href="../index.html#sobre">Sobre</a></li>
+ <li><a href="../index.html#faq">FAQ</a></li>
+ <li><a href="https://wa.me/5521900000000" target="_blank" rel="noopener">Contato</a></li>
+ </ul>
+ </div>
+ <div>
+ <p class="footer-col-title">Admin</p>
+ <ul class="footer-links">
+ <li><a href="../admin/index.html">Dashboard</a></li>
+ </ul>
+ </div>
+ </div>
+ <div class="footer-bottom">
+ <span class="footer-copy"> <script>document.write(new Date().getFullYear())</script> Tecksart. Todos os direitos reservados.</span>
+ <span class="footer-wordmark">Tecksart</span>
+ </div>
+ </div>
+ </footer>
+
+ <div id="site-toast" class="toast" role="status" aria-live="polite"></div>
+
+ <script src="../../../assets/vendor/gsap.min.js"></script>
+ <script src="../../../assets/vendor/ScrollTrigger.min.js"></script>
+ <script src="../../../assets/vendor/lenis.min.js"></script>
+ <script src="../scripts/core.js"></script>
+ <script src="../scripts/user-auth.js"></script>
+ <script src="../scripts/cursor.js"></script>
+ <script src="../scripts/products.js"></script>
+ <script src="../scripts/cart.js"></script>
+ <script src="../scripts/checkout.js"></script>
+ <script src="../scripts/motion.js"></script>
+
+ <script>
+ document.addEventListener('DOMContentLoaded', async () => {
+ Header.init();
+ CustomCursor.init();
+ initLenis();
+
+ await ProductStore.load();
+ const settings = ProductStore.getSettings();
+ Cart.init(settings);
+ Checkout.init();
+
+ let allProducts = ProductStore.getAll();
+ let filtered = [...allProducts];
+ const params = new URLSearchParams(location.search);
+
+ /* Initial filter from URL */
+ const urlDrop = params.get('drop');
+ const urlCat = params.get('category');
+
+ if (urlDrop) {
+ filtered = allProducts.filter(p => p.drop === urlDrop);
+ document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('is-active'));
+ document.querySelector(`[data-filter="${urlDrop}"]`)?.classList.add('is-active');
+ const drop = ProductStore.getDrops().find(d => d.id === urlDrop);
+ if (drop) {
+ document.getElementById('catalog-title').textContent = `${drop.number} - ${drop.name}`;
+ document.getElementById('catalog-sub').textContent = drop.tagline;
+ }
+ } else if (urlCat) {
+ filtered = allProducts.filter(p => p.category === urlCat);
+ }
+
+ _render(filtered);
+
+ /* Filter buttons */
+ document.querySelectorAll('.filter-btn[data-filter]').forEach(btn => {
+ btn.addEventListener('click', () => {
+ document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('is-active'));
+ btn.classList.add('is-active');
+ const val = btn.dataset.filter;
+ filtered = val === 'all'? allProducts: allProducts.filter(p => p.drop === val);
+ _render(filtered);
+ });
+ });
+
+ document.querySelectorAll('.filter-btn[data-filter-cat]').forEach(btn => {
+ btn.addEventListener('click', () => {
+ document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('is-active'));
+ btn.classList.add('is-active');
+ filtered = allProducts.filter(p => p.category === btn.dataset.filterCat);
+ _render(filtered);
+ });
+ });
+
+ /* Sort */
+ document.getElementById('sort-select')?.addEventListener('change', e => {
+ const v = e.target.value;
+ if (v === 'price-asc') filtered.sort((a,b) => a.price - b.price);
+ if (v === 'price-desc') filtered.sort((a,b) => b.price - a.price);
+ if (v === 'name') filtered.sort((a,b) => a.name.localeCompare(b.name));
+ if (v === 'default') filtered = [...allProducts].filter(p => filtered.some(f => f.id === p.id));
+ _render(filtered);
+ });
+
+ Analytics.track('page_view', { page: 'catalog', drop: urlDrop || 'all' });
+ });
+
+ function _render(products) {
+ const grid = document.getElementById('catalog-grid');
+ const count = document.getElementById('result-count');
+ document.getElementById('catalog-count').textContent = `${products.length} peças`;
+ if (count) count.textContent = `${products.length} peça${products.length!== 1? 's': ''}`;
+
+ if (!products.length) {
+ grid.innerHTML = '<div class="catalog-empty">Nenhuma pea encontrada.</div>';
+ return;
+ }
+
+ grid.innerHTML = products.map(p => ProductCard.render(p)).join('');
+ ProductCard.bindEvents(grid);
+
+ /* Stagger reveal */
+ if (typeof gsap!== 'undefined') {
+ gsap.fromTo(grid.querySelectorAll('.product-card'),
+ { opacity: 0, y: 30 },
+ { opacity: 1, y: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out' }
+ );
+ }
+ }
+ </script>
+</body>
+</html>

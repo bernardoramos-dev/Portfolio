@@ -1,0 +1,29 @@
+[
+ {
+ "id": "u_8a65a116f4c4",
+ "email": "teste@tecksart.com",
+ "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+ "name": "Teste",
+ "phone": "",
+ "created_at": "2026-05-19T02:17:12.623847",
+ "address": {}
+ },
+ {
+ "id": "u_7a2534b4b13f",
+ "email": "clara.mendes@exemplo.com",
+ "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+ "name": "Clara Mendes",
+ "phone": "(21) 99999-0001",
+ "created_at": "2026-05-19T02:30:57.028023",
+ "address": {
+ "cep": "20000-000",
+ "street": "Rua das Laranjeiras",
+ "number": "100",
+ "complement": "apto 201",
+ "neighborhood": "Laranjeiras",
+ "city": "Rio de Janeiro",
+ "state": "RJ"
+ },
+ "updated_at": "2026-05-19T02:31:25.971245"
+ }
+]

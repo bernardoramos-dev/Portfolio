@@ -1,0 +1,187 @@
+[
+ {
+ "customer": {
+ "name": "Test",
+ "email": "test@test.com"
+ },
+ "items": [],
+ "total": 500,
+ "id": "TA-20260518-60B448",
+ "created_at": "2026-05-18T20:07:37.911865",
+ "status": "pending"
+ },
+ {
+ "customer": {
+ "name": "Test",
+ "email": "test@test.com"
+ },
+ "items": [
+ {
+ "id": "vaso-obsidiana-01",
+ "qty": 1,
+ "price": 189.9
+ }
+ ],
+ "total": 189.9,
+ "id": "TA-20260518-F31C47",
+ "created_at": "2026-05-18T20:28:22.153346",
+ "status": "pending"
+ },
+ {
+ "customer": {
+ "name": "João Silva",
+ "email": "joao@exemplo.com",
+ "phone": "(21) 99999-0000",
+ "cep": "20040-020",
+ "address": "Rua da Quitanda",
+ "number": "88",
+ "complement": "Apto 302",
+ "city": "Rio de Janeiro",
+ "state": "RJ"
+ },
+ "items": [
+ {
+ "id": "vaso-obsidiana-01",
+ "name": "Vaso Obsidiana",
+ "edition": "01 / 50",
+ "price": 189.9,
+ "priceFormatted": "R$ 189,90",
+ "image": "/demos/tecksart/assets/images/products/vaso.webp",
+ "qty": 1
+ }
+ ],
+ "total": 189.9,
+ "discount": 18.990000000000002,
+ "finalTotal": 170.91,
+ "paymentMethod": "pix",
+ "status": "pending",
+ "id": "TA-20260518-D87272",
+ "created_at": "2026-05-18T21:00:37.185948"
+ },
+ {
+ "customer": {
+ "name": "Marina Duarte",
+ "email": "marina.duarte@exemplo.com",
+ "phone": "(21) 99999-0002",
+ "cep": "22071-100",
+ "address": "Avenida Atlântica",
+ "number": "1500",
+ "complement": "",
+ "city": "Rio de Janeiro",
+ "state": "RJ"
+ },
+ "items": [
+ {
+ "id": "lampada-chrome-01",
+ "name": "Lâmpada Chrome",
+ "edition": "01 / 20",
+ "price": 289.9,
+ "priceFormatted": "R$ 289,90",
+ "image": "/demos/tecksart/assets/images/products/lampada.webp",
+ "qty": 1
+ }
+ ],
+ "total": 289.9,
+ "discount": 0,
+ "finalTotal": 289.9,
+ "paymentMethod": "pix",
+ "status": "pending",
+ "id": "TA-20260519-DDCAAB",
+ "created_at": "2026-05-19T01:49:17.516164"
+ },
+ {
+ "customer": {
+ "name": "Clara Mendes",
+ "email": "clara.mendes@exemplo.com",
+ "phone": "(21) 99999-0001",
+ "cep": "20000-000",
+ "address": "Rua das Laranjeiras",
+ "number": "100",
+ "complement": "apto 201",
+ "city": "Rio de Janeiro",
+ "state": "RJ"
+ },
+ "user_id": "u_7a2534b4b13f",
+ "items": [
+ {
+ "id": "vaso-obsidiana-01",
+ "name": "Vaso Obsidiana",
+ "edition": "01 / 50",
+ "price": 189.9,
+ "priceFormatted": "R$ 189,90",
+ "image": "/demos/tecksart/assets/images/products/vaso.webp",
+ "qty": 1
+ }
+ ],
+ "total": 189.9,
+ "discount": 9.495000000000001,
+ "finalTotal": 180.405,
+ "paymentMethod": "pix",
+ "status": "pending",
+ "id": "TA-20260519-C97AB6",
+ "created_at": "2026-05-19T02:33:04.524949"
+ },
+ {
+ "customer": {
+ "name": "Clara Mendes",
+ "email": "clara.mendes@exemplo.com",
+ "phone": "(21) 99999-0001",
+ "cep": "20000-000",
+ "address": "Rua das Laranjeiras",
+ "number": "100",
+ "complement": "apto 201",
+ "city": "Rio de Janeiro",
+ "state": "RJ"
+ },
+ "user_id": "u_7a2534b4b13f",
+ "items": [
+ {
+ "id": "luminaria-chrome-01",
+ "name": "Luminária Arc",
+ "edition": "01 / 15",
+ "price": 349.9,
+ "priceFormatted": "R$ 349,90",
+ "image": "/demos/tecksart/assets/images/products/luminaria.webp",
+ "qty": 1
+ }
+ ],
+ "total": 349.9,
+ "discount": 17.495,
+ "finalTotal": 332.405,
+ "paymentMethod": "pix",
+ "status": "pending",
+ "id": "TA-20260519-CDF585",
+ "created_at": "2026-05-19T02:57:58.918611"
+ },
+ {
+ "customer": {
+ "name": "Rafael Antunes",
+ "email": "rafael.antunes@exemplo.com",
+ "phone": "(21) 99999-0003",
+ "cep": "22410-002",
+ "address": "Rua Visconde de Pirajá",
+ "number": "550",
+ "complement": "sala 12",
+ "city": "Rio de Janeiro",
+ "state": "RJ"
+ },
+ "items": [
+ {
+ "id": "lampada-chrome-01",
+ "name": "Lâmpada Chrome",
+ "edition": "01 / 20",
+ "price": 289.9,
+ "priceFormatted": "R$ 289,90",
+ "image": "/demos/tecksart/assets/images/products/lampada.webp",
+ "qty": 1
+ }
+ ],
+ "total": 289.9,
+ "discount": 14.495,
+ "finalTotal": 275.405,
+ "paymentMethod": "pix",
+ "status": "pending",
+ "id": "TA-20260520-A46E67",
+ "created_at": "2026-05-20T23:31:29.263697"
+ }
+]

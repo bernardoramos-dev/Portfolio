@@ -1,0 +1,56 @@
+/* ============================================================
+   BERNARDO RAMOS — PORTFÓLIO V3 · tokens.css
+   Design tokens: SIGNAL / MATTER — monochrome shell,
+   real projects provide the color.
+   ============================================================ */
+:root {
+  /* surfaces */
+  --black: #050505;
+  --black-soft: #0a0a0a;
+  --surface: #101010;
+  --surface-raised: #161616;
+
+  /* ink */
+  --white: #f3f3ef;
+  --white-pure: #ffffff;
+  --silver: #b8b8b2;
+  --gray: #7b7b76;
+  --gray-dark: #454542;
+
+  /* hairlines */
+  --line: rgba(255, 255, 255, 0.14);
+  --line-soft: rgba(255, 255, 255, 0.075);
+  --overlay: rgba(0, 0, 0, 0.32);
+
+  /* layout */
+  --page-gutter: clamp(20px, 3vw, 52px);
+  --section-space: clamp(96px, 14vw, 220px);
+  --content-max: 1680px;
+  --header-h: 72px;
+
+  /* radius */
+  --radius-xs: 8px;
+  --radius-sm: 14px;
+  --radius-md: 22px;
+  --radius-lg: 32px;
+
+  /* motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-smooth: cubic-bezier(0.51, 0, 0.08, 1);
+  --duration-fast: 220ms;
+  --duration-medium: 480ms;
+  --duration-slow: 900ms;
+
+  /* type */
+  --font-display: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  /* z-index scale */
+  --z-header: 100;
+  --z-menu: 200;
+  --z-viewer: 400;
+  --z-cursor: 900;
+  --z-loader: 1000;
+}

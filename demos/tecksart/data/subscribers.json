@@ -1,0 +1,16 @@
+[
+ {
+ "email": "test@tecksart.com",
+ "name": "",
+ "drop": "",
+ "created_at": "2026-05-18T21:33:17.409249",
+ "active": true
+ },
+ {
+ "email": "clara.mendes@exemplo.com",
+ "name": "",
+ "drop": "",
+ "created_at": "2026-05-19T01:49:57.932909",
+ "active": true
+ }
+]

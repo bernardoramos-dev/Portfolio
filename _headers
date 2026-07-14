@@ -1,0 +1,20 @@
+# Security headers — Netlify / Cloudflare Pages
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+
+# Immutable cache + hotlink protection for media (posters, covers, videos).
+# Cross-Origin-Resource-Policy blocks OTHER SITES from embedding these files
+# directly (hotlinking); same-site still allows this portfolio's own pages/
+# iframes to load them normally. X-Robots-Tag keeps full-size originals out
+# of Google Images so casual scraping via image search is harder.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+  Cross-Origin-Resource-Policy: same-site
+  X-Robots-Tag: noimageindex
+
+# Same hotlink protection for every project case study's own asset folder.
+/demos/*
+  Cross-Origin-Resource-Policy: same-site

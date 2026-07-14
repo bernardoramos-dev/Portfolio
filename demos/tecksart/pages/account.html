@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Minha Conta - Tecksart</title>
+ <meta name="description" content="Acesse sua conta Tecksart para acompanhar pedidos e gerenciar seus dados." />
+ <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23000'/><text x='50%25' y='70%25' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='22' fill='%23fff'>T</text></svg>" />
+
+ <link rel="preconnect" href="https://fonts.googleapis.com" />
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+ <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+ <link rel="stylesheet" href="../styles/tokens.css" />
+ <link rel="stylesheet" href="../styles/global.css" />
+ <link rel="stylesheet" href="../styles/account.css" />
+ <script src="../scripts/api-shim.js"></script>
+</head>
+<body>
+
+ <!-- Toast -->
+ <div id="site-toast" class="toast" role="status" aria-live="polite"></div>
+
+ <!-- Header -->
+ <header class="site-header" role="banner">
+ <a href="../index.html" class="header-logo" aria-label="Tecksart">
+ <img class="header-logo-symbol" src="../assets/images/brand/logo-white.png" alt="" aria-hidden="true" />
+ <img class="header-logo-wordmark" src="../assets/images/brand/symbol.png" alt="Tecksart" />
+ </a>
+ <nav class="header-nav" aria-label="Navegao">
+ <a href="catalog.html">Catálogo</a>
+ <a href="catalog.html?drop=void">DROP_001</a>
+ <a href="catalog.html?drop=signal">DROP_002</a>
+ <a href="../index.html#sobre">Sobre</a>
+ </nav>
+ <div class="header-actions">
+ <button class="cart-btn" id="cart-btn" aria-label="Carrinho">
+ <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+ <span class="cart-count" style="display:none">0</span>
+ </button>
+ </div>
+ </header>
+
+ <main class="account-page" id="account-root">
+
+ <!-- Auth Gate (shown when logged out) -->
+ <section class="auth-gate" id="auth-gate" style="display:none">
+ <div class="auth-gate-bg" aria-hidden="true"></div>
+
+ <div class="auth-card">
+ <a href="../index.html" class="auth-logo">
+ <img class="auth-logo-symbol" src="../assets/images/brand/logo-white.png" alt="" aria-hidden="true" />
+ <img src="../assets/images/brand/symbol.png" alt="Tecksart" style="height:16px;width:auto" />
+ </a>
+
+ <div class="auth-tabs" role="tablist">
+ <button class="auth-tab is-active" id="tab-login" role="tab" aria-selected="true" aria-controls="panel-login">
+ Entrar
+ </button>
+ <button class="auth-tab" id="tab-register" role="tab" aria-selected="false" aria-controls="panel-register">
+ Criar conta
+ </button>
+ </div>
+
+ <!-- Login -->
+ <div class="auth-panel is-active" id="panel-login" role="tabpanel">
+ <h1 class="auth-title">Bem-vindo de volta.</h1>
+ <p class="auth-subtitle">Entre com seus dados para acessar seus pedidos e informações.</p>
+
+ <form id="login-form" novalidate>
+ <div class="auth-field">
+ <label for="login-email">Email</label>
+ <input type="email" id="login-email" name="email" placeholder="seu@email.com" autocomplete="email" required />
+ </div>
+ <div class="auth-field">
+ <label for="login-password">Senha</label>
+ <input type="password" id="login-password" name="password" placeholder="""""""""" autocomplete="current-password" required />
+ </div>
+ <p class="auth-error" id="login-error"></p>
+ <button type="submit" class="btn btn--primary auth-submit">
+ <span class="btn-label">Entrar</span>
+ <span class="btn-spinner"></span>
+ </button>
+ </form>
+
+ <div class="auth-divider"><span>ou</span></div>
+ <p style="font-family:var(--font-secondary);font-size:var(--fs-sm);color:var(--c-steel);text-align:center">
+ Não tem conta?
+ <button id="switch-to-register" style="color:var(--c-white);background:none;border:none;cursor:pointer;font-size:inherit;text-decoration:underline;padding:0">Criar agora </button>
+ </p>
+ </div>
+
+ <!-- Register -->
+ <div class="auth-panel" id="panel-register" role="tabpanel">
+ <h1 class="auth-title">Crie sua conta.</h1>
+ <p class="auth-subtitle">Acompanhe seus pedidos, salve seu endereço e compre mais rápido.</p>
+
+ <form id="register-form" novalidate>
+ <div class="auth-field">
+ <label for="reg-name">Nome completo</label>
+ <input type="text" id="reg-name" name="name" placeholder="Joo Silva" autocomplete="name" required />
+ </div>
+ <div class="auth-field-row">
+ <div class="auth-field">
+ <label for="reg-email">Email</label>
+ <input type="email" id="reg-email" name="email" placeholder="seu@email.com" autocomplete="email" required />
+ </div>
+ <div class="auth-field">
+ <label for="reg-cpf">CPF</label>
+ <input type="text" id="reg-cpf" name="cpf" placeholder="000.000.000-00" maxlength="14" required />
+ </div>
+ </div>
+ <div class="auth-field">
+ <label for="reg-phone">Telefone</label>
+ <input type="tel" id="reg-phone" name="phone" placeholder="(11) 99999-9999" autocomplete="tel" />
+ </div>
+ <div class="auth-field-row">
+ <div class="auth-field">
+ <label for="reg-password">Senha</label>
+ <input type="password" id="reg-password" name="password" placeholder="Mín. 6 caracteres" autocomplete="new-password" required />
+ </div>
+ <div class="auth-field">
+ <label for="reg-confirm">Confirmar senha</label>
+ <input type="password" id="reg-confirm" name="confirm" placeholder="Repita a senha" autocomplete="new-password" required />
+ </div>
+ </div>
+
+ <!-- Terms -->
+ <div style="margin-top:var(--sp-5)">
+ <label style="display:flex;align-items:flex-start;gap:var(--sp-3);cursor:pointer">
+ <input type="checkbox" id="reg-terms" style="margin-top:3px;accent-color:#fff;width:14px;height:14px;flex-shrink:0" required />
+ <span style="font-family:var(--font-secondary);font-size:var(--fs-xs);color:var(--c-steel);line-height:1.6">
+ Li e aceito os
+ <a href="terms.html" target="_blank" rel="noopener" style="color:var(--c-white);text-decoration:underline">Termos de Uso e Política de Privacidade</a>.
+ </span>
+ </label>
+ </div>
+ <div style="margin-top:var(--sp-3)">
+ <label style="display:flex;align-items:flex-start;gap:var(--sp-3);cursor:pointer">
+ <input type="checkbox" id="reg-newsletter" checked style="margin-top:3px;accent-color:#fff;width:14px;height:14px;flex-shrink:0" />
+ <span style="font-family:var(--font-secondary);font-size:var(--fs-xs);color:var(--c-steel);line-height:1.6">
+ Quero receber novidades, lançamentos exclusivos e acessos antecipados.
+ </span>
+ </label>
+ </div>
+
+ <p class="auth-error" id="register-error"></p>
+ <button type="submit" class="btn btn--primary auth-submit">
+ <span class="btn-label">Criar conta</span>
+ <span class="btn-spinner"></span>
+ </button>
+ </form>
+
+ <div class="auth-divider"><span>ou</span></div>
+ <p style="font-family:var(--font-secondary);font-size:var(--fs-sm);color:var(--c-steel);text-align:center">
+ J? tem conta?
+ <button id="switch-to-login" style="color:var(--c-white);background:none;border:none;cursor:pointer;font-size:inherit;text-decoration:underline;padding:0">Entrar </button>
+ </p>
+ </div>
+ </div>
+ </section>
+
+ <!-- Dashboard (shown when logged in) -->
+ <section class="account-dashboard" id="account-dashboard" style="display:none">
+ <div class="account-container">
+
+ <div class="account-greeting">
+ <p class="account-greeting-label">Minha conta</p>
+ <h1 class="account-greeting-name" id="greeting-name">Carregando&</h1>
+ </div>
+
+ <div class="account-grid">
+
+ <!-- Sidebar -->
+ <aside class="account-sidebar">
+ <button class="account-nav-item is-active" data-panel="orders">
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+ Meus pedidos
+ </button>
+ <button class="account-nav-item" data-panel="profile">
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+ Meus dados
+ </button>
+ <button class="account-nav-item" data-panel="address">
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+ Endereo
+ </button>
+ <button class="account-nav-item account-nav-logout" id="btn-logout">
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+ Sair
+ </button>
+ </aside>
+
+ <!-- Content -->
+ <div class="account-content">
+
+ <!-- Orders panel -->
+ <div class="account-panel is-active" id="panel-orders">
+ <h2 class="account-section-title">Meus pedidos</h2>
+ <div class="orders-list" id="orders-list">
+ <div class="orders-empty" id="orders-loading">
+ <p>Carregando pedidos&</p>
+ </div>
+ </div>
+ </div>
+
+ <!-- Profile panel -->
+ <div class="account-panel" id="panel-profile">
+ <h2 class="account-section-title">Meus dados</h2>
+ <form class="profile-form" id="profile-form">
+ <div class="profile-field">
+ <label for="pf-name">Nome completo</label>
+ <input type="text" id="pf-name" autocomplete="name" />
+ </div>
+ <div class="profile-field">
+ <label for="pf-email">Email</label>
+ <input type="email" id="pf-email" readonly />
+ </div>
+ <div class="profile-field">
+ <label for="pf-phone">Telefone</label>
+ <input type="tel" id="pf-phone" autocomplete="tel" placeholder="(11) 99999-9999" />
+ </div>
+ <div class="profile-actions">
+ <button type="submit" class="btn btn--primary">Salvar alteraes</button>
+ </div>
+ </form>
+
+ <div style="margin-top:var(--sp-10)">
+ <p class="profile-section-label">Alterar senha</p>
+ <form class="profile-form" id="password-form" style="margin-top:var(--sp-5)">
+ <div class="profile-field">
+ <label for="pw-old">Senha atual</label>
+ <input type="password" id="pw-old" placeholder="""""""""" />
+ </div>
+ <div class="profile-field-row">
+ <div class="profile-field">
+ <label for="pw-new">Nova senha</label>
+ <input type="password" id="pw-new" placeholder="Mín. 6 caracteres" />
+ </div>
+ <div class="profile-field">
+ <label for="pw-confirm">Confirmar</label>
+ <input type="password" id="pw-confirm" placeholder="Repita a senha" />
+ </div>
+ </div>
+ <div class="profile-actions">
+ <button type="submit" class="btn btn--ghost">Alterar senha</button>
+ </div>
+ </form>
+ </div>
+ </div>
+
+ <!-- Address panel -->
+ <div class="account-panel" id="panel-address">
+ <h2 class="account-section-title">Endereo de entrega</h2>
+ <form class="profile-form" id="address-form">
+ <div class="profile-field">
+ <label for="addr-cep">CEP</label>
+ <input type="text" id="addr-cep" placeholder="00000-000" maxlength="9" />
+ </div>
+ <div class="profile-field">
+ <label for="addr-street">Rua / Avenida</label>
+ <input type="text" id="addr-street" autocomplete="address-line1" />
+ </div>
+ <div class="profile-field-row">
+ <div class="profile-field">
+ <label for="addr-number">Nmero</label>
+ <input type="text" id="addr-number" autocomplete="address-line2" />
+ </div>
+ <div class="profile-field">
+ <label for="addr-complement">Complemento</label>
+ <input type="text" id="addr-complement" placeholder="Apto, bloco..." />
+ </div>
+ </div>
+ <div class="profile-field">
+ <label for="addr-neighborhood">Bairro</label>
+ <input type="text" id="addr-neighborhood" />
+ </div>
+ <div class="profile-field-row">
+ <div class="profile-field">
+ <label for="addr-city">Cidade</label>
+ <input type="text" id="addr-city" />
+ </div>
+ <div class="profile-field" style="max-width:100px">
+ <label for="addr-state">UF</label>
+ <input type="text" id="addr-state" maxlength="2" placeholder="SP" />
+ </div>
+ </div>
+ <div class="profile-actions">
+ <button type="submit" class="btn btn--primary">Salvar endereço</button>
+ </div>
+ </form>
+ </div>
+
+ </div><!-- /account-content -->
+ </div><!-- /account-grid -->
+ </div><!-- /account-container -->
+ </section>
+
+ </main>
+
+ <!-- Footer -->
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">
+ <img src="../assets/images/brand/symbol.png" alt="Tecksart" style="height:16px;width:auto;opacity:0.7" />
+ <p class="footer-tagline">Objetos de design autoral.</p>
+ </div>
+ <p class="footer-copy"> <script>document.write(new Date().getFullYear())</script> Tecksart. Todos os direitos reservados.</p>
+ </div>
+ </footer>
+
+ <script src="../scripts/core.js"></script>
+ <script src="../scripts/cart.js"></script>
+ <script src="../scripts/user-auth.js"></script>
+ <script>
+ /* Account Page Controller */
+ (function() {
+ 'use strict';
+
+ const $ = id => document.getElementById(id);
+
+ /* Tab switching */
+ function switchTab(tab) {
+ ['login','register'].forEach(t => {
+ $(`tab-${t}`).classList.toggle('is-active', t === tab);
+ $(`tab-${t}`).setAttribute('aria-selected', t === tab);
+ $(`panel-${t}`).classList.toggle('is-active', t === tab);
+ });
+ }
+
+ $('tab-login').addEventListener('click', () => switchTab('login'));
+ $('tab-register').addEventListener('click', () => switchTab('register'));
+ $('switch-to-register')?.addEventListener('click', () => switchTab('register'));
+ $('switch-to-login')?.addEventListener('click', () => switchTab('login'));
+
+ /* Show/hide sections */
+ function showDashboard() {
+ $('auth-gate').style.display = 'none';
+ $('account-dashboard').style.display = '';
+ }
+
+ function showAuthGate() {
+ $('auth-gate').style.display = '';
+ $('account-dashboard').style.display = 'none';
+ }
+
+ /* Panel nav */
+ document.querySelectorAll('.account-nav-item[data-panel]').forEach(btn => {
+ btn.addEventListener('click', () => {
+ const target = btn.dataset.panel;
+ document.querySelectorAll('.account-nav-item').forEach(b => b.classList.remove('is-active'));
+ document.querySelectorAll('.account-panel').forEach(p => p.classList.remove('is-active'));
+ btn.classList.add('is-active');
+ $(`panel-${target}`).classList.add('is-active');
+ });
+ });
+
+ /* Logout */
+ $('btn-logout').addEventListener('click', () => {
+ UserAuth.logout();
+ Toast.show('At logo!');
+ setTimeout(() => { window.location.href = '../index.html'; }, 1000);
+ });
+
+ /* Phone mask */
+ function maskPhone(el) {
+ el.addEventListener('input', () => {
+ let v = el.value.replace(/\D/g, '').slice(0,11);
+ if (v.length > 6) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+ else if (v.length > 2) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
+ else if (v.length) v = `(${v}`;
+ el.value = v;
+ });
+ }
+
+ /* CEP mask + autofill */
+ function maskCEP(el) {
+ el.addEventListener('input', () => {
+ let v = el.value.replace(/\D/g,'').slice(0,8);
+ if (v.length > 5) v = v.slice(0,5) + '-' + v.slice(5);
+ el.value = v;
+ if (v.replace(/\D/g,'').length === 8) viaCEP(v.replace(/\D/g,''));
+ });
+ }
+
+ async function viaCEP(cep) {
+ try {
+ const r = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+ const d = await r.json();
+ if (d.erro) return;
+ const set = (id, val) => { const el = $(id); if (el && val) el.value = val; };
+ set('addr-street', d.logradouro);
+ set('addr-neighborhood', d.bairro);
+ set('addr-city', d.localidade);
+ set('addr-state', d.uf);
+ $('addr-number')?.focus();
+ } catch {}
+ }
+
+ /* CPF mask */
+ function maskCPF(el) {
+ el.addEventListener('input', () => {
+ let v = el.value.replace(/\D/g,'').slice(0,11);
+ if (v.length > 9) v = v.slice(0,3)+'.'+v.slice(3,6)+'.'+v.slice(6,9)+'-'+v.slice(9);
+ else if (v.length > 6) v = v.slice(0,3)+'.'+v.slice(3,6)+'.'+v.slice(6);
+ else if (v.length > 3) v = v.slice(0,3)+'.'+v.slice(3);
+ el.value = v;
+ });
+ }
+
+ maskPhone($('reg-phone'));
+ maskCPF($('reg-cpf'));
+
+ /* Login form */
+ $('login-form').addEventListener('submit', async e => {
+ e.preventDefault();
+ const btn = e.target.querySelector('.auth-submit');
+ const err = $('login-error');
+ btn.classList.add('is-loading');
+ err.classList.remove('is-visible');
+
+ const result = await UserAuth.login({
+ email: $('login-email').value.trim(),
+ password: $('login-password').value,
+ });
+
+ btn.classList.remove('is-loading');
+ if (result.success) {
+ Toast.show('Bem-vindo de volta!');
+ loadDashboard(result.user);
+ showDashboard();
+ } else {
+ err.textContent = result.error || 'Email ou senha incorretos.';
+ err.classList.add('is-visible');
+ }
+ });
+
+ /* Register form */
+ $('register-form').addEventListener('submit', async e => {
+ e.preventDefault();
+ const btn = e.target.querySelector('.auth-submit');
+ const err = $('register-error');
+ btn.classList.add('is-loading');
+ err.classList.remove('is-visible');
+
+ const pw = $('reg-password').value;
+ const confirm = $('reg-confirm').value;
+
+ if (pw!== confirm) {
+ err.textContent = 'As senhas não coincidem.';
+ err.classList.add('is-visible');
+ btn.classList.remove('is-loading');
+ return;
+ }
+
+ if (pw.length < 6) {
+ err.textContent = 'Senha deve ter ao menos 6 caracteres.';
+ err.classList.add('is-visible');
+ btn.classList.remove('is-loading');
+ return;
+ }
+
+ const cpf = $('reg-cpf').value.replace(/\D/g,'');
+ if (cpf.length!== 11) {
+ err.textContent = 'CPF inválido. Digite todos os 11 dígitos.';
+ err.classList.add('is-visible');
+ btn.classList.remove('is-loading');
+ return;
+ }
+
+ if (!$('reg-terms').checked) {
+ err.textContent = 'Você precisa aceitar os termos para continuar.';
+ err.classList.add('is-visible');
+ btn.classList.remove('is-loading');
+ return;
+ }
+
+ const subscribeNewsletter = $('reg-newsletter').checked;
+
+ const result = await UserAuth.register({
+ name: $('reg-name').value.trim(),
+ email: $('reg-email').value.trim(),
+ phone: $('reg-phone').value.trim(),
+ cpf: $('reg-cpf').value.trim(),
+ password: pw,
+ newsletter: subscribeNewsletter,
+ });
+
+ btn.classList.remove('is-loading');
+ if (result.success) {
+ Toast.show('Conta criada! Bem-vindo Tecksart.');
+ loadDashboard(result.user);
+ showDashboard();
+ } else {
+ err.textContent = result.error || 'Erro ao criar conta.';
+ err.classList.add('is-visible');
+ }
+ });
+
+ /* Load dashboard data */
+ function loadDashboard(user) {
+ const firstName = (user.name || user.email).split(' ')[0];
+ $('greeting-name').textContent = firstName + '.';
+ $('pf-name').value = user.name || '';
+ $('pf-email').value = user.email || '';
+ $('pf-phone').value = user.phone || '';
+
+ const addr = user.address || {};
+ const setAddr = (id, val) => { const el = $(id); if (el) el.value = val || ''; };
+ setAddr('addr-cep', addr.cep);
+ setAddr('addr-street', addr.street);
+ setAddr('addr-number', addr.number);
+ setAddr('addr-complement', addr.complement);
+ setAddr('addr-neighborhood', addr.neighborhood);
+ setAddr('addr-city', addr.city);
+ setAddr('addr-state', addr.state);
+
+ maskPhone($('pf-phone'));
+ maskCEP($('addr-cep'));
+
+ loadOrders();
+ }
+
+ async function loadOrders() {
+ const orders = await UserAuth.fetchOrders();
+ const list = $('orders-list');
+ if (!orders.length) {
+ list.innerHTML = `
+ <div class="orders-empty">
+ <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+ <p>Você ainda não fez nenhum pedido.<br />Explore o catálogo e encontre algo especial.</p>
+ <a href="catalog.html" class="btn btn--ghost btn--sm">Ver catálogo </a>
+ </div>`;
+ return;
+ }
+ list.innerHTML = [...orders].reverse().map(o => {
+ const items = o.items || [];
+ const statusMap = { pending:'Pendente', paid:'Pago', shipped:'Enviado', delivered:'Entregue', cancelled:'Cancelado' };
+ const status = o.status || 'pending';
+ const date = o.created_at? new Date(o.created_at).toLocaleDateString('pt-BR'): ' - ';
+ return `
+ <div class="order-card">
+ <div class="order-card-header">
+ <div>
+ <div class="order-card-id">${o.id}</div>
+ <div class="order-card-date">${date}</div>
+ </div>
+ <span class="order-status-badge order-status-badge--${status}">${statusMap[status] || status}</span>
+ </div>
+ <div class="order-card-items">
+ ${items.map(it => `
+ <div class="order-card-item">
+ <span>${it.name || it.id} ${it.quantity > 1? ` ${it.quantity}`: ''}</span>
+ <span>${formatBRL((it.price || 0) * (it.quantity || 1))}</span>
+ </div>`).join('')}
+ </div>
+ <div class="order-card-total">
+ <span>Total</span>
+ <span>${formatBRL(o.total || 0)}</span>
+ </div>
+ </div>`;
+ }).join('');
+ }
+
+ /* Profile form */
+ $('profile-form').addEventListener('submit', async e => {
+ e.preventDefault();
+ const result = await UserAuth.updateProfile({
+ name: $('pf-name').value.trim(),
+ phone: $('pf-phone').value.trim(),
+ });
+ if (result.error) { Toast.show(result.error, 'error'); return; }
+ Toast.show('Dados atualizados!');
+ $('greeting-name').textContent = (result.name || result.email).split(' ')[0] + '.';
+ });
+
+ /* Password form */
+ $('password-form').addEventListener('submit', async e => {
+ e.preventDefault();
+ const newPw = $('pw-new').value;
+ const confirm = $('pw-confirm').value;
+ if (newPw!== confirm) { Toast.show('As senhas não coincidem.', 'error'); return; }
+ const token = UserAuth.getToken();
+ const r = await fetch('/api/v4/users/me/password', {
+ method: 'PUT',
+ headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+ body: JSON.stringify({ old_password: $('pw-old').value, new_password: newPw })
+ });
+ const data = await r.json();
+ if (data.error) { Toast.show(data.error, 'error'); return; }
+ Toast.show('Senha alterada com sucesso!');
+ $('password-form').reset();
+ });
+
+ /* Address form */
+ $('address-form').addEventListener('submit', async e => {
+ e.preventDefault();
+ const result = await UserAuth.updateProfile({
+ address: {
+ cep: $('addr-cep').value.trim(),
+ street: $('addr-street').value.trim(),
+ number: $('addr-number').value.trim(),
+ complement: $('addr-complement').value.trim(),
+ neighborhood: $('addr-neighborhood').value.trim(),
+ city: $('addr-city').value.trim(),
+ state: $('addr-state').value.trim().toUpperCase(),
+ }
+ });
+ if (result.error) { Toast.show(result.error, 'error'); return; }
+ Toast.show('Endereo salvo!');
+ });
+
+ /* Init */
+ async function init() {
+ Header.init();
+ if (typeof CartStore!== 'undefined') CartStore.init();
+
+ if (UserAuth.isLoggedIn()) {
+ showDashboard();
+ const user = await UserAuth.fetchMe();
+ if (user) loadDashboard(user);
+ else showAuthGate();
+ } else {
+ showAuthGate();
+ /* Check if redirected from checkout */
+ if (location.search.includes('register=1')) switchTab('register');
+ }
+ }
+
+ init();
+ })();
+ </script>
+</body>
+</html>

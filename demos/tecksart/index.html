@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Tecksart - Objetos de Design</title>
+ <meta name="description" content="Esculturas funcionais, iluminação e objetos decorativos de design autoral. Edição limitada." />
+ <meta name="theme-color" content="#000000" />
+ <meta property="og:title" content="Tecksart - Objetos de Design" />
+ <meta property="og:description" content="Esculturas funcionais, iluminação e objetos decorativos de design autoral. Edição limitada." />
+ <meta property="og:type" content="website" />
+ <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23000'/><text x='50%25' y='70%25' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='22' fill='%23fff'>T</text></svg>" />
+
+ <!-- Fonts -->
+ <link rel="preconnect" href="https://fonts.googleapis.com" />
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+ <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" />
+ <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+ <!-- Styles -->
+ <link rel="stylesheet" href="styles/tokens.css" />
+ <link rel="stylesheet" href="styles/global.css" />
+ <link rel="stylesheet" href="styles/cursor.css" />
+ <link rel="stylesheet" href="styles/animations.css" />
+ <link rel="stylesheet" href="styles/home.css" />
+ <link rel="stylesheet" href="styles/checkout.css" />
+ <script src="scripts/api-shim.js"></script>
+</head>
+<body class="no-scroll">
+
+ <!-- Grain -->
+ <div class="grain" aria-hidden="true"></div>
+
+ <!-- Cursor -->
+ <div class="cursor-dot" aria-hidden="true"></div>
+ <div class="cursor-ring" aria-hidden="true"></div>
+
+ <!-- Loading Screen -->
+ <div id="loading-screen" class="loading-screen" role="status" aria-label="Carregando Tecksart">
+ <video
+ class="loading-video"
+ autoplay muted loop playsinline
+ id="loading-video"
+ aria-hidden="true"
+ >
+ <source src="assets/videos/particles-web.mp4" type="video/mp4" />
+ </video>
+ <div class="loading-video-overlay" aria-hidden="true"></div>
+
+ <div class="loading-center">
+ <div class="loading-logo-wrap" id="loading-logo-wrap">
+ <img class="loading-logo-img" src="assets/images/brand/symbol.png" alt="Tecksart" id="loading-logo-img" />
+ </div>
+ <div class="loading-progress" id="loading-progress">
+ <div class="loading-bar">
+ <div class="loading-bar-fill" id="loading-bar-fill"></div>
+ </div>
+ <span class="loading-pct" id="loading-pct">0%</span>
+ </div>
+ </div>
+ </div>
+
+ <!-- Cart Overlay + Drawer -->
+ <div class="cart-overlay" aria-hidden="true"></div>
+ <aside class="cart-drawer" aria-label="Carrinho">
+ <div class="cart-header">
+ <span class="cart-title">Carrinho</span>
+ <button class="cart-close" aria-label="Fechar">x</button>
+ </div>
+ <div class="cart-shipping-bar">
+ <span>Faltam R$ 500,00 para frete grátis</span>
+ <div class="cart-shipping-track">
+ <div class="cart-shipping-fill"></div>
+ </div>
+ </div>
+ <div class="cart-items"></div>
+ <div class="cart-empty">
+ <span class="cart-empty-icon"> - 9</span>
+ <span style="font-family:var(--font-mono);font-size:var(--fs-xs);letter-spacing:var(--ls-wider);text-transform:uppercase;color:var(--c-steel-dim)">Vazio</span>
+ </div>
+ <footer class="cart-footer">
+ <div class="cart-coupon-row">
+ <input class="cart-coupon-input" type="text" placeholder="CUPOM" aria-label="Código de cupom" />
+ <button class="btn btn--dark btn--sm cart-coupon-apply">Aplicar</button>
+ </div>
+ <div class="cart-subtotal">
+ <span class="cart-subtotal-label">Total</span>
+ <span class="cart-subtotal-value">R$ 0,00</span>
+ </div>
+ <button class="btn btn--primary cart-checkout-btn">Finalizar Compra</button>
+ <button class="btn btn--ghost" style="justify-content:center" onclick="Cart.closeDrawer()">Continuar comprando</button>
+ </footer>
+ </aside>
+
+ <!-- Checkout Overlay -->
+ <div id="checkout-overlay" class="checkout-overlay" aria-label="Checkout" role="dialog">
+ <div class="checkout-header">
+ <div class="checkout-logo">
+ <img src="assets/images/brand/logo-white.png" alt="Tecksart" />
+ </div>
+ <div class="checkout-steps">
+ <span class="checkout-step is-active">Endereço</span>
+ <div class="checkout-step-sep"></div>
+ <span class="checkout-step">Pagamento</span>
+ <div class="checkout-step-sep"></div>
+ <span class="checkout-step">Confirmação</span>
+ </div>
+ <button id="checkout-close" class="checkout-close" aria-label="Fechar checkout">x</button>
+ </div>
+
+ <div class="checkout-body">
+ <div class="checkout-main">
+
+ <!-- Step 1: Address -->
+ <div class="checkout-panel is-active" data-step="1">
+ <h2 class="checkout-panel-title">Endereço de entrega</h2>
+ <div class="checkout-form">
+ <div class="form-row">
+ <div class="form-group">
+ <label class="form-label" for="checkout-name">Nome completo</label>
+ <input class="form-input" id="checkout-name" type="text" placeholder="Seu nome" autocomplete="name" />
+ </div>
+ <div class="form-group">
+ <label class="form-label" for="checkout-email">Email</label>
+ <input class="form-input" id="checkout-email" type="email" placeholder="seu@email.com" autocomplete="email" />
+ </div>
+ </div>
+ <div class="form-group">
+ <label class="form-label" for="checkout-phone">Telefone</label>
+ <input class="form-input" id="checkout-phone" type="tel" placeholder="(00) 00000-0000" autocomplete="tel" />
+ </div>
+ <span class="checkout-panel-subtitle">Endereço</span>
+ <div class="form-row">
+ <div class="form-group">
+ <label class="form-label" for="checkout-cep">CEP</label>
+ <input class="form-input" id="checkout-cep" type="text" placeholder="00000-000" maxlength="9" />
+ </div>
+ <div class="form-group">
+ <label class="form-label" for="checkout-state">Estado</label>
+ <input class="form-input" id="checkout-state" type="text" placeholder="SP" maxlength="2" autocomplete="address-level1" />
+ </div>
+ </div>
+ <div class="form-group">
+ <label class="form-label" for="checkout-address">Logradouro</label>
+ <input class="form-input" id="checkout-address" type="text" placeholder="Rua, Avenida..." autocomplete="address-line1" />
+ </div>
+ <div class="form-row">
+ <div class="form-group">
+ <label class="form-label" for="checkout-number">Número</label>
+ <input class="form-input" id="checkout-number" type="text" placeholder="123" />
+ </div>
+ <div class="form-group">
+ <label class="form-label" for="checkout-complement">Complemento</label>
+ <input class="form-input" id="checkout-complement" type="text" placeholder="Apto, bloco..." />
+ </div>
+ </div>
+ <div class="form-group">
+ <label class="form-label" for="checkout-city">Cidade</label>
+ <input class="form-input" id="checkout-city" type="text" placeholder="São Paulo" autocomplete="address-level2" />
+ </div>
+ </div>
+ <button id="checkout-to-payment" class="btn btn--primary checkout-continue">Continuar para pagamento -> </button>
+ </div>
+
+ <!-- Step 2: Payment -->
+ <div class="checkout-panel" data-step="2">
+ <h2 class="checkout-panel-title">Forma de pagamento</h2>
+ <div class="payment-methods">
+ <div class="payment-method is-selected" data-method="pix">
+ <div class="payment-method-radio"></div>
+ <div class="payment-method-icon">PIX</div>
+ <div class="payment-method-info">
+ <p class="payment-method-name">PIX</p>
+ <p class="payment-method-sub">Pagamento instantâneo</p>
+ </div>
+ </div>
+ <div class="payment-method" data-method="card">
+ <div class="payment-method-radio"></div>
+ <div class="payment-method-icon">
+ <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><rect x="0.5" y="0.5" width="15" height="11" rx="1.5" stroke="currentColor"/><rect x="0" y="3" width="16" height="2.5" fill="currentColor" opacity="0.4"/></svg>
+ </div>
+ <div class="payment-method-info">
+ <p class="payment-method-name">Cartão de crédito</p>
+ <p class="payment-method-sub">Em breve</p>
+ </div>
+ </div>
+ <div class="payment-method" data-method="whatsapp">
+ <div class="payment-method-radio"></div>
+ <div class="payment-method-icon">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0.16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+ </div>
+ <div class="payment-method-info">
+ <p class="payment-method-name">WhatsApp</p>
+ <p class="payment-method-sub">Combinamos o pagamento</p>
+ </div>
+ </div>
+ </div>
+ <div id="payment-detail" style="margin-top:var(--sp-6)"></div>
+ <div class="checkout-nav-row">
+ <button id="checkout-back-to-address" class="btn btn--ghost checkout-back">? Voltar</button>
+ <button id="checkout-to-confirm" class="btn btn--primary checkout-continue">Revisar pedido -> </button>
+ </div>
+ </div>
+
+ <!-- Step 3: Confirm -->
+ <div class="checkout-panel" data-step="3">
+ <h2 class="checkout-panel-title">Confirmar pedido</h2>
+ <div id="confirm-summary"></div>
+ <div class="checkout-nav-row" style="margin-top:var(--sp-8)">
+ <button id="checkout-back-to-payment" class="btn btn--ghost checkout-back">? Voltar</button>
+ <button id="checkout-place-order" class="btn btn--primary checkout-continue">Confirmar e pagar -> </button>
+ </div>
+ </div>
+
+ <!-- Success -->
+ <div id="checkout-success" class="checkout-success">
+ <div class="success-icon">OK</div>
+ <h2 class="success-title">Pedido confirmado.</h2>
+ <p class="success-subtitle">Obrigado. Você acabou de adquirir um objeto premium. Você receberá as informações de pagamento por email em breve.</p>
+ <span class="success-order-id">Pedido # - </span>
+ <button class="btn btn--ghost" onclick="Checkout.close(); window.location.reload()">Continuar explorando</button>
+ </div>
+
+ </div>
+
+ <!-- Sidebar: Order Summary -->
+ <div class="checkout-sidebar">
+ <p class="order-summary-title">Resumo do pedido</p>
+ <div class="order-items"></div>
+ <div class="order-divider"></div>
+ <div class="order-line">
+ <span class="order-line-label">Subtotal</span>
+ <span class="order-line-value order-subtotal">R$ 0,00</span>
+ </div>
+ <div class="order-line order-discount-row" style="display:none">
+ <span class="order-line-label">Desconto</span>
+ <span class="order-line-value" style="color:rgba(100,200,100,0.9)">- R$ 0,00</span>
+ </div>
+ <div class="order-line">
+ <span class="order-line-label">Frete</span>
+ <span class="order-line-value">A calcular</span>
+ </div>
+ <div class="order-divider"></div>
+ <div class="order-line order-line--total">
+ <span class="order-line-label">Total</span>
+ <span class="order-line-value order-total">R$ 0,00</span>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <!-- Header -->
+ <header class="site-header" role="banner">
+ <a href="/" class="header-logo" aria-label="Tecksart">
+ <img class="header-logo-symbol" src="assets/images/brand/logo-white.png" alt="" aria-hidden="true" />
+ <img class="header-logo-wordmark" src="assets/images/brand/symbol.png" alt="Tecksart" />
+ </a>
+ <nav class="header-nav" aria-label="Navegação">
+ <a href="pages/catalog.html">Catálogo</a>
+ <a href="pages/catalog.html?drop=void">DROP_001</a>
+ <a href="pages/catalog.html?drop=signal">DROP_002</a>
+ <a href="#sobre">Sobre</a>
+ </nav>
+ <div class="header-actions">
+ <a href="pages/account.html" class="header-btn header-account-btn" id="header-account-btn" aria-label="Minha conta">
+ <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+ </a>
+ <button id="cart-btn" class="header-btn" aria-label="Carrinho">
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+ <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+ <line x1="3" y1="6" x2="21" y2="6"/>
+ <path d="M16 10a4 4 0 01-8 0"/>
+ </svg>
+ <span class="cart-count" style="display:none">0</span>
+ </button>
+ <button class="header-hamburger" aria-label="Menu" aria-expanded="false">
+ <span></span><span></span><span></span>
+ </button>
+ </div>
+ </header>
+
+ <!-- Mobile Nav -->
+ <nav class="mobile-nav" aria-label="Menu mobile">
+ <a href="pages/catalog.html">Catálogo</a>
+ <a href="pages/catalog.html?drop=void">DROP_001 - VOID</a>
+ <a href="pages/catalog.html?drop=signal">DROP_002 - SIGNAL</a>
+ <a href="#sobre">Sobre</a>
+ <a href="pages/account.html">Minha conta</a>
+ <button class="mobile-nav-cart-btn" onclick="document.querySelector('.mobile-nav').classList.remove('is-open'); document.querySelector('.header-hamburger')?.classList.remove('is-open'); document.body.style.overflow=''; Cart.openDrawer();">
+ Carrinho <span class="cart-count" style="display:none">0</span>
+ </button>
+ </nav>
+
+ <main>
+
+ <!-- 1. Hero -->
+ <section class="hero" aria-label="Hero">
+ <div class="hero-media">
+ <video
+ class="hero-video"
+ autoplay muted loop playsinline
+ preload="auto"
+ poster="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='1' height='1'><rect fill='%23000'/></svg>"
+ aria-hidden="true"
+ style="background:#000"
+ >
+ <source src="assets/videos/hero-abstract.mp4" type="video/mp4" />
+ </video>
+ <div class="hero-overlay"></div>
+ <div class="hero-overlay-top"></div>
+ </div>
+
+ <div class="hero-grid" aria-hidden="true">
+ <div class="hero-grid-line"></div><div class="hero-grid-line"></div>
+ <div class="hero-grid-line"></div><div class="hero-grid-line"></div>
+ <div class="hero-grid-line"></div><div class="hero-grid-line"></div>
+ </div>
+
+ <div class="hero-content">
+ <p class="hero-label">Objetos de design autoral</p>
+ <h1 class="hero-headline">
+ Design que não<br />precisa de<br /><em>explicação.</em>
+ </h1>
+ <p class="hero-sub">
+ Esculturas funcionais. Iluminação. Objetos colecionáveis. Criados para quem entende.
+ </p>
+ <div class="hero-actions">
+ <a href="pages/catalog.html" class="btn btn--primary btn--lg">Explorar coleções</a>
+ <a href="#manifesto" class="btn btn--ghost btn--lg">Manifesto</a>
+ </div>
+ </div>
+
+ <div class="hero-bottom">
+ <div class="hero-stats">
+ <div class="hero-stat-item">
+ <span class="hero-stat-label">Drops ativos</span>
+ <span class="hero-stat-value">02</span>
+ </div>
+ <div class="hero-stat-item">
+ <span class="hero-stat-label">Peças</span>
+ <span class="hero-stat-value">06</span>
+ </div>
+ <div class="hero-stat-item">
+ <span class="hero-stat-label">Edição</span>
+ <span class="hero-stat-value">I</span>
+ </div>
+ </div>
+ <div class="scroll-indicator">
+ <div class="scroll-indicator-line"></div>
+ </div>
+ </div>
+ </section>
+
+ <!-- 2. Marquee -->
+ <div class="marquee-strip" aria-hidden="true">
+ <div class="marquee-track">
+ <div class="marquee-inner">
+ <span class="marquee-item">Design Autoral</span><span class="marquee-dot"></span>
+ <span class="marquee-item">DROP_001 VOID</span><span class="marquee-dot"></span>
+ <span class="marquee-item">Edição Limitada</span><span class="marquee-dot"></span>
+ <span class="marquee-item">DROP_002 SIGNAL</span><span class="marquee-dot"></span>
+ <span class="marquee-item">Geometria Precisa</span><span class="marquee-dot"></span>
+ <span class="marquee-item">Objetos que Existem</span><span class="marquee-dot"></span>
+ <span class="marquee-item">Forma + Função</span><span class="marquee-dot"></span>
+ <span class="marquee-item">Gallery in Miniature</span><span class="marquee-dot"></span>
+ </div>
+ <div class="marquee-inner" aria-hidden="true">
+ <span class="marquee-item">Design Autoral</span><span class="marquee-dot"></span>
+ <span class="marquee-item">DROP_001 VOID</span><span class="marquee-dot"></span>
+ <span class="marquee-item">Edição Limitada</span><span class="marquee-dot"></span>
+ <span class="marquee-item">DROP_002 SIGNAL</span><span class="marquee-dot"></span>
+ <span class="marquee-item">Geometria Precisa</span><span class="marquee-dot"></span>
+ <span class="marquee-item">Objetos que Existem</span><span class="marquee-dot"></span>
+ <span class="marquee-item">Forma + Função</span><span class="marquee-dot"></span>
+ <span class="marquee-item">Gallery in Miniature</span><span class="marquee-dot"></span>
+ </div>
+ </div>
+ </div>
+
+ <!-- 3. Drops -->
+ <section class="drops-section silver-laser" style="--laser-delay:0s;--laser-dur:16s" aria-label="Drops">
+ <div class="drops-header">
+ <div>
+ <p class="drops-header-label">Drops</p>
+ <h2 class="reveal">Universos estéticos.<br />Não apenas produtos.</h2>
+ </div>
+ <a href="pages/catalog.html" class="btn btn--ghost reveal">Ver catálogo -> </a>
+ </div>
+ <div class="drops-grid reveal-stagger">
+ <!-- DROP_001 VOID -->
+ <div class="drop-card drop-card--main" data-href="pages/catalog.html?drop=void">
+ <div class="drop-card-media">
+ <video class="drop-card-video" src="assets/videos/hero-abstract.mp4" autoplay muted loop playsinline preload="auto"></video>
+ </div>
+ <div class="drop-card-overlay"></div>
+ <span class="drop-card-status drop-card-status--active">Ativo</span>
+ <div class="drop-card-content">
+ <span class="drop-card-number">DROP_001</span>
+ <h3 class="drop-card-name">VOID</h3>
+ <p class="drop-card-tagline">O silêncio tem forma.</p>
+ <span class="drop-card-cta">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+ Explorar drop
+ </span>
+ </div>
+ </div>
+
+ <!-- DROP_002 SIGNAL -->
+ <div class="drop-card drop-card--side" data-href="pages/catalog.html?drop=signal">
+ <div class="drop-card-media">
+ <video class="drop-card-video" src="assets/videos/hero-floating.mp4" autoplay muted loop playsinline preload="auto"></video>
+ </div>
+ <div class="drop-card-overlay"></div>
+ <span class="drop-card-status drop-card-status--active">Ativo</span>
+ <div class="drop-card-content">
+ <span class="drop-card-number">DROP_002</span>
+ <h3 class="drop-card-name">SIGNAL</h3>
+ <p class="drop-card-tagline">Luz como linguagem.</p>
+ <span class="drop-card-cta">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+ Explorar drop
+ </span>
+ </div>
+ </div>
+ </div>
+ </section>
+
+ <!-- 4. Manifesto -->
+ <section id="manifesto" class="manifesto-section" aria-label="Manifesto">
+ <p class="label">Manifesto</p>
+ <p class="manifesto-text" id="manifesto-text"></p>
+ </section>
+
+ <!-- 5. Featured Products -->
+ <section class="featured-section" aria-label="Destaques">
+ <div class="container">
+ <div class="featured-header">
+ <h2 class="featured-headline reveal">Destaques</h2>
+ <a href="pages/catalog.html" class="btn btn--ghost reveal">Catálogo completo -> </a>
+ </div>
+ <div class="product-grid reveal-stagger" id="featured-grid">
+ <!-- Populated by JS -->
+ </div>
+ </div>
+ </section>
+
+ <!-- 6. Process (horizontal scroll) -->
+ <section class="process-section" aria-label="Processo">
+ <div class="process-sticky">
+ <div class="process-track">
+
+ <div class="process-panel">
+ <span class="process-panel-bg-num" aria-hidden="true">01</span>
+ <div class="process-panel-content">
+ <span class="process-step-num">01 / 03</span>
+ <h2 class="process-step-title">Conceito</h2>
+ <p class="process-step-body">Cada peça começa como uma questão, não uma solução. O processo começa quando encontramos a pergunta certa - uma forma que ainda não existe, uma função que merece uma nova linguagem visual.</p>
+ </div>
+ </div>
+
+ <div class="process-panel">
+ <span class="process-panel-bg-num" aria-hidden="true">02</span>
+ <div class="process-panel-content">
+ <span class="process-step-num">02 / 03</span>
+ <h2 class="process-step-title">Precisão</h2>
+ <p class="process-step-body">O design é refinado até que cada ângulo seja intencional. Não existe detalhe decorativo - se está ali, tem razão de estar. A forma final é aquela que não pode ser simplificada sem perder a essência.</p>
+ </div>
+ </div>
+
+ <div class="process-panel">
+ <span class="process-panel-bg-num" aria-hidden="true">03</span>
+ <div class="process-panel-content">
+ <span class="process-step-num">03 / 03</span>
+ <h2 class="process-step-title">Objeto</h2>
+ <p class="process-step-body">O resultado é uma peça que existe no espaço de forma completa - não precisa de contexto, de legenda, de explicação. Ela simplesmente está ali, e o espaço ao redor responde a ela.</p>
+ </div>
+ </div>
+
+ </div>
+
+ <!-- Progress dots -->
+ <div class="process-dots" aria-hidden="true">
+ <div class="process-dot is-active" data-dot="0"></div>
+ <div class="process-dot" data-dot="1"></div>
+ <div class="process-dot" data-dot="2"></div>
+ </div>
+ </div>
+ </section>
+
+ <!-- 7. About -->
+ <section id="sobre" class="about-section silver-laser silver-laser-v" style="--laser-delay:10s;--laser-dur:20s" aria-label="Sobre">
+ <div class="about-inner">
+ <div class="about-content">
+ <p class="label about-label reveal">Sobre a Tecksart</p>
+ <h2 class="about-headline reveal">Design é decisão.<br />Cada uma delas<br />importa.</h2>
+ <p class="about-body reveal">
+ Tecksart nasce da convicção de que os objetos que escolhemos para nosso espaço dizem algo sobre quem somos. Não criamos peças para encher prateleiras - criamos objetos que justificam a própria existência.
+ </p>
+ <div class="about-values reveal">
+ <div class="about-value">
+ <span class="about-value-num">01</span>
+ <p class="about-value-text">O objeto é o herói. A embalagem, o site, a copy - tudo serve a ele.</p>
+ </div>
+ <div class="about-value">
+ <span class="about-value-num">02</span>
+ <p class="about-value-text">Espaço em branco não é ausência.? peso, respiro, intenção.</p>
+ </div>
+ <div class="about-value">
+ <span class="about-value-num">03</span>
+ <p class="about-value-text">Edição limitada por princípio, não por estratégia de marketing.</p>
+ </div>
+ </div>
+ </div>
+ <div class="about-visual reveal">
+ <div class="about-img">
+ <img src="assets/images/products/bowl.webp" alt="Bowl Prata" loading="lazy" />
+ </div>
+ <div class="about-img">
+ <img src="assets/images/products/vaso.webp" alt="Vaso Obsidiana" loading="lazy" />
+ </div>
+ <div class="about-img">
+ <img src="assets/images/products/luminaria.webp" alt="Luminária Arc" loading="lazy" />
+ </div>
+ </div>
+ </div>
+ </section>
+
+ <!-- 8. Numbers -->
+ <section class="numbers-section silver-laser" style="--laser-delay:5s;--laser-dur:18s" aria-label="Números">
+ <div class="numbers-grid">
+ <div class="number-item">
+ <span class="stat-number" data-count="6" data-suffix="">0</span>
+ <span class="number-label">Peças no catálogo</span>
+ </div>
+ <div class="number-item">
+ <span class="stat-number" data-count="2" data-suffix="">0</span>
+ <span class="number-label">Drops ativos</span>
+ </div>
+ <div class="number-item">
+ <span class="stat-number" data-count="100" data-suffix="%">0%</span>
+ <span class="number-label">Design autoral</span>
+ </div>
+ <div class="number-item">
+ <span class="stat-number" data-count="0" data-suffix=""></span>
+ <span class="number-label" style="margin-top:0">Peças genéricas - nunca</span>
+ </div>
+ </div>
+ </section>
+
+ <!-- 9. Custom CTA -->
+ <section class="custom-cta" aria-label="Encomendas">
+ <div class="custom-cta-inner">
+ <p class="label reveal">Encomenda especial</p>
+ <h2 class="custom-cta-headline reveal">
+ Tem uma ideia de peça<br />que ainda não existe?
+ </h2>
+ <p class="custom-cta-sub reveal">
+ Trabalhamos com projetos personalizados para quem sabe o que quer - ou para quem precisa de ajuda para descobrir.
+ </p>
+ <a
+ href="https://wa.me/5521900000000?text=Ol%C3%A1%2C%20gostaria%20de%20fazer%20uma%20encomenda%20personalizada."
+ class="btn btn--whatsapp btn--lg reveal"
+ target="_blank"
+ rel="noopener noreferrer"
+ >
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0.16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+ Falar no WhatsApp
+ </a>
+ </div>
+ </section>
+
+ <!-- 10. FAQ -->
+ <section class="faq-section" aria-label="FAQ">
+ <div class="faq-inner">
+ <div class="faq-header">
+ <p class="label reveal">FAQ</p>
+ <h2 class="faq-headline reveal">Perguntas frequentes</h2>
+ </div>
+
+ <div class="faq-item">
+ <button class="faq-question">Os produtos são produzidos no Brasil?<span class="faq-icon" aria-hidden="true"></span></button>
+ <div class="faq-answer"><div class="faq-answer-inner">Sim. Todos os objetos Tecksart são desenvolvidos e produzidos no Brasil, com materiais de alta qualidade selecionados por suas propriedades técnicas e estéticas.</div></div>
+ </div>
+
+ <div class="faq-item">
+ <button class="faq-question">Como funciona o frete?<span class="faq-icon" aria-hidden="true"></span></button>
+ <div class="faq-answer"><div class="faq-answer-inner">Enviamos para todo o Brasil. Frete grátis em pedidos acima de R$ 500. As peças são embaladas individualmente para garantir que cheguem em perfeitas condições.</div></div>
+ </div>
+
+ <div class="faq-item">
+ <button class="faq-question">? possível encomendar peças personalizadas?<span class="faq-icon" aria-hidden="true"></span></button>
+ <div class="faq-answer"><div class="faq-answer-inner">Sim. Trabalhamos com projetos especiais para clientes, arquitetos e estúdios de design. Entre em contato via WhatsApp para discutirmos sua necessidade.</div></div>
+ </div>
+
+ <div class="faq-item">
+ <button class="faq-question">As peças são numeradas?<span class="faq-icon" aria-hidden="true"></span></button>
+ <div class="faq-answer"><div class="faq-answer-inner">Cada peça de edição limitada vem com numeração de série individual. Isso garante a autenticidade e o valor de colecionador do objeto.</div></div>
+ </div>
+
+ <div class="faq-item">
+ <button class="faq-question">Qual é a política de trocas?<span class="faq-icon" aria-hidden="true"></span></button>
+ <div class="faq-answer"><div class="faq-answer-inner">Aceitamos trocas em até 7 dias após o recebimento, desde que a peça esteja em condição original. Para produtos com defeito de fabricação, fazemos a substituição sem custo.</div></div>
+ </div>
+ </div>
+ </section>
+
+ <!-- 11. Newsletter -->
+ <section class="newsletter-section" aria-label="Newsletter">
+ <div class="newsletter-inner">
+ <p class="label">Newsletter</p>
+ <h2 class="newsletter-headline">Novidades antes de todo mundo.</h2>
+ <p class="newsletter-sub">Lançamentos, drops e edições exclusivas - somente por email.</p>
+ <form class="newsletter-form" novalidate>
+ <input type="email" class="newsletter-input" placeholder="seu@email.com" aria-label="Email" required />
+ <button type="submit" class="newsletter-btn">Inscrever</button>
+ </form>
+ <p class="newsletter-note">Sem spam. Cancelamento a qualquer momento.</p>
+ </div>
+ </section>
+
+ </main>
+
+ <!-- Footer -->
+ <footer class="site-footer" aria-label="Rodapé">
+ <div class="container">
+ <div class="footer-inner">
+ <div class="footer-brand">
+ <img src="assets/images/brand/symbol.png" alt="Tecksart" class="footer-logo" style="height:32px;width:auto;object-fit:contain;object-position:center" />
+ <p class="footer-tagline">Objetos de design autoral. Peças que existem por si só.</p>
+ <div class="footer-social">
+ <a href="https://instagram.com/tecksart" target="_blank" rel="noopener">Instagram</a>
+ <a href="https://tiktok.com/@tecksart" target="_blank" rel="noopener">TikTok</a>
+ </div>
+ </div>
+ <div>
+ <p class="footer-col-title">Drops</p>
+ <ul class="footer-links">
+ <li><a href="pages/catalog.html?drop=void">DROP_001 - VOID</a></li>
+ <li><a href="pages/catalog.html?drop=signal">DROP_002 - SIGNAL</a></li>
+ <li><a href="pages/catalog.html">Ver tudo</a></li>
+ </ul>
+ </div>
+ <div>
+ <p class="footer-col-title">Informações</p>
+ <ul class="footer-links">
+ <li><a href="#sobre">Sobre</a></li>
+ <li><a href="#faq">FAQ</a></li>
+ <li><a href="https://wa.me/5521900000000" target="_blank" rel="noopener">Contato</a></li>
+ </ul>
+ </div>
+ <div>
+ <p class="footer-col-title">Admin</p>
+ <ul class="footer-links">
+ <li><a href="admin/index.html">Dashboard</a></li>
+ </ul>
+ </div>
+ </div>
+ <div class="footer-bottom">
+ <span class="footer-copy">© <script>document.write(new Date().getFullYear())</script> Tecksart. Todos os direitos reservados.</span>
+ <span class="footer-wordmark">Tecksart</span>
+ </div>
+ </div>
+ </footer>
+
+ <!-- Toast -->
+ <div id="site-toast" class="toast" role="status" aria-live="polite"></div>
+
+ <!-- CDN: GSAP -->
+ <script src="../../assets/vendor/gsap.min.js"></script>
+ <script src="../../assets/vendor/ScrollTrigger.min.js"></script>
+ <!-- CDN: Lenis -->
+ <script src="../../assets/vendor/lenis.min.js"></script>
+
+ <!-- Scripts -->
+ <script src="scripts/core.js"></script>
+ <script src="scripts/user-auth.js"></script>
+ <script src="scripts/cursor.js"></script>
+ <script src="scripts/products.js"></script>
+ <script src="scripts/cart.js"></script>
+ <script src="scripts/checkout.js"></script>
+ <script src="scripts/motion.js"></script>
+ <script>
+ /* Update account button icon if user is logged in */
+ (function() {
+ const user = Store.get('ta_user_data');
+ const btn = document.getElementById('header-account-btn');
+ if (user && btn) {
+ const initials = (user.name || user.email).split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+ btn.innerHTML = `<span class="header-account-avatar">${initials}</span>`;
+ btn.setAttribute('aria-label', `Conta de ${user.name || user.email}`);
+ }
+ })();
+ </script>
+
+ <script>
+ /* - - Init - - */
+ document.addEventListener('DOMContentLoaded', async () => {
+ /* Loading */
+ LoadingScreen.init();
+
+ /* Cursor */
+ CustomCursor.init();
+
+ /* Header */
+ Header.init();
+
+ /* FAQ */
+ initFAQ();
+
+ /* Newsletter */
+ initNewsletter();
+
+ /* Products */
+ await ProductStore.load();
+
+ /* Cart */
+ const settings = ProductStore.getSettings();
+ Cart.init(settings);
+
+ /* Checkout */
+ Checkout.init();
+
+ /* Featured grid */
+ const grid = document.getElementById('featured-grid');
+ const featured = [...ProductStore.getFeatured(),...ProductStore.getAll().filter(p =>!p.featured)].slice(0, 6);
+ if (grid && featured.length) {
+ grid.innerHTML = featured.map(p => ProductCard.render(p, { fromRoot: true })).join('');
+ ProductCard.bindEvents(grid, { fromRoot: true });
+ }
+
+ /* Drop cards navigation */
+ document.querySelectorAll('[data-href]').forEach(card => {
+ card.addEventListener('click', () => window.location.href = card.dataset.href);
+ card.style.cursor = 'pointer';
+ });
+
+ /* Manifesto */
+ const MANIFESTO = 'Não fazemos objetos para preencher espaço. Fazemos objetos que definem o espaço ao redor. Cada peça começa como uma pergunta e termina como uma resposta que não precisa de palavras.';
+ const mEl = document.getElementById('manifesto-text');
+ if (mEl) {
+ mEl.innerHTML = MANIFESTO.split(' ').map(w => `<span class="manifesto-word">${w}</span>`).join(' ');
+ }
+
+ /* Lenis */
+ initLenis();
+
+ /* GSAP Animations (after loading screen hides) */
+ setTimeout(() => {
+ heroEntrance();
+ initScrollAnimations();
+ initDropCards();
+ initVideos();
+ }, 200);
+
+ /* Analytics */
+ Analytics.track('page_view', { page: 'home' });
+ });
+ </script>
+</body>
+</html>

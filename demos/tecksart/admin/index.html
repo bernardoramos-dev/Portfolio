@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <title>Admin - Tecksart V4</title>
+ <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23000'/><text x='50%25' y='70%25' text-anchor='middle' font-family='sans-serif' font-weight='700' font-size='22' fill='%23fff'>T</text></svg>" />
+ <link rel="preconnect" href="https://fonts.googleapis.com" />
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+ <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+ <link rel="stylesheet" href="../styles/tokens.css" />
+ <link rel="stylesheet" href="../styles/global.css" />
+ <link rel="stylesheet" href="../styles/admin.css" />
+
+ <style>
+ /* Login overlay */.login-overlay {
+ position: fixed; inset: 0; background: var(--c-black);
+ z-index: 10000; display: flex; flex-direction: column;
+ align-items: center; justify-content: center; gap: var(--sp-8);
+ }.login-overlay.is-hidden { display: none; }.login-box {
+ width: min(380px,90vw); display: flex; flex-direction: column; gap: var(--sp-6);
+ padding: var(--sp-10); background: var(--c-surface);
+ border: 1px solid var(--c-border); border-radius: var(--radius-sm);
+ }.login-logo img { height: 20px; }.login-title { font-size: var(--fs-xl); font-weight: var(--fw-semibold); letter-spacing: var(--ls-tight); }.login-sub { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--c-steel-dim); letter-spacing: var(--ls-wide); }.login-form { display: flex; flex-direction: column; gap: var(--sp-4); }.login-error { font-family: var(--font-mono); font-size: var(--fs-xs); color: rgba(200,80,80,.9); display: none; }
+
+ /* Product image preview */.img-preview { width: 80px; height: 80px; background: var(--c-surface-2);
+ border: 1px solid var(--c-border); border-radius: var(--radius-sm);
+ object-fit: contain; padding: var(--sp-2); display: none; }.img-preview.is-visible { display: block; }
+
+ /* Inline form in modal */.admin-modal.admin-form { padding: 0; }
+
+ /* Toggle switch */.toggle-row { display: flex; align-items: center; justify-content: space-between; }.toggle { position: relative; width: 36px; height: 20px; }.toggle input { opacity: 0; width: 0; height: 0; }.toggle-slider {
+ position: absolute; inset: 0; background: var(--c-surface-3);
+ border: 1px solid var(--c-border); border-radius: var(--radius-full);
+ cursor: pointer; transition: all.3s var(--ease-out);
+ }.toggle-slider::before {
+ content: ''; position: absolute; height: 12px; width: 12px;
+ left: 3px; bottom: 3px; background: var(--c-steel);
+ border-radius: 50%; transition:.3s var(--ease-out);
+ }.toggle input:checked +.toggle-slider { background: var(--c-white); border-color: var(--c-white); }.toggle input:checked +.toggle-slider::before { transform: translateX(16px); background: var(--c-black); }
+
+ /* Tabs in panel */.panel-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--c-border-soft); padding: 0 var(--sp-8); }.panel-tab {
+ font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: var(--ls-wide);
+ text-transform: uppercase; padding: var(--sp-4) var(--sp-4); color: var(--c-steel-dim);
+ cursor: pointer; background: none; border: none; border-bottom: 2px solid transparent;
+ margin-bottom: -1px; transition: all var(--t-fast);
+ }.panel-tab:hover { color: var(--c-white); }.panel-tab.is-active { color: var(--c-white); border-bottom-color: var(--c-white); }
+
+ /* Journey funnel */.journey-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
+
+ /* Quick action bar */.quick-actions { display: flex; gap: var(--sp-3); flex-wrap: wrap; padding: 0 var(--sp-8) var(--sp-6); }
+ </style>
+ <script src="../scripts/api-shim.js"></script>
+<script src="../../../scripts/core/form-accessibility.js?v=20260711-2" defer></script>
+</head>
+<body>
+
+ <!-- Login Overlay -->
+ <div id="login-overlay" class="login-overlay">
+ <div class="login-box">
+ <div class="login-logo"><img src="../assets/images/brand/logo-white.png" alt="Tecksart" /></div>
+ <div>
+ <p class="login-title">Admin</p>
+ <p class="login-sub">Tecksart V4 - Dashboard</p>
+ </div>
+ <form class="login-form" id="login-form">
+ <div class="admin-form-group">
+ <label class="admin-form-label">Senha</label>
+ <input type="password" class="admin-form-input" id="login-password" placeholder="""""""""""" />
+ </div>
+ <p class="login-error" id="login-error">Senha incorreta.</p>
+ <button type="submit" class="btn btn--primary" style="width:100%;justify-content:center">Entrar </button>
+ </form>
+ </div>
+ </div>
+
+ <!-- Product Modal -->
+ <div id="product-modal" class="admin-modal-overlay">
+ <div class="admin-modal">
+ <div class="admin-modal-header">
+ <span class="admin-modal-title" id="product-modal-title">Novo Produto</span>
+ <button class="admin-modal-close" type="button" aria-label="Fechar cadastro de produto" onclick="closeProductModal()"></button>
+ </div>
+ <div class="admin-modal-body">
+ <div class="admin-form">
+ <input type="hidden" id="edit-product-id" />
+ <div class="admin-form-row">
+ <div class="admin-form-group">
+ <label class="admin-form-label">Nome</label>
+ <input class="admin-form-input" id="p-name" type="text" placeholder="Nome do produto" />
+ </div>
+ <div class="admin-form-group">
+ <label class="admin-form-label">Subtítulo</label>
+ <input class="admin-form-input" id="p-subtitle" type="text" placeholder="Subtítulo" />
+ </div>
+ </div>
+ <div class="admin-form-row">
+ <div class="admin-form-group">
+ <label class="admin-form-label">Preço (R$)</label>
+ <input class="admin-form-input" id="p-price" type="number" step="0.01" placeholder="0,00" />
+ </div>
+ <div class="admin-form-group">
+ <label class="admin-form-label">Drop</label>
+ <select class="admin-form-select" id="p-drop">
+ <option value="void">DROP_001 - VOID</option>
+ <option value="signal">DROP_002 - SIGNAL</option>
+ <option value="mono">DROP_003 - MONO</option>
+ </select>
+ </div>
+ </div>
+ <div class="admin-form-row">
+ <div class="admin-form-group">
+ <label class="admin-form-label">Coleção</label>
+ <input class="admin-form-input" id="p-collection" type="text" placeholder="Forma, Luz, Figura..." />
+ </div>
+ <div class="admin-form-group">
+ <label class="admin-form-label">Categoria</label>
+ <select class="admin-form-select" id="p-category">
+ <option value="decoracao">Decoração</option>
+ <option value="iluminacao">Iluminação</option>
+ </select>
+ </div>
+ </div>
+ <div class="admin-form-row">
+ <div class="admin-form-group">
+ <label class="admin-form-label">Edição (ex: 01 / 50)</label>
+ <input class="admin-form-input" id="p-edition" type="text" placeholder="01 / 50" />
+ </div>
+ <div class="admin-form-group">
+ <label class="admin-form-label">Badge</label>
+ <input class="admin-form-input" id="p-badge" type="text" placeholder="DROP_001, Premium..." />
+ </div>
+ </div>
+ <div class="admin-form-group">
+ <label class="admin-form-label">Descrição</label>
+ <textarea class="admin-form-textarea" id="p-description" placeholder="Descrição do produto..."></textarea>
+ </div>
+ <div class="admin-form-group">
+ <label class="admin-form-label">Manifesto</label>
+ <input class="admin-form-input" id="p-manifesto" type="text" placeholder="Frase do produto..." />
+ </div>
+ <div class="admin-form-row">
+ <div class="admin-form-group">
+ <label class="admin-form-label">Dimensões</label>
+ <input class="admin-form-input" id="p-dimensions" type="text" placeholder="12 12 28 cm" />
+ </div>
+ <div class="admin-form-group">
+ <label class="admin-form-label">Material</label>
+ <input class="admin-form-input" id="p-material" type="text" placeholder="Polímero premium" />
+ </div>
+ </div>
+ <div class="admin-form-row">
+ <div class="admin-form-group">
+ <label class="admin-form-label">Peso</label>
+ <input class="admin-form-input" id="p-weight" type="text" placeholder="380g" />
+ </div>
+ <div class="admin-form-group">
+ <label class="admin-form-label">Status</label>
+ <select class="admin-form-select" id="p-status">
+ <option value="available">Disponível</option>
+ <option value="sold-out">Esgotado</option>
+ </select>
+ </div>
+ </div>
+ <div class="admin-form-group">
+ <label class="admin-form-label">URL da imagem</label>
+ <input class="admin-form-input" id="p-image" type="text" placeholder="assets/images/products/nome.png" />
+ </div>
+ <div class="toggle-row">
+ <span class="admin-form-label">Destaque</span>
+ <label class="toggle"><input type="checkbox" id="p-featured" /><span class="toggle-slider"></span></label>
+ </div>
+ <div class="admin-form-actions">
+ <button class="btn btn--primary" id="save-product-btn" onclick="saveProduct()">Salvar produto</button>
+ <button class="btn btn--ghost" onclick="closeProductModal()">Cancelar</button>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <!-- Coupon Modal -->
+ <div id="coupon-modal" class="admin-modal-overlay">
+ <div class="admin-modal">
+ <div class="admin-modal-header">
+ <span class="admin-modal-title">Novo Cupom</span>
+ <button class="admin-modal-close" type="button" aria-label="Fechar cadastro de cupom" onclick="closeCouponModal()"></button>
+ </div>
+ <div class="admin-modal-body">
+ <div class="admin-form">
+ <div class="admin-form-row">
+ <div class="admin-form-group">
+ <label class="admin-form-label">Código</label>
+ <input class="admin-form-input" id="c-code" type="text" placeholder="CODIGO10" style="text-transform:uppercase" />
+ </div>
+ <div class="admin-form-group">
+ <label class="admin-form-label">Tipo</label>
+ <select class="admin-form-select" id="c-type">
+ <option value="percentage">Percentual (%)</option>
+ <option value="fixed">Valor fixo (R$)</option>
+ <option value="shipping">Frete grátis</option>
+ </select>
+ </div>
+ </div>
+ <div class="admin-form-row">
+ <div class="admin-form-group">
+ <label class="admin-form-label">Valor</label>
+ <input class="admin-form-input" id="c-value" type="number" placeholder="10" />
+ </div>
+ <div class="admin-form-group">
+ <label class="admin-form-label">Mx. de usos</label>
+ <input class="admin-form-input" id="c-max-uses" type="number" placeholder="Ilimitado" />
+ </div>
+ </div>
+ <div class="admin-form-row">
+ <div class="admin-form-group">
+ <label class="admin-form-label">Validade</label>
+ <input class="admin-form-input" id="c-expires" type="date" />
+ </div>
+ <div class="admin-form-group">
+ <label class="admin-form-label">Pedido mnimo</label>
+ <input class="admin-form-input" id="c-min-order" type="number" placeholder="0" />
+ </div>
+ </div>
+ <div class="admin-form-group">
+ <label class="admin-form-label">Descrição</label>
+ <input class="admin-form-input" id="c-description" type="text" placeholder="Desconto de lanamento..." />
+ </div>
+ <div class="toggle-row">
+ <span class="admin-form-label">Ativo</span>
+ <label class="toggle"><input type="checkbox" id="c-active" checked /><span class="toggle-slider"></span></label>
+ </div>
+ <div class="admin-form-actions">
+ <button class="btn btn--primary" onclick="saveCoupon()">Criar cupom</button>
+ <button class="btn btn--ghost" onclick="closeCouponModal()">Cancelar</button>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <!-- Admin Layout -->
+ <div class="admin-layout">
+
+ <!-- Header -->
+ <header class="admin-header">
+ <div class="admin-header-logo">
+ <img src="../assets/images/brand/logo-white.png" alt="Tecksart" />
+ <span class="admin-version">V4 Admin</span>
+ </div>
+ <div class="admin-header-right">
+ <a href="../index.html" class="admin-header-link" target="_blank" rel="noopener"> Ver site</a>
+ <button class="admin-header-link" onclick="AdminAuth.logout()">Sair</button>
+ </div>
+ </header>
+
+ <!-- Sidebar -->
+ <aside class="admin-sidebar">
+ <nav class="admin-nav">
+ <span class="admin-nav-section">Principal</span>
+ <button class="admin-nav-item is-active" data-panel="dashboard">
+ <svg class="admin-nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="1" y="1" width="6" height="6"/><rect x="9" y="1" width="6" height="6"/><rect x="1" y="9" width="6" height="6"/><rect x="9" y="9" width="6" height="6"/></svg>
+ Dashboard
+ </button>
+
+ <span class="admin-nav-section">Loja</span>
+ <button class="admin-nav-item" data-panel="products">
+ <svg class="admin-nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/></svg>
+ Produtos
+ <span class="admin-nav-badge" id="nav-products-count"> - </span>
+ </button>
+ <button class="admin-nav-item" data-panel="orders">
+ <svg class="admin-nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M2 4h12M2 8h12M2 12h8"/></svg>
+ Pedidos
+ <span class="admin-nav-badge" id="nav-orders-count"> - </span>
+ </button>
+ <button class="admin-nav-item" data-panel="coupons">
+ <svg class="admin-nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="1" y="5" width="14" height="6" rx="1"/><line x1="5" y1="5" x2="5" y2="11"/><line x1="11" y1="5" x2="11" y2="11"/></svg>
+ Cupons
+ </button>
+
+ <span class="admin-nav-section">Marca</span>
+ <button class="admin-nav-item" data-panel="drops">
+ <svg class="admin-nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 2C8 2 3 7 3 10a5 5 0 0010 0C13 7 8 2 8 2z"/></svg>
+ Drops
+ </button>
+ <button class="admin-nav-item" data-panel="production">
+ <svg class="admin-nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/></svg>
+ Produ??o
+ </button>
+
+ <span class="admin-nav-section">CRM</span>
+ <button class="admin-nav-item" data-panel="customers">
+ <svg class="admin-nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/></svg>
+ Clientes
+ <span class="admin-nav-badge" id="nav-customers-count"> - </span>
+ </button>
+ <button class="admin-nav-item" data-panel="newsletter">
+ <svg class="admin-nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="1" y="3" width="14" height="10" rx="1"/><path d="M1 5l7 5 7-5"/></svg>
+ Newsletter
+ <span class="admin-nav-badge" id="nav-subs-count"> - </span>
+ </button>
+
+ <span class="admin-nav-section">Dados</span>
+ <button class="admin-nav-item" data-panel="analytics">
+ <svg class="admin-nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M1 12l4-4 3 3 4-5 3-3"/></svg>
+ Analytics
+ </button>
+ </nav>
+ </aside>
+
+ <!-- Main -->
+ <main class="admin-main">
+
+ <!-- DASHBOARD -->
+ <div id="panel-dashboard" class="admin-panel is-active">
+ <div class="panel-header">
+ <div class="panel-title-group">
+ <span class="panel-eyebrow">Viso geral</span>
+ <h1 class="panel-title">Dashboard</h1>
+ </div>
+ <div class="panel-actions">
+ <button class="btn btn--ghost btn--sm" onclick="refreshDashboard()"> Atualizar</button>
+ </div>
+ </div>
+
+ <div class="metrics-grid" id="metrics-grid">
+ <div class="metric-card metric-card--orders">
+ <div class="metric-card-header">
+ <span class="metric-card-label">Pedidos</span>
+ <div class="metric-card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
+ </div>
+ <span class="metric-card-value" id="metric-orders"> - </span>
+ <span class="metric-card-sub">Total de pedidos</span>
+ </div>
+ <div class="metric-card metric-card--revenue">
+ <div class="metric-card-header">
+ <span class="metric-card-label">Receita</span>
+ <div class="metric-card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+ </div>
+ <span class="metric-card-value" id="metric-revenue"> - </span>
+ <span class="metric-card-sub">Total faturado</span>
+ </div>
+ <div class="metric-card metric-card--products">
+ <div class="metric-card-header">
+ <span class="metric-card-label">Produtos</span>
+ <div class="metric-card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+ </div>
+ <span class="metric-card-value" id="metric-products"> - </span>
+ <span class="metric-card-sub">No catálogo</span>
+ </div>
+ <div class="metric-card metric-card--leads">
+ <div class="metric-card-header">
+ <span class="metric-card-label">Leads</span>
+ <div class="metric-card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2.9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+ </div>
+ <span class="metric-card-value" id="metric-leads"> - </span>
+ <span class="metric-card-sub">Newsletter</span>
+ </div>
+ </div>
+
+ <!-- Secondary metrics row -->
+ <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);padding:0 var(--sp-8) var(--sp-6)">
+ <div class="metric-card" style="border-color:rgba(255,255,255,0.06)">
+ <span class="metric-card-label">Clientes registrados</span>
+ <span class="metric-card-value" style="font-size:var(--fs-2xl)" id="metric-customers"> - </span>
+ <span class="metric-card-sub">Com conta criada</span>
+ </div>
+ <div class="metric-card" style="border-color:rgba(255,255,255,0.06)">
+ <span class="metric-card-label">Ticket mdio</span>
+ <span class="metric-card-value" style="font-size:var(--fs-2xl)" id="metric-avg-ticket"> - </span>
+ <span class="metric-card-sub">Por pedido pago</span>
+ </div>
+ <div class="metric-card" style="border-color:rgba(255,255,255,0.06)">
+ <span class="metric-card-label">Pedidos pendentes</span>
+ <span class="metric-card-value" style="font-size:var(--fs-2xl);color:rgba(255,200,80,0.9)" id="metric-pending"> - </span>
+ <span class="metric-card-sub">Aguardando ao</span>
+ </div>
+ </div>
+
+ <div class="quick-actions">
+ <button class="btn btn--dark btn--sm" onclick="showPanel('products'); openProductModal()">+ Novo produto</button>
+ <button class="btn btn--dark btn--sm" onclick="showPanel('orders')">Ver pedidos</button>
+ <button class="btn btn--dark btn--sm" onclick="showPanel('newsletter')">Ver leads</button>
+ <button class="btn btn--dark btn--sm" onclick="showPanel('production')">Centro de produção</button>
+ </div>
+
+ <!-- Recent Orders -->
+ <div style="padding: 0 var(--sp-8) var(--sp-8)">
+ <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-5)">
+ <span style="font-family:var(--font-mono);font-size:var(--fs-xs);letter-spacing:var(--ls-widest);text-transform:uppercase;color:var(--c-steel-dim)">Pedidos recentes</span>
+ <button class="btn btn--ghost btn--sm" onclick="showPanel('orders')">Ver todos </button>
+ </div>
+ <div id="recent-orders-table"></div>
+ </div>
+ </div>
+
+ <!-- PRODUCTS -->
+ <div id="panel-products" class="admin-panel">
+ <div class="panel-header">
+ <div class="panel-title-group">
+ <span class="panel-eyebrow">Catálogo</span>
+ <h1 class="panel-title">Produtos</h1>
+ </div>
+ <div class="panel-actions">
+ <button class="btn btn--primary btn--sm" onclick="openProductModal()">+ Novo produto</button>
+ </div>
+ </div>
+ <div class="data-table-wrap">
+ <table class="data-table">
+ <thead>
+ <tr>
+ <th></th><th>Nome</th><th>Drop</th><th>Preço</th><th>Edição</th><th>Status</th><th>Destaque</th><th></th>
+ </tr>
+ </thead>
+ <tbody id="products-table-body"></tbody>
+ </table>
+ </div>
+ </div>
+
+ <!-- ORDERS -->
+ <div id="panel-orders" class="admin-panel">
+ <div class="panel-header">
+ <div class="panel-title-group">
+ <span class="panel-eyebrow">Loja</span>
+ <h1 class="panel-title">Pedidos</h1>
+ </div>
+ <div class="panel-actions">
+ <button class="btn btn--ghost btn--sm" onclick="exportData('orders')"> Exportar CSV</button>
+ </div>
+ </div>
+ <div class="data-table-wrap">
+ <table class="data-table">
+ <thead>
+ <tr><th>#</th><th>Cliente</th><th>Email</th><th>Total</th><th>Pagamento</th><th>Status</th><th>Data</th><th></th></tr>
+ </thead>
+ <tbody id="orders-table-body"></tbody>
+ </table>
+ </div>
+ <div id="orders-empty" class="empty-state" style="display:none">
+ <span class="empty-state-icon"></span>
+ <p class="empty-state-text">Nenhum pedido ainda</p>
+ </div>
+ </div>
+
+ <!-- COUPONS -->
+ <div id="panel-coupons" class="admin-panel">
+ <div class="panel-header">
+ <div class="panel-title-group">
+ <span class="panel-eyebrow">Promoes</span>
+ <h1 class="panel-title">Cupons</h1>
+ </div>
+ <div class="panel-actions">
+ <button class="btn btn--primary btn--sm" onclick="openCouponModal()">+ Novo cupom</button>
+ </div>
+ </div>
+ <div class="data-table-wrap">
+ <table class="data-table">
+ <thead>
+ <tr><th>Código</th><th>Tipo</th><th>Valor</th><th>Usos</th><th>Validade</th><th>Status</th><th></th></tr>
+ </thead>
+ <tbody id="coupons-table-body"></tbody>
+ </table>
+ </div>
+ </div>
+
+ <!-- DROPS -->
+ <div id="panel-drops" class="admin-panel">
+ <div class="panel-header">
+ <div class="panel-title-group">
+ <span class="panel-eyebrow">Marca</span>
+ <h1 class="panel-title">Drops</h1>
+ </div>
+ </div>
+ <div class="panel-body">
+ <div id="drops-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4)"></div>
+ </div>
+ </div>
+
+ <!-- PRODUCTION -->
+ <div id="panel-production" class="admin-panel">
+ <div class="panel-header">
+ <div class="panel-title-group">
+ <span class="panel-eyebrow">Opera??es</span>
+ <h1 class="panel-title">Centro de Produ??o</h1>
+ </div>
+ </div>
+ <div class="panel-body">
+ <p style="font-family:var(--font-secondary);color:var(--c-steel);margin-bottom:var(--sp-8);max-width:600px;line-height:var(--lh-loose)">
+ Gerencie a fila de produção, status de fabrica??o e estoque. Cada card representa um produto com suas configurações de produção.
+ </p>
+ <div class="production-grid" id="production-grid"></div>
+ </div>
+ </div>
+
+ <!-- CUSTOMERS -->
+ <div id="panel-customers" class="admin-panel">
+ <div class="panel-header">
+ <div class="panel-title-group">
+ <span class="panel-eyebrow">CRM</span>
+ <h1 class="panel-title">Clientes</h1>
+ </div>
+ <div class="panel-actions" style="gap:var(--sp-2);display:flex;flex-wrap:wrap">
+ <button class="btn btn--ghost btn--sm" onclick="exportCustomersCSV()"> CSV</button>
+ <button class="btn btn--ghost btn--sm" onclick="exportCustomersJSON()"> JSON</button>
+ </div>
+ </div>
+
+ <!-- Stats row -->
+ <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-4);padding:0 var(--sp-8) var(--sp-6)" id="customers-stats-row">
+ <div class="stat-card" style="border-color:rgba(59,130,246,0.15);background:linear-gradient(135deg,rgba(59,130,246,0.06) 0%,var(--c-surface) 60%)">
+ <span class="stat-label">Total clientes</span>
+ <span class="stat-value" id="cs-total" style="color:rgba(130,180,255,0.95)"> - </span>
+ </div>
+ <div class="stat-card" style="border-color:rgba(168,85,247,0.15);background:linear-gradient(135deg,rgba(168,85,247,0.06) 0%,var(--c-surface) 60%)">
+ <span class="stat-label">Com conta</span>
+ <span class="stat-value" id="cs-registered" style="color:rgba(195,130,255,0.95)"> - </span>
+ </div>
+ <div class="stat-card" style="border-color:rgba(34,197,94,0.15);background:linear-gradient(135deg,rgba(34,197,94,0.06) 0%,var(--c-surface) 60%)">
+ <span class="stat-label">Compradores</span>
+ <span class="stat-value" id="cs-buyers" style="color:rgba(100,220,130,0.95)"> - </span>
+ </div>
+ <div class="stat-card" style="border-color:rgba(251,191,36,0.15);background:linear-gradient(135deg,rgba(251,191,36,0.05) 0%,var(--c-surface) 60%)">
+ <span class="stat-label">Ticket mdio</span>
+ <span class="stat-value" id="cs-avg-ticket" style="color:rgba(255,215,80,0.95);font-size:var(--fs-xl)"> - </span>
+ </div>
+ </div>
+
+ <!-- Filters -->
+ <div class="cust-filters">
+ <input id="cust-search" class="cust-filter-input" type="text"
+ placeholder="Buscar por nome, email ou CPF&" oninput="renderCustomers()" />
+
+ <select id="cust-filter-type" class="cust-filter-select" onchange="renderCustomers()">
+ <option value="all">Todos os tipos</option>
+ <option value="registered">Conta criada</option>
+ <option value="buyers">Com pedidos</option>
+ <option value="guest">Apenas guests</option>
+ <option value="newsletter">Na newsletter</option>
+ </select>
+
+ <select id="cust-filter-newsletter" class="cust-filter-select" onchange="renderCustomers()">
+ <option value="all">Newsletter: todos</option>
+ <option value="yes">Inscrito </option>
+ <option value="no">No inscrito</option>
+ </select>
+
+ <select id="cust-sort" class="cust-filter-select" onchange="renderCustomers()">
+ <option value="recent">Mais recente</option>
+ <option value="oldest">Mais antigo</option>
+ <option value="spent_desc">Maior gasto</option>
+ <option value="orders_desc">Mais pedidos</option>
+ <option value="name">Nome A-Z</option>
+ </select>
+
+ <input id="cust-date-from" class="cust-filter-date" type="date"
+ title="Cadastro a partir de" onchange="renderCustomers()" />
+ <input id="cust-date-to" class="cust-filter-date" type="date"
+ title="Cadastro at" onchange="renderCustomers()" />
+ </div>
+
+ <div class="data-table-wrap">
+ <table class="data-table">
+ <thead>
+ <tr>
+ <th>Nome</th>
+ <th>Email</th>
+ <th>CPF</th>
+ <th>Telefone</th>
+ <th>Pedidos</th>
+ <th>Total gasto</th>
+ <th>Newsletter</th>
+ <th>Cadastro</th>
+ <th>Tipo</th>
+ </tr>
+ </thead>
+ <tbody id="customers-table-body"></tbody>
+ </table>
+ </div>
+ <div id="customers-empty" class="empty-state" style="display:none">
+ <span class="empty-state-icon"></span>
+ <p class="empty-state-text">Nenhum cliente encontrado</p>
+ </div>
+ <p id="customers-count-label" style="font-family:var(--font-mono);font-size:var(--fs-2xs);color:var(--c-steel-dim);margin-top:var(--sp-4)"></p>
+ </div>
+
+ <!-- NEWSLETTER -->
+ <div id="panel-newsletter" class="admin-panel">
+ <div class="panel-header">
+ <div class="panel-title-group">
+ <span class="panel-eyebrow">Email Marketing</span>
+ <h1 class="panel-title">Newsletter</h1>
+ </div>
+ <div class="panel-actions">
+ <button class="btn btn--ghost btn--sm" onclick="exportData('subscribers')"> Exportar CSV</button>
+ </div>
+ </div>
+
+ <div style="padding:0 var(--sp-8) var(--sp-6);display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4)">
+ <div class="metric-card">
+ <span class="metric-card-label">Subscribers</span>
+ <span class="metric-card-value" id="newsletter-count"> - </span>
+ <span class="metric-card-sub">Emails cadastrados</span>
+ </div>
+ <div class="metric-card">
+ <span class="metric-card-label">Esta semana</span>
+ <span class="metric-card-value" id="newsletter-week"> - </span>
+ <span class="metric-card-sub">Novos leads</span>
+ </div>
+ </div>
+
+ <div class="data-table-wrap">
+ <table class="data-table">
+ <thead><tr><th>Email</th><th>Data de inscrição</th><th></th></tr></thead>
+ <tbody id="newsletter-table-body"></tbody>
+ </table>
+ </div>
+ <div id="newsletter-empty" class="empty-state" style="display:none">
+ <span class="empty-state-icon"></span>
+ <p class="empty-state-text">Nenhum subscriber ainda</p>
+ </div>
+ </div>
+
+ <!-- ANALYTICS -->
+ <div id="panel-analytics" class="admin-panel">
+ <div class="panel-header">
+ <div class="panel-title-group">
+ <span class="panel-eyebrow">Dados</span>
+ <h1 class="panel-title">Analytics</h1>
+ </div>
+ </div>
+ <div class="panel-body">
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-6)">
+ <!-- Funnel -->
+ <div class="analytics-chart-wrap">
+ <p style="font-family:var(--font-mono);font-size:var(--fs-xs);letter-spacing:var(--ls-widest);text-transform:uppercase;color:var(--c-steel-dim);margin-bottom:var(--sp-6)">Funil de converso</p>
+ <div class="funnel-bar">
+ <div class="funnel-step">
+ <span class="funnel-step-label">Visitantes</span>
+ <div class="funnel-step-bar-wrap"><div class="funnel-step-bar" style="width:100%"></div></div>
+ <span class="funnel-step-value" id="f-visitors"> - </span>
+ </div>
+ <div class="funnel-step">
+ <span class="funnel-step-label">Produto</span>
+ <div class="funnel-step-bar-wrap"><div class="funnel-step-bar" id="f-product-bar" style="width:0%"></div></div>
+ <span class="funnel-step-value" id="f-product"> - </span>
+ </div>
+ <div class="funnel-step">
+ <span class="funnel-step-label">Carrinho</span>
+ <div class="funnel-step-bar-wrap"><div class="funnel-step-bar" id="f-cart-bar" style="width:0%"></div></div>
+ <span class="funnel-step-value" id="f-cart"> - </span>
+ </div>
+ <div class="funnel-step">
+ <span class="funnel-step-label">Checkout</span>
+ <div class="funnel-step-bar-wrap"><div class="funnel-step-bar" id="f-checkout-bar" style="width:0%"></div></div>
+ <span class="funnel-step-value" id="f-checkout"> - </span>
+ </div>
+ <div class="funnel-step">
+ <span class="funnel-step-label">Compra</span>
+ <div class="funnel-step-bar-wrap"><div class="funnel-step-bar" id="f-purchase-bar" style="width:0%"></div></div>
+ <span class="funnel-step-value" id="f-purchase"> - </span>
+ </div>
+ </div>
+ </div>
+ <!-- Top Products -->
+ <div class="analytics-chart-wrap">
+ <p style="font-family:var(--font-mono);font-size:var(--fs-xs);letter-spacing:var(--ls-widest);text-transform:uppercase;color:var(--c-steel-dim);margin-bottom:var(--sp-6)">Produtos mais adicionados</p>
+ <div id="top-products-list" style="display:flex;flex-direction:column;gap:var(--sp-4)"></div>
+ </div>
+ </div>
+
+ <div style="margin-top:var(--sp-6)">
+ <div class="analytics-chart-wrap">
+ <p style="font-family:var(--font-mono);font-size:var(--fs-xs);letter-spacing:var(--ls-widest);text-transform:uppercase;color:var(--c-steel-dim);margin-bottom:var(--sp-4)">Eventos recentes da sesso atual</p>
+ <div id="events-list" style="display:flex;flex-direction:column;gap:var(--sp-2)"></div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ </main>
+ </div>
+
+ <div id="site-toast" class="toast" role="status" aria-live="polite"></div>
+
+ <script src="../scripts/core.js"></script>
+
+ <script>
+ /* Admin Bootstrap */
+ let _products = [], _orders = [], _subscribers = [], _coupons = [], _drops = [], _users = [];
+
+ /* Public portfolio build: admin opens directly for review. */
+ document.getElementById('login-overlay')?.classList.add('is-hidden');
+ document.addEventListener('DOMContentLoaded', initAdmin);
+
+ /* Panel navigation */
+ function showPanel(id) {
+ document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('is-active'));
+ document.querySelectorAll('.admin-nav-item').forEach(b => b.classList.remove('is-active'));
+ document.getElementById(`panel-${id}`)?.classList.add('is-active');
+ document.querySelector(`[data-panel="${id}"]`)?.classList.add('is-active');
+ window.scrollTo({ top: 0, behavior: 'smooth' });
+ }
+
+ document.querySelectorAll('.admin-nav-item[data-panel]').forEach(btn => {
+ btn.addEventListener('click', () => {
+ showPanel(btn.dataset.panel);
+ const panel = btn.dataset.panel;
+ if (panel === 'dashboard') refreshDashboard();
+ if (panel === 'products') renderProducts();
+ if (panel === 'orders') renderOrders();
+ if (panel === 'coupons') renderCoupons();
+ if (panel === 'customers') renderCustomers();
+ if (panel === 'newsletter') renderNewsletter();
+ if (panel === 'analytics') renderAnalytics();
+ if (panel === 'drops') renderDrops();
+ if (panel === 'production') renderProduction();
+ });
+ });
+
+ /* Load Data */
+ async function initAdmin() {
+ await loadAll();
+ refreshDashboard();
+ }
+
+ async function loadAll() {
+ try {
+ const [pr, or, sr, cr, dr, ur] = await Promise.all([
+ fetch('/api/v4/products').then(r => r.json()),
+ fetch('/api/v4/orders').then(r => r.json()),
+ fetch('/api/v4/subscribers').then(r => r.json()),
+ fetch('/api/v4/coupons').then(r => r.json()),
+ fetch('/api/v4/drops').then(r => r.json()),
+ fetch('/api/v4/users').then(r => r.json()).catch(() => ({ users: [] })),
+ ]);
+ _products = pr.products || [];
+ _orders = or.orders || (Array.isArray(or)? or: []);
+ _subscribers = sr.subscribers || (Array.isArray(sr)? sr: []);
+ _coupons = cr.coupons || [];
+ _drops = dr.drops || [];
+ _users = ur.users || [];
+ } catch(e) {
+ console.warn('API unavailable, using empty state');
+ }
+ /* Update nav badges */
+ const set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+ set('nav-products-count', _products.length);
+ set('nav-orders-count', _orders.length);
+ set('nav-customers-count', _buildCustomers().length);
+ set('nav-subs-count', _subscribers.length);
+ }
+
+ /* Dashboard */
+ function refreshDashboard() {
+ loadAll().then(() => {
+ const totalRevenue = _orders.reduce((s,o) => s + (o.finalTotal || o.total || 0), 0);
+ const pendingCount = _orders.filter(o =>!o.status || o.status === 'pending').length;
+ const paidOrders = _orders.filter(o => o.status === 'paid' || o.status === 'confirmed' || o.status === 'shipped' || o.status === 'delivered');
+ const avgTicket = paidOrders.length? totalRevenue / paidOrders.length: 0;
+ const customers = _buildCustomers();
+
+ _setMetric('metric-orders', _orders.length);
+ _setMetric('metric-revenue', formatBRL(totalRevenue));
+ _setMetric('metric-products', _products.length);
+ _setMetric('metric-leads', _subscribers.length);
+ _setMetric('metric-customers', customers.filter(c => c.registered).length);
+ _setMetric('metric-avg-ticket', paidOrders.length? formatBRL(avgTicket): ' - ');
+ _setMetric('metric-pending', pendingCount || '0');
+
+ /* Recent orders */
+ const recentEl = document.getElementById('recent-orders-table');
+ if (recentEl) {
+ const recent = _orders.slice(-5).reverse();
+ if (!recent.length) {
+ recentEl.innerHTML = '<p style="font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--c-steel-dim);padding:var(--sp-4)">Nenhum pedido ainda.</p>';
+ } else {
+ recentEl.innerHTML = `<table class="data-table">
+ <thead><tr><th>#</th><th>Cliente</th><th>Total</th><th>Status</th><th>Data</th></tr></thead>
+ <tbody>${recent.map(o => `
+ <tr>
+ <td class="table-cell-mono">#${o.id}</td>
+ <td class="table-cell-name">${o.customer?.name || ' - '}</td>
+ <td class="table-cell-price">${formatBRL(o.finalTotal || o.total || 0)}</td>
+ <td><span class="status-badge status-badge--${o.status || 'pending'}">${_statusLabel(o.status)}</span></td>
+ <td class="table-cell-mono" style="font-size:var(--fs-2xs)">${o.created_at? o.created_at.split('T')[0]: ' - '}</td>
+ </tr>`).join('')}
+ </tbody>
+ </table>`;
+ }
+ }
+ });
+ }
+
+ function _setMetric(id, val) {
+ const el = document.getElementById(id);
+ if (el) el.textContent = val;
+ }
+
+ /* Products */
+ function renderProducts() {
+ const tbody = document.getElementById('products-table-body');
+ if (!tbody) return;
+ tbody.innerHTML = _products.map(p => `
+ <tr>
+ <td><img class="table-img" src="${p.images?.[0] || ''}" alt="${p.name}" /></td>
+ <td class="table-cell-name">${p.name}<br><span style="font-size:var(--fs-xs);color:var(--c-steel-dim)">${p.subtitle||''}</span></td>
+ <td class="table-cell-mono">${p.drop? p.drop.toUpperCase(): ' - '}</td>
+ <td class="table-cell-price">${p.priceFormatted}</td>
+ <td class="table-cell-mono">${p.edition||' - '}</td>
+ <td><span class="status-badge status-badge--${p.status||'available'}">${p.status==='available'?'Disponível':'Esgotado'}</span></td>
+ <td><span style="font-family:var(--font-mono);font-size:var(--fs-xs);color:${p.featured?'rgba(100,200,100,.9)':'var(--c-steel-dim)'}">${p.featured?' Sim':' - '}</span></td>
+ <td style="display:flex;gap:var(--sp-2);align-items:center">
+ <button class="btn btn--dark btn--sm" onclick="editProduct('${p.id}')">Editar</button>
+ <button class="btn btn--ghost btn--sm" onclick="deleteProduct('${p.id}')"></button>
+ </td>
+ </tr>
+ `).join('');
+ }
+
+ function openProductModal(id = null) {
+ document.getElementById('edit-product-id').value = '';
+ document.getElementById('product-modal-title').textContent = 'Novo produto';
+ ['p-name','p-subtitle','p-price','p-collection','p-edition','p-badge','p-description','p-manifesto','p-dimensions','p-material','p-weight','p-image'].forEach(id => {
+ const el = document.getElementById(id);
+ if (el) el.value = '';
+ });
+ document.getElementById('p-status').value = 'available';
+ document.getElementById('p-drop').value = 'void';
+ document.getElementById('p-category').value = 'decoracao';
+ document.getElementById('p-featured').checked = false;
+ document.getElementById('product-modal').classList.add('is-open');
+ }
+
+ function editProduct(id) {
+ const p = _products.find(x => x.id === id);
+ if (!p) return;
+ document.getElementById('edit-product-id').value = id;
+ document.getElementById('product-modal-title').textContent = 'Editar produto';
+ document.getElementById('p-name').value = p.name || '';
+ document.getElementById('p-subtitle').value = p.subtitle || '';
+ document.getElementById('p-price').value = p.price || '';
+ document.getElementById('p-collection').value = p.collection || '';
+ document.getElementById('p-edition').value = p.edition || '';
+ document.getElementById('p-badge').value = p.badge || '';
+ document.getElementById('p-description').value = p.description || '';
+ document.getElementById('p-manifesto').value = p.manifesto || '';
+ document.getElementById('p-dimensions').value = p.dimensions || '';
+ document.getElementById('p-material').value = p.material || '';
+ document.getElementById('p-weight').value = p.weight || '';
+ document.getElementById('p-image').value = p.images?.[0] || '';
+ document.getElementById('p-status').value = p.status || 'available';
+ document.getElementById('p-drop').value = p.drop || 'void';
+ document.getElementById('p-category').value = p.category || 'decoracao';
+ document.getElementById('p-featured').checked =!!p.featured;
+ document.getElementById('product-modal').classList.add('is-open');
+ }
+
+ function closeProductModal() {
+ document.getElementById('product-modal').classList.remove('is-open');
+ }
+
+ async function saveProduct() {
+ const editId = document.getElementById('edit-product-id').value;
+ const price = parseFloat(document.getElementById('p-price').value) || 0;
+ const body = {
+ name: document.getElementById('p-name').value,
+ subtitle: document.getElementById('p-subtitle').value,
+ price,
+ priceFormatted: new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(price),
+ collection: document.getElementById('p-collection').value,
+ edition: document.getElementById('p-edition').value,
+ badge: document.getElementById('p-badge').value || null,
+ description: document.getElementById('p-description').value,
+ manifesto: document.getElementById('p-manifesto').value,
+ dimensions: document.getElementById('p-dimensions').value,
+ material: document.getElementById('p-material').value,
+ weight: document.getElementById('p-weight').value,
+ images: [document.getElementById('p-image').value].filter(Boolean),
+ status: document.getElementById('p-status').value,
+ drop: document.getElementById('p-drop').value,
+ category: document.getElementById('p-category').value,
+ featured: document.getElementById('p-featured').checked,
+ };
+
+ const url = editId? `/api/v4/products/${editId}`: '/api/v4/products';
+ const method = editId? 'PUT': 'POST';
+
+ try {
+ const r = await fetch(url, { method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
+ if (r.ok) {
+ Toast.show(editId? 'Produto atualizado': 'Produto criado', 'success');
+ closeProductModal();
+ await loadAll();
+ renderProducts();
+ }
+ } catch { Toast.show('Erro ao salvar produto', 'error'); }
+ }
+
+ async function deleteProduct(id) {
+ if (!confirm('Excluir este produto?')) return;
+ try {
+ await fetch(`/api/v4/products/${id}`, { method: 'DELETE' });
+ Toast.show('Produto excludo');
+ await loadAll();
+ renderProducts();
+ } catch { Toast.show('Erro', 'error'); }
+ }
+
+ /* Orders */
+ function renderOrders() {
+ const tbody = document.getElementById('orders-table-body');
+ const emptyEl = document.getElementById('orders-empty');
+ if (!tbody) return;
+ if (!_orders.length) {
+ tbody.innerHTML = '';
+ if (emptyEl) emptyEl.style.display = 'flex';
+ return;
+ }
+ if (emptyEl) emptyEl.style.display = 'none';
+ tbody.innerHTML = [..._orders].reverse().map(o => `
+ <tr>
+ <td class="table-cell-mono">#${o.id}</td>
+ <td class="table-cell-name">${o.customer?.name || ' - '}</td>
+ <td class="table-cell-mono">${o.customer?.email || ' - '}</td>
+ <td class="table-cell-price">${formatBRL(o.finalTotal || o.total || 0)}</td>
+ <td class="table-cell-mono">${o.paymentMethod || ' - '}</td>
+ <td>
+ <select style="background:var(--c-surface-2);border:1px solid var(--c-border);color:var(--c-white);font-family:var(--font-mono);font-size:var(--fs-xs);padding:2px 4px;border-radius:3px"
+ onchange="updateOrderStatus('${o.id}', this.value)">
+ ${['pending','confirmed','production','shipped','delivered'].map(s => `<option value="${s}" ${o.status===s?'selected':''}>${_statusLabel(s)}</option>`).join('')}
+ </select>
+ </td>
+ <td class="table-cell-mono" style="font-size:var(--fs-2xs)">${o.created_at? o.created_at.split('T')[0]: ' - '}</td>
+ <td>
+ <button class="btn btn--ghost btn--sm" onclick="showOrderDetail('${o.id}')">Ver</button>
+ </td>
+ </tr>
+ `).join('');
+ }
+
+ async function updateOrderStatus(id, status) {
+ try {
+ await fetch(`/api/v4/orders/${id}`, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ status }) });
+ Toast.show('Status atualizado');
+ await loadAll();
+ } catch { Toast.show('Erro', 'error'); }
+ }
+
+ function showOrderDetail(id) {
+ const o = _orders.find(x => String(x.id) === String(id));
+ if (!o) return;
+ const items = (o.items || []).map(i => `<li>${i.name} ${i.qty} - ${formatBRL(i.price * i.qty)}</li>`).join('');
+ alert(`Pedido #${o.id}\n\nCliente: ${o.customer?.name}\nEmail: ${o.customer?.email}\nEndereço: ${o.customer?.address}, ${o.customer?.number} - ${o.customer?.city}/${o.customer?.state}\n\nItens:\n${(o.items||[]).map(i => `${i.name} ${i.qty}`).join('\n')}\n\nTotal: ${formatBRL(o.finalTotal || o.total || 0)}\nPagamento: ${o.paymentMethod}`);
+ }
+
+ /* Coupons */
+ function renderCoupons() {
+ const tbody = document.getElementById('coupons-table-body');
+ if (!tbody) return;
+ tbody.innerHTML = _coupons.map(c => `
+ <tr>
+ <td class="table-cell-name" style="font-family:var(--font-mono)">${c.code}</td>
+ <td class="table-cell-mono">${c.type==='percentage'?'%':c.type==='fixed'?'R$':'Frete'}</td>
+ <td class="table-cell-price">${c.type==='percentage'?c.value+'%':c.type==='fixed'?formatBRL(c.value):'Grátis'}</td>
+ <td class="table-cell-mono">${c.currentUses||0} / ${c.maxUses||''}</td>
+ <td class="table-cell-mono">${c.expiresAt||'Sem validade'}</td>
+ <td><span class="status-badge status-badge--${c.active?'active':'sold-out'}">${c.active?'Ativo':'Inativo'}</span></td>
+ <td>
+ <button class="btn btn--ghost btn--sm" onclick="toggleCoupon('${c.id}')">
+ ${c.active? 'Desativar': 'Ativar'}
+ </button>
+ </td>
+ </tr>
+ `).join('');
+ }
+
+ function openCouponModal() { document.getElementById('coupon-modal').classList.add('is-open'); }
+ function closeCouponModal() { document.getElementById('coupon-modal').classList.remove('is-open'); }
+
+ async function saveCoupon() {
+ const body = {
+ code: document.getElementById('c-code').value.toUpperCase(),
+ type: document.getElementById('c-type').value,
+ value: parseFloat(document.getElementById('c-value').value) || 0,
+ maxUses: parseInt(document.getElementById('c-max-uses').value) || null,
+ expiresAt: document.getElementById('c-expires').value || null,
+ minOrderValue: parseFloat(document.getElementById('c-min-order').value) || 0,
+ description: document.getElementById('c-description').value,
+ active: document.getElementById('c-active').checked,
+ currentUses: 0,
+ };
+ try {
+ const r = await fetch('/api/v4/coupons', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
+ if (r.ok) {
+ Toast.show('Cupom criado', 'success');
+ closeCouponModal();
+ await loadAll();
+ renderCoupons();
+ }
+ } catch { Toast.show('Erro', 'error'); }
+ }
+
+ async function toggleCoupon(id) {
+ const c = _coupons.find(x => x.id === id);
+ if (!c) return;
+ try {
+ await fetch(`/api/v4/coupons/${id}`, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ active:!c.active }) });
+ Toast.show('Cupom atualizado');
+ await loadAll();
+ renderCoupons();
+ } catch { Toast.show('Erro', 'error'); }
+ }
+
+ /* Drops */
+ function renderDrops() {
+ const grid = document.getElementById('drops-grid');
+ if (!grid) return;
+ grid.innerHTML = _drops.map(d => `
+ <div class="production-card">
+ <div class="production-card-header">
+ <div>
+ <p class="production-card-sku">${d.number}</p>
+ <p class="production-card-name">${d.name}</p>
+ </div>
+ <span class="status-badge status-badge--${d.status}">${d.status}</span>
+ </div>
+ <p style="font-family:var(--font-secondary);font-size:var(--fs-sm);color:var(--c-steel);line-height:1.6">${d.tagline}</p>
+ <p style="font-family:var(--font-secondary);font-size:var(--fs-xs);color:var(--c-steel-dim);font-style:italic">"${d.manifesto}"</p>
+ <div class="production-specs">
+ <div class="production-spec-row"><span class="production-spec-key">Lanamento</span><span class="production-spec-val">${d.releaseDate}</span></div>
+ <div class="production-spec-row"><span class="production-spec-key">Produtos</span><span class="production-spec-val">${d.productIds?.length || 0} peças</span></div>
+ </div>
+ </div>
+ `).join('');
+ }
+
+ /* Production */
+ function renderProduction() {
+ const grid = document.getElementById('production-grid');
+ if (!grid) return;
+ const statuses = ['Em fila', 'Produ??o', 'Finalizado', 'Estoque'];
+ grid.innerHTML = _products.map((p, i) => `
+ <div class="production-card">
+ <div class="production-card-header">
+ <div>
+ <p class="production-card-sku">${p.id.toUpperCase()}</p>
+ <p class="production-card-name">${p.name}</p>
+ </div>
+ <img class="production-card-img" src="../${p.images?.[0]||''}" alt="${p.name}" />
+ </div>
+ <div class="production-specs">
+ <div class="production-spec-row"><span class="production-spec-key">Material</span><span class="production-spec-val">${p.material||' - '}</span></div>
+ <div class="production-spec-row"><span class="production-spec-key">Dimensões</span><span class="production-spec-val">${p.dimensions||' - '}</span></div>
+ <div class="production-spec-row"><span class="production-spec-key">Edição</span><span class="production-spec-val">${p.edition||' - '}</span></div>
+ </div>
+ <select class="admin-form-select" style="margin-top:auto">
+ ${statuses.map(s => `<option>${s}</option>`).join('')}
+ </select>
+ <button class="btn btn--dark production-start-btn btn--sm"> Iniciar produção</button>
+ </div>
+ `).join('');
+
+ grid.querySelectorAll('.production-start-btn').forEach((btn, i) => {
+ btn.addEventListener('click', () => {
+ btn.textContent = ' Em produção...';
+ btn.disabled = true;
+ setTimeout(() => { btn.textContent = ' Concludo'; }, 2000);
+ Toast.show(`Produ??o de ${_products[i]?.name} iniciada`, 'success');
+ });
+ });
+ }
+
+ /* Customers */
+ function _buildCustomers() {
+ const map = {};
+
+ /* Seed from registered users (accounts) */
+ _users.forEach(u => {
+ map[u.email.toLowerCase()] = {
+ name: u.name || '',
+ email: u.email || '',
+ cpf: u.cpf || '',
+ phone: u.phone || '',
+ orders: 0,
+ total: 0,
+ date: u.created_at || '',
+ registered: true,
+ newsletter: u.newsletter || false,
+ address: u.address || {},
+ };
+ });
+
+ /* Merge order data */
+ _orders.forEach(o => {
+ if (!o.customer?.email) return;
+ const key = o.customer.email.toLowerCase();
+ if (!map[key]) {
+ map[key] = {
+ name: o.customer.name || '',
+ email: o.customer.email || '',
+ cpf: '',
+ phone: o.customer.phone || '',
+ orders: 0,
+ total: 0,
+ date: o.created_at || '',
+ registered: false,
+ newsletter: false,
+ address: {},
+ };
+ }
+ map[key].orders++;
+ map[key].total += o.finalTotal || o.total || 0;
+ if (!map[key].name && o.customer.name) map[key].name = o.customer.name;
+ if (!map[key].phone && o.customer.phone) map[key].phone = o.customer.phone;
+ });
+
+ /* Mark newsletter subscribers */
+ _subscribers.forEach(s => {
+ const key = (s.email || '').toLowerCase();
+ if (map[key]) map[key].newsletter = true;
+ });
+
+ return Object.values(map);
+ }
+
+ function renderCustomers() {
+ const tbody = document.getElementById('customers-table-body');
+ const emptyEl = document.getElementById('customers-empty');
+ const countLabel = document.getElementById('customers-count-label');
+ const search = (document.getElementById('cust-search')?.value || '').toLowerCase();
+ const filterType = document.getElementById('cust-filter-type')?.value || 'all';
+ const filterNewsletter = document.getElementById('cust-filter-newsletter')?.value || 'all';
+ const sortKey = document.getElementById('cust-sort')?.value || 'recent';
+ const dateFrom = document.getElementById('cust-date-from')?.value || '';
+ const dateTo = document.getElementById('cust-date-to')?.value || '';
+
+ let customers = _buildCustomers();
+
+ /* Update stats (always on full list) */
+ const $ = id => document.getElementById(id);
+ $('cs-total').textContent = customers.length;
+ $('cs-registered').textContent = customers.filter(c => c.registered).length;
+ $('cs-buyers').textContent = customers.filter(c => c.orders > 0).length;
+ const buyers = customers.filter(c => c.total > 0);
+ $('cs-avg-ticket').textContent = buyers.length? formatBRL(buyers.reduce((s,c) => s + c.total, 0) / buyers.length): ' - ';
+
+ /* Filter by search */
+ if (search) {
+ customers = customers.filter(c =>
+ c.name.toLowerCase().includes(search) ||
+ c.email.toLowerCase().includes(search) ||
+ c.cpf.includes(search.replace(/\D/g,''))
+ );
+ }
+ /* Filter by type */
+ if (filterType === 'registered') customers = customers.filter(c => c.registered);
+ if (filterType === 'buyers') customers = customers.filter(c => c.orders > 0);
+ if (filterType === 'guest') customers = customers.filter(c =>!c.registered);
+ if (filterType === 'newsletter') customers = customers.filter(c => c.newsletter);
+ /* Filter by newsletter */
+ if (filterNewsletter === 'yes') customers = customers.filter(c => c.newsletter);
+ if (filterNewsletter === 'no') customers = customers.filter(c =>!c.newsletter);
+ /* Filter by date range */
+ if (dateFrom) customers = customers.filter(c => (c.date || '').slice(0,10) >= dateFrom);
+ if (dateTo) customers = customers.filter(c => (c.date || '').slice(0,10) <= dateTo);
+
+ /* Sort */
+ if (sortKey === 'recent') customers.sort((a,b) => (b.date||'') > (a.date||'')? 1: -1);
+ if (sortKey === 'oldest') customers.sort((a,b) => (a.date||'') > (b.date||'')? 1: -1);
+ if (sortKey === 'spent_desc') customers.sort((a,b) => b.total - a.total);
+ if (sortKey === 'orders_desc') customers.sort((a,b) => b.orders - a.orders);
+ if (sortKey === 'name') customers.sort((a,b) => a.name.localeCompare(b.name));
+
+ if (!customers.length) {
+ if (tbody) tbody.innerHTML = '';
+ if (emptyEl) emptyEl.style.display = 'flex';
+ if (countLabel) countLabel.textContent = '';
+ return;
+ }
+ if (emptyEl) emptyEl.style.display = 'none';
+ if (countLabel) countLabel.textContent = `Exibindo ${customers.length} cliente${customers.length!== 1? 's': ''}`;
+
+ const fmtCPF = cpf => cpf.length === 11? `${cpf.slice(0,3)}.${cpf.slice(3,6)}.${cpf.slice(6,9)}-${cpf.slice(9)}`: cpf || ' - ';
+
+ tbody.innerHTML = customers.map(c => `
+ <tr>
+ <td class="table-cell-name">${c.name || ' - '}</td>
+ <td class="table-cell-mono" style="font-size:var(--fs-2xs)">${c.email}</td>
+ <td class="table-cell-mono" style="font-size:var(--fs-2xs)">${fmtCPF(c.cpf)}</td>
+ <td class="table-cell-mono" style="font-size:var(--fs-2xs)">${c.phone || ' - '}</td>
+ <td class="table-cell-mono" style="text-align:center">${c.orders}</td>
+ <td class="table-cell-price">${c.orders > 0? formatBRL(c.total): ' - '}</td>
+ <td style="text-align:center;font-size:var(--fs-lg)">${c.newsletter? '': ' - '}</td>
+ <td class="table-cell-mono" style="font-size:var(--fs-2xs)">${c.date? c.date.split('T')[0]: ' - '}</td>
+ <td>
+ <span style="font-family:var(--font-mono);font-size:var(--fs-2xs);padding:2px 8px;border-radius:999px;border:1px solid;
+ ${c.registered? 'color:#10b981;border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.08)': 'color:#6b7280;border-color:rgba(107,114,128,.3);background:rgba(107,114,128,.08)'}">
+ ${c.registered? 'Conta': 'Guest'}
+ </span>
+ </td>
+ </tr>
+ `).join('');
+ }
+
+ function exportCustomersCSV() {
+ const customers = _buildCustomers();
+ const fmtCPF = cpf => cpf.length === 11? `${cpf.slice(0,3)}.${cpf.slice(3,6)}.${cpf.slice(6,9)}-${cpf.slice(9)}`: cpf;
+ const header = 'Nome,Email,CPF,Telefone,Pedidos,Total Gasto,Newsletter,Cadastro,Tipo';
+ const rows = customers.map(c =>
+ [c.name, c.email, fmtCPF(c.cpf), c.phone, c.orders,
+ c.total.toFixed(2), c.newsletter?'Sim':'No',
+ c.date?.split('T')[0]||'', c.registered?'Conta':'Guest'
+ ].map(v => `"${(v||'').toString().replace(/"/g,'""')}"`).join(',')
+ );
+ const blob = new Blob([header + '\n' + rows.join('\n')], { type: 'text/csv;charset=utf-8' });
+ const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+ a.download = `tecksart-clientes-${new Date().toISOString().slice(0,10)}.csv`;
+ a.click();
+ }
+
+ function exportCustomersJSON() {
+ const customers = _buildCustomers();
+ const blob = new Blob([JSON.stringify(customers, null, 2)], { type: 'application/json' });
+ const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+ a.download = `tecksart-clientes-${new Date().toISOString().slice(0,10)}.json`;
+ a.click();
+ }
+
+ /* Newsletter */
+ function renderNewsletter() {
+ const tbody = document.getElementById('newsletter-table-body');
+ const emptyEl = document.getElementById('newsletter-empty');
+ const countEl = document.getElementById('newsletter-count');
+ const weekEl = document.getElementById('newsletter-week');
+
+ const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+ const thisWeek = _subscribers.filter(s => s.created_at && new Date(s.created_at) > weekAgo).length;
+
+ if (countEl) countEl.textContent = _subscribers.length;
+ if (weekEl) weekEl.textContent = thisWeek;
+
+ if (!_subscribers.length) {
+ if (tbody) tbody.innerHTML = '';
+ if (emptyEl) emptyEl.style.display = 'flex';
+ return;
+ }
+ if (emptyEl) emptyEl.style.display = 'none';
+ tbody.innerHTML = [..._subscribers].reverse().map(s => `
+ <tr>
+ <td class="table-cell-name">${s.email}</td>
+ <td class="table-cell-mono" style="font-size:var(--fs-2xs)">${s.created_at? s.created_at.split('T')[0]: ' - '}</td>
+ <td><button class="btn btn--ghost btn--sm" onclick="removeSubscriber('${s.email}')"></button></td>
+ </tr>
+ `).join('');
+ }
+
+ async function removeSubscriber(email) {
+ if (!confirm(`Remover ${email}?`)) return;
+ try {
+ await fetch(`/api/v4/subscribers/${encodeURIComponent(email)}`, { method: 'DELETE' });
+ _subscribers = _subscribers.filter(s => s.email!== email);
+ renderNewsletter();
+ Toast.show('Subscriber removido');
+ } catch {
+ Toast.show('Erro ao remover', 'error');
+ }
+ }
+
+ /* Analytics */
+ function renderAnalytics() {
+ const session = Store.get('ta_session');
+ const events = session?.events || [];
+
+ /* Funnel from events */
+ const count = type => events.filter(e => e.e === type).length;
+ const visits = Math.max(1, count('page_view'));
+ const prodViews = count('product_view');
+ const addCarts = count('add_to_cart');
+ const checkouts = count('checkout_open');
+ const purchases = count('purchase');
+
+ const _set = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+ const _bar = (id, pct) => { const el = document.getElementById(id); if(el) el.style.width = Math.round(pct)+'%'; };
+
+ _set('f-visitors', visits);
+ _set('f-product', prodViews);
+ _set('f-cart', addCarts);
+ _set('f-checkout', checkouts);
+ _set('f-purchase', purchases);
+
+ _bar('f-product-bar', visits > 0? prodViews / visits * 100: 0);
+ _bar('f-cart-bar', visits > 0? addCarts / visits * 100: 0);
+ _bar('f-checkout-bar', visits > 0? checkouts / visits * 100: 0);
+ _bar('f-purchase-bar', visits > 0? purchases / visits * 100: 0);
+
+ /* Top products */
+ const productCounts = {};
+ events.filter(e => e.e === 'add_to_cart').forEach(e => {
+ const id = e.d?.product_id || 'unknown';
+ productCounts[id] = (productCounts[id] || 0) + 1;
+ });
+ const topEl = document.getElementById('top-products-list');
+ if (topEl) {
+ const sorted = Object.entries(productCounts).sort((a,b) => b[1]-a[1]).slice(0,5);
+ topEl.innerHTML = sorted.length? sorted.map(([id, c]) => `
+ <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--sp-2) 0;border-bottom:1px solid var(--c-border-soft)">
+ <span style="font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--c-steel)">${id}</span>
+ <span style="font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--c-white)">${c}</span>
+ </div>`).join(''): '<p style="font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--c-steel-dim)">Sem dados ainda</p>';
+ }
+
+ /* Recent events */
+ const eventsEl = document.getElementById('events-list');
+ if (eventsEl) {
+ const recent = events.slice(-10).reverse();
+ eventsEl.innerHTML = recent.length? recent.map(e => `
+ <div style="display:flex;gap:var(--sp-3);align-items:center;padding:var(--sp-2) 0;border-bottom:1px solid var(--c-border-soft)">
+ <span style="font-family:var(--font-mono);font-size:var(--fs-2xs);color:var(--c-steel-dim)">${new Date(e.t).toLocaleTimeString('pt-BR')}</span>
+ <span style="font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--c-steel)">${e.e}</span>
+ <span style="font-family:var(--font-secondary);font-size:var(--fs-xs);color:var(--c-steel-dim)">${JSON.stringify(e.d||{})}</span>
+ </div>`).join(''): '<p style="font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--c-steel-dim)">Sem eventos nesta sesso</p>';
+ }
+ }
+
+ /* Export */
+ function exportData(type) {
+ let rows = [], filename = `tecksart-${type}-${Date.now()}.csv`;
+ if (type === 'orders') {
+ rows = [['ID','Cliente','Email','Total','Pagamento','Status','Data']];
+ _orders.forEach(o => rows.push([o.id, o.customer?.name||'', o.customer?.email||'', o.finalTotal||o.total||0, o.paymentMethod||'', o.status||'', o.created_at||'']));
+ } else if (type === 'subscribers') {
+ rows = [['Email','Data']];
+ _subscribers.forEach(s => rows.push([s.email, s.created_at||'']));
+ } else if (type === 'customers') {
+ const customers = _buildCustomers();
+ rows = [['Nome','Email','Pedidos','Total']];
+ customers.forEach(c => rows.push([c.name, c.email, c.orders, c.total]));
+ }
+ const csv = rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n');
+ const blob = new Blob([csv], { type: 'text/csv' });
+ const url = URL.createObjectURL(blob);
+ const a = document.createElement('a');
+ a.href = url; a.download = filename; a.click();
+ URL.revokeObjectURL(url);
+ Toast.show(`Exportando ${type}...`, 'success');
+ }
+
+ /* Helpers */
+ function _statusLabel(s) {
+ const labels = { pending:'Pendente', confirmed:'Confirmado', production:'Produ??o', shipped:'Enviado', delivered:'Entregue' };
+ return labels[s] || s || ' - ';
+ }
+ </script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAINSTAGE — Entrar</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/base.css">
+<link rel="stylesheet" href="../styles/components.css">
+<link rel="stylesheet" href="../styles/auth.css">
+<link rel="icon" type="image/png" href="../assets/images/brand/logo.png">
+</head>
+<body>
+<div class="auth-layout">
+  <!-- Brand Panel (Left) -->
+  <div class="auth-brand">
+    <div class="auth-brand__bg">
+      <img src="../assets/images/hero-bg.jpg" alt="">
+    </div>
+    <div class="auth-brand__overlay"></div>
+    <div class="auth-brand__grid"></div>
+    <div class="auth-brand__orb auth-brand__orb--1"></div>
+    <div class="auth-brand__orb auth-brand__orb--2"></div>
+
+    <div class="auth-brand__content">
+      <div class="auth-brand__logo">
+        <img src="../assets/images/brand/logo.png" alt="MAINSTAGE">
+      </div>
+      <h1 class="auth-brand__title">Fandom redefinido</h1>
+      <p class="auth-brand__subtitle">A plataforma de inteligência de fãs que conecta artistas ao coração do seu público.</p>
+      <ul class="auth-brand__features">
+        <li>
+          <span class="auth-brand__feat-icon">📊</span>
+          <span>Insights em tempo real sobre seu público</span>
+        </li>
+        <li>
+          <span class="auth-brand__feat-icon">📋</span>
+          <span>Pesquisas inteligentes com recompensas</span>
+        </li>
+        <li>
+          <span class="auth-brand__feat-icon">🎁</span>
+          <span>Ativações e brindes exclusivos</span>
+        </li>
+        <li>
+          <span class="auth-brand__feat-icon">⚡</span>
+          <span>Suba de nível como fã</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Form Panel (Right) -->
+  <div class="auth-form-side">
+    <div class="auth-form-container">
+      <a href="../index.html" class="auth-form__back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        Voltar ao site
+      </a>
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Entrar</button>
+        <button class="auth-tab" data-tab="register">Criar Conta</button>
+      </div>
+
+      <!-- Login Panel -->
+      <div class="auth-panel active" id="panel-login">
+        <h2 class="auth-form__title">Bem-vindo de volta</h2>
+        <p class="auth-form__subtitle">Entre na sua conta MAINSTAGE</p>
+
+        <form id="login-form" novalidate>
+          <div class="field">
+            <label>E-mail</label>
+            <input type="email" class="input" placeholder="seu@email.com" required id="login-email">
+          </div>
+          <div class="field">
+            <label>Senha</label>
+            <input type="password" class="input" placeholder="••••••••" required id="login-password">
+          </div>
+          <div class="auth-form__row-between">
+            <label class="auth-checkbox">
+              <input type="checkbox">
+              <span>Lembrar de mim</span>
+            </label>
+            <a href="#" class="auth-link">Esqueceu a senha?</a>
+          </div>
+          <button type="submit" class="btn btn--red btn--block btn--lg">Entrar</button>
+        </form>
+
+        <div class="auth-form__footer">
+          Não tem conta? <a href="#" class="auth-link" data-switch="register">Criar conta</a>
+        </div>
+      </div>
+
+      <!-- Register Panel -->
+      <div class="auth-panel" id="panel-register">
+        <h2 class="auth-form__title">Crie sua conta</h2>
+        <p class="auth-form__subtitle">Junte-se ao MAINSTAGE como fã</p>
+
+        <form id="register-form" novalidate>
+          <div class="auth-form__row">
+            <div class="field">
+              <label>Nome</label>
+              <input type="text" class="input" placeholder="Seu nome" required id="reg-name">
+            </div>
+            <div class="field">
+              <label>Sobrenome</label>
+              <input type="text" class="input" placeholder="Seu sobrenome" required id="reg-lastname">
+            </div>
+          </div>
+
+          <div class="field">
+            <label>E-mail</label>
+            <input type="email" class="input" placeholder="seu@email.com" required id="reg-email">
+          </div>
+
+          <div class="field">
+            <label>Senha</label>
+            <input type="password" class="input" placeholder="Mínimo 6 caracteres" required minlength="6" id="reg-password">
+          </div>
+
+          <div class="field">
+            <label>Gêneros favoritos</label>
+            <div class="genre-chips" id="genre-chips">
+              <span class="genre-chip" data-genre="Pop">Pop</span>
+              <span class="genre-chip" data-genre="K-Pop">K-Pop</span>
+              <span class="genre-chip" data-genre="Sertanejo">Sertanejo</span>
+              <span class="genre-chip" data-genre="Trap">Trap / Rap</span>
+              <span class="genre-chip" data-genre="Funk">Funk</span>
+              <span class="genre-chip" data-genre="R&B">R&B</span>
+              <span class="genre-chip" data-genre="Rock">Rock</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="auth-checkbox">
+              <input type="checkbox" required id="reg-consent">
+              <span>Eu aceito os <a href="#" class="auth-link">Termos de Uso</a> e a <a href="#" class="auth-link">Política de Privacidade</a></span>
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn--red btn--block btn--lg">Criar Conta</button>
+        </form>
+
+        <div class="auth-form__footer">
+          Já tem conta? <a href="#" class="auth-link" data-switch="login">Entrar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../scripts/data.js"></script>
+<script src="../scripts/core.js"></script>
+<script src="../scripts/auth.js"></script>
+</body>
+</html>

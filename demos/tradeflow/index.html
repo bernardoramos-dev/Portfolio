@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Central de Trade | TradeCorp Brasil</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root {
+  --brand-black: #000000;
+  --brand-gold: #C5A55A;
+  --brand-gold-light: #E8D5A3;
+  --brand-white: #FFFFFF;
+  --tc-pink: #E91E8C;
+  --tc-pink-dark: #C4177A;
+  --tc-pink-light: #FCE4F3;
+  --tc-pink-soft: #FFF0F8;
+  --tc-gradient: linear-gradient(135deg, #E91E8C 0%, #FF6BB5 50%, #FF9BD2 100%);
+  --tc-gradient-dark: linear-gradient(135deg, #C4177A 0%, #E91E8C 100%);
+  --text: #1a1a2e;
+  --text-2: #6b7280;
+  --text-3: #9ca3af;
+  --bg: #fafbfc;
+  --card: #ffffff;
+  --border: #e5e7eb;
+  --border-light: #f3f4f6;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.06);
+  --shadow: 0 4px 20px rgba(0,0,0,.06);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,.1);
+  --shadow-xl: 0 25px 60px rgba(0,0,0,.15);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --green: #10b981;
+  --red: #ef4444;
+  --amber: #f59e0b;
+  --blue: #3b82f6;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+
+/* ═══════════════════════ ANIMATIONS ═══════════════════════ */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .6; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+.fade-in { animation: fadeIn .6s ease-out both; }
+.slide-up { animation: slideUp .8s ease-out both; }
+
+/* ═══════════════════════ GATE DE ENTRADA ═══════════════════════ */
+.gate-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--brand-black);
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity .5s, visibility .5s;
+}
+.gate-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.gate-container {
+  text-align: center; width: 92%; max-width: 400px;
+  animation: fadeIn .8s ease-out;
+}
+.gate-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px; font-weight: 700; color: var(--brand-white);
+  letter-spacing: 6px; text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.gate-brand-sub {
+  font-size: 11px; letter-spacing: 4px; color: var(--brand-gold);
+  text-transform: uppercase; font-weight: 500;
+  margin-bottom: 48px;
+}
+.gate-line {
+  width: 40px; height: 1px; background: var(--brand-gold);
+  margin: 0 auto 48px;
+}
+.gate-input-wrap {
+  position: relative; margin-bottom: 20px;
+}
+.gate-input {
+  width: 100%; padding: 16px 20px; background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12); border-radius: 8px;
+  color: #fff; font-size: 15px; font-family: inherit;
+  outline: none; transition: all .3s; text-align: center;
+  letter-spacing: 3px;
+}
+.gate-input::placeholder { color: rgba(255,255,255,.3); letter-spacing: 1px; font-size: 13px; }
+.gate-input:focus { border-color: var(--brand-gold); background: rgba(255,255,255,.08); }
+.gate-btn {
+  width: 100%; padding: 15px; background: transparent;
+  border: 1px solid var(--brand-gold); color: var(--brand-gold);
+  font-size: 13px; font-weight: 600; font-family: inherit;
+  letter-spacing: 3px; text-transform: uppercase;
+  cursor: pointer; border-radius: 8px; transition: all .3s;
+}
+.gate-btn:hover { background: var(--brand-gold); color: var(--brand-black); }
+.gate-err {
+  color: #ff6b6b; font-size: 12px; margin-top: 12px; min-height: 18px;
+  font-weight: 500;
+}
+
+/* ═══════════════════════ CENTRAL DE TRADE ═══════════════════════ */
+#central { display: block; }
+#central.active { display: block; }
+
+.central-nav {
+  background: var(--brand-black); padding: 0 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px; border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.central-nav-brand {
+  display: flex; align-items: center; gap: 14px;
+}
+.central-nav-brand img { height: 28px; filter: brightness(0) invert(1); }
+.central-nav-brand span {
+  font-family: 'Playfair Display', serif; font-size: 18px;
+  color: #fff; letter-spacing: 3px; font-weight: 700;
+}
+.central-nav-right {
+  display: flex; align-items: center; gap: 20px;
+}
+.central-nav-right a {
+  color: rgba(255,255,255,.6); font-size: 13px; font-weight: 500;
+  transition: color .2s;
+}
+.central-nav-right a:hover { color: var(--brand-gold); }
+
+.central-hero {
+  background: var(--brand-black);
+  padding: 60px 40px 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.central-hero::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 120px;
+  background: linear-gradient(to top, var(--bg), transparent);
+}
+.central-hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px; color: var(--brand-white); font-weight: 700;
+  letter-spacing: 2px; margin-bottom: 12px;
+  position: relative; z-index: 1;
+}
+.central-hero p {
+  color: rgba(255,255,255,.5); font-size: 14px; font-weight: 400;
+  max-width: 500px; margin: 0 auto;
+  position: relative; z-index: 1;
+}
+.central-hero .gold-line {
+  width: 60px; height: 2px; background: var(--brand-gold);
+  margin: 20px auto 0; position: relative; z-index: 1;
+}
+
+.central-grid {
+  max-width: 1100px; margin: -40px auto 60px; padding: 0 24px;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px; position: relative; z-index: 2;
+}
+
+.service-card {
+  background: var(--card); border-radius: var(--radius);
+  padding: 32px 28px; box-shadow: var(--shadow);
+  border: 1px solid var(--border-light);
+  transition: all .4s cubic-bezier(.25,.8,.25,1);
+  cursor: pointer; position: relative; overflow: hidden;
+}
+.service-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0;
+  height: 4px; border-radius: var(--radius) var(--radius) 0 0;
+  transition: height .3s;
+}
+.service-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+.service-card:hover::before { height: 5px; }
+
+.service-card.tc::before { background: var(--tc-gradient); }
+.service-card.coming::before { background: linear-gradient(90deg, #cbd5e1, #94a3b8); }
+.service-card.coming { opacity: .55; cursor: default; }
+.service-card.coming:hover { transform: none; box-shadow: var(--shadow); }
+
+.sc-icon {
+  width: 56px; height: 56px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; margin-bottom: 20px;
+}
+.service-card.tc .sc-icon { background: var(--tc-pink-light); }
+.service-card.coming .sc-icon { background: #f1f5f9; }
+
+.sc-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+.sc-desc { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+.sc-badge {
+  display: inline-block; margin-top: 14px; padding: 4px 10px;
+  border-radius: 20px; font-size: 11px; font-weight: 600;
+  letter-spacing: .5px; text-transform: uppercase;
+}
+.sc-badge.active { background: #dcfce7; color: #15803d; }
+.sc-badge.soon { background: #f1f5f9; color: #94a3b8; }
+
+/* ═══════════════════════ TRADEFLOW APP ═══════════════════════ */
+#tradeflow { display: none; }
+#tradeflow.active { display: block; }
+
+.tc-nav {
+  background: #fff; padding: 0 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px; border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+.tc-nav-left {
+  display: flex; align-items: center; gap: 14px;
+}
+.tc-nav-left .back-btn {
+  width: 36px; height: 36px; border-radius: 10px;
+  border: 1px solid var(--border); background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all .2s; font-size: 16px;
+}
+.tc-nav-left .back-btn:hover { border-color: var(--tc-pink); background: var(--tc-pink-soft); }
+.tc-nav-left img { height: 36px; }
+.tc-nav-left span {
+  font-size: 16px; font-weight: 700; color: var(--tc-pink);
+  letter-spacing: .5px;
+}
+.tc-nav-right {
+  display: flex; align-items: center; gap: 14px; font-size: 13px;
+}
+.tc-nav-right a {
+  color: var(--text-2); font-weight: 500; transition: color .2s;
+  display: flex; align-items: center; gap: 6px;
+}
+.tc-nav-right a:hover { color: var(--tc-pink); }
+
+.tc-container { max-width: 860px; margin: 0 auto; padding: 28px 20px 60px; }
+
+.tc-hero {
+  background: linear-gradient(135deg, #FFF0F8 0%, #FFDBED 50%, #FFC8E6 100%);
+  border-radius: var(--radius); padding: 32px; margin-bottom: 24px;
+  position: relative; overflow: hidden;
+  border: 1px solid rgba(233,30,140,.08);
+}
+.tc-hero::after {
+  content: ''; position: absolute; right: -20px; top: -20px;
+  width: 180px; height: 180px; border-radius: 50%;
+  background: rgba(233,30,140,.06);
+}
+.tc-hero h1 {
+  font-size: 22px; font-weight: 800; color: var(--tc-pink-dark);
+  margin-bottom: 8px; position: relative; z-index: 1;
+}
+.tc-hero p {
+  color: #9b4d7c; font-size: 13px; line-height: 1.7;
+  max-width: 600px; position: relative; z-index: 1;
+}
+.tc-hero .quarter-tag {
+  display: inline-block; background: rgba(233,30,140,.12);
+  color: var(--tc-pink-dark); padding: 5px 14px; border-radius: 20px;
+  font-size: 12px; font-weight: 700; margin-top: 12px;
+  position: relative; z-index: 1;
+}
+
+/* FORM SECTIONS */
+.form-section {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border-light);
+  padding: 28px 32px; margin-bottom: 16px;
+}
+.form-section h2 {
+  font-size: 14px; font-weight: 700; color: var(--text);
+  margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+}
+.form-section h2 .step {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--tc-gradient); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; flex-shrink: 0;
+}
+
+.row { display: grid; gap: 14px; margin-bottom: 14px; }
+.row.c2 { grid-template-columns: 1fr 1fr; }
+.row.c3 { grid-template-columns: 1fr 1fr 1fr; }
+@media (max-width: 700px) { .row.c2, .row.c3 { grid-template-columns: 1fr; } }
+
+.field label {
+  display: block; font-size: 12px; font-weight: 600;
+  color: var(--text); margin-bottom: 6px;
+}
+.field label .req { color: var(--tc-pink); }
+.field input, .field select, .field textarea {
+  width: 100%; padding: 11px 14px;
+  border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  font-size: 14px; font-family: inherit; background: #fff;
+  outline: none; transition: all .2s; color: var(--text);
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: var(--tc-pink);
+  box-shadow: 0 0 0 3px rgba(233,30,140,.08);
+}
+.field textarea { min-height: 80px; resize: vertical; }
+.field .help { font-size: 11px; color: var(--text-3); margin-top: 4px; }
+
+.radios { display: flex; gap: 16px; padding-top: 4px; }
+.radio-opt {
+  display: flex; align-items: center; gap: 7px;
+  font-weight: 500; font-size: 13px; cursor: pointer;
+}
+.radio-opt input[type=radio] { accent-color: var(--tc-pink); width: auto; }
+
+/* Autocomplete */
+.autocomp { position: relative; }
+.autocomp-list {
+  position: absolute; top: 100%; left: 0; right: 0;
+  background: #fff; border: 1.5px solid var(--border);
+  border-top: none; border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  max-height: 240px; overflow: auto; z-index: 50;
+  display: none; box-shadow: var(--shadow-lg);
+}
+.autocomp-list.active { display: block; }
+.autocomp-item {
+  padding: 10px 14px; cursor: pointer;
+  border-bottom: 1px solid var(--border-light); font-size: 13px;
+  transition: background .15s;
+}
+.autocomp-item:hover { background: var(--tc-pink-soft); }
+.autocomp-item b { color: var(--tc-pink); }
+.autocomp-item small { color: var(--text-2); display: block; margin-top: 2px; font-size: 11px; }
+
+/* Buttons */
+.btn {
+  padding: 12px 24px; border: none; border-radius: var(--radius-sm);
+  font-size: 14px; font-weight: 600; font-family: inherit;
+  cursor: pointer; transition: all .2s; display: inline-flex;
+  align-items: center; gap: 8px;
+}
+.btn-pink { background: var(--tc-gradient); color: #fff; }
+.btn-pink:hover { opacity: .9; transform: translateY(-1px); box-shadow: 0 4px 15px rgba(233,30,140,.3); }
+.btn-pink:disabled { opacity: .4; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-outline {
+  background: #fff; color: var(--text); border: 1.5px solid var(--border);
+}
+.btn-outline:hover { border-color: var(--tc-pink); color: var(--tc-pink); }
+
+.form-actions {
+  display: flex; gap: 12px; justify-content: space-between;
+  align-items: center; flex-wrap: wrap; margin-top: 8px;
+}
+
+.hide { display: none !important; }
+
+/* ═══════════════════════ TOAST / LOADER / MODAL ═══════════════════════ */
+.toast {
+  position: fixed; top: 24px; right: 24px; background: var(--text);
+  color: #fff; padding: 14px 24px; border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg); z-index: 10000;
+  transform: translateX(120%); transition: transform .4s cubic-bezier(.25,.8,.25,1);
+  font-size: 14px; font-weight: 500; max-width: 400px;
+  display: flex; align-items: center; gap: 10px;
+}
+.toast.show { transform: translateX(0); }
+.toast.success { background: var(--green); }
+.toast.error { background: var(--red); }
+
+.loader-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.4);
+  backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center; z-index: 9998;
+}
+.loader-overlay.active { display: flex; }
+.loader-box {
+  background: #fff; padding: 32px 40px; border-radius: var(--radius);
+  text-align: center; box-shadow: var(--shadow-xl);
+}
+.loader-spin {
+  width: 40px; height: 40px;
+  border: 3px solid var(--border); border-top-color: var(--tc-pink);
+  border-radius: 50%; animation: spin .7s linear infinite;
+  margin: 0 auto 14px;
+}
+
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.5);
+  backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center;
+  z-index: 10001; padding: 20px;
+}
+.modal-overlay.active { display: flex; }
+.modal-box {
+  background: #fff; border-radius: var(--radius);
+  padding: 40px; max-width: 480px; width: 100%;
+  text-align: center; box-shadow: var(--shadow-xl);
+  animation: slideUp .4s ease-out;
+}
+.modal-ok-icon {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px; font-size: 28px;
+}
+.modal-box h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+.modal-box p { color: var(--text-2); font-size: 14px; line-height: 1.6; margin-bottom: 24px; }
+.modal-id {
+  background: var(--tc-pink-light); color: var(--tc-pink-dark);
+  padding: 6px 16px; border-radius: 8px; font-family: 'Inter', monospace;
+  font-weight: 700; font-size: 16px;
+}
+
+/* History section */
+.history-card {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border-light);
+  padding: 24px 28px; margin-bottom: 16px; text-align: center;
+}
+.history-card p { color: var(--text-2); font-size: 13px; }
+.history-card a { color: var(--tc-pink); font-weight: 600; }
+
+/* Notification panel */
+.notif-panel {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border-light);
+  padding: 24px 28px; margin-bottom: 16px;
+}
+.notif-panel h3 {
+  font-size: 14px; font-weight: 700; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.notif-item {
+  padding: 12px 16px; border-radius: var(--radius-sm);
+  background: var(--tc-pink-soft); margin-bottom: 8px;
+  border-left: 3px solid var(--tc-pink);
+  font-size: 13px; line-height: 1.5;
+}
+.notif-item.read { background: #f9fafb; border-left-color: var(--border); opacity: .7; }
+.notif-item .notif-date { font-size: 11px; color: var(--text-3); margin-top: 4px; }
+.notif-empty { color: var(--text-3); font-size: 13px; text-align: center; padding: 20px; }
+
+/* Footer */
+.central-footer {
+  text-align: center; padding: 40px 20px;
+  color: var(--text-3); font-size: 12px;
+}
+</style>
+<script src="../../scripts/core/form-accessibility.js?v=20260711-2" defer></script>
+</head>
+<body>
+
+<!-- ═══════════════════ GATE DE ENTRADA ═══════════════════ -->
+<div id="gate" class="gate-overlay hidden" aria-hidden="true">
+  <div class="gate-container">
+    <div class="gate-brand">TradeCorp</div>
+    <div class="gate-brand-sub">Central de Trade</div>
+    <div class="gate-line"></div>
+    <div class="gate-input-wrap">
+      <input type="hidden" id="gate-pw" class="gate-input" value="">
+    </div>
+    <button class="gate-btn" onclick="checkGate()">Entrar</button>
+    <div id="gate-err" class="gate-err"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ CENTRAL DE TRADE ═══════════════════ -->
+<div id="central">
+  <nav class="central-nav">
+    <div class="central-nav-brand">
+      <span>TradeCorp</span>
+    </div>
+    <div class="central-nav-right">
+      <a href="admin.html">Painel Admin</a>
+      <a href="#" onclick="doLogout()" style="color:var(--brand-gold)">Sair</a>
+    </div>
+  </nav>
+
+  <div class="central-hero">
+    <h1>Central de Trade</h1>
+    <p>Plataforma unificada de ferramentas e serviços para a equipe comercial TradeCorp Brasil.</p>
+    <div class="gold-line"></div>
+  </div>
+
+  <div class="central-grid">
+    <!-- TRADEFLOW -->
+    <div class="service-card tc" onclick="openTradeFlow()">
+      <div class="sc-icon">💄</div>
+      <div class="sc-title">Ajuste de Redes — TradeFlow</div>
+      <div class="sc-desc">Solicite inclusão, exclusão ou ajuste de cluster de CNPJs da base de redes TradeFlow.</div>
+      <span class="sc-badge active">Ativo</span>
+    </div>
+
+    <!-- COMING SOON -->
+    <div class="service-card coming">
+      <div class="sc-icon">📊</div>
+      <div class="sc-title">Relatórios Sell-Out</div>
+      <div class="sc-desc">Dashboards de performance e sell-out por regional, distribuidor e rede.</div>
+      <span class="sc-badge soon">Em breve</span>
+    </div>
+
+    <div class="service-card coming">
+      <div class="sc-icon">📋</div>
+      <div class="sc-title">Gestão de Contratos</div>
+      <div class="sc-desc">Controle de contratos comerciais, termos de trade e acordos por conta.</div>
+      <span class="sc-badge soon">Em breve</span>
+    </div>
+
+    <div class="service-card coming">
+      <div class="sc-icon">🎯</div>
+      <div class="sc-title">Metas & Incentivos</div>
+      <div class="sc-desc">Acompanhamento de metas comerciais e programas de incentivo.</div>
+      <span class="sc-badge soon">Em breve</span>
+    </div>
+
+    <div class="service-card coming">
+      <div class="sc-icon">📦</div>
+      <div class="sc-title">Gestão de Estoque PDV</div>
+      <div class="sc-desc">Monitoramento de estoque e ruptura nos pontos de venda.</div>
+      <span class="sc-badge soon">Em breve</span>
+    </div>
+
+    <div class="service-card coming">
+      <div class="sc-icon">🗓️</div>
+      <div class="sc-title">Calendário Promocional</div>
+      <div class="sc-desc">Planejamento de ações promocionais e execuções de trade.</div>
+      <span class="sc-badge soon">Em breve</span>
+    </div>
+  </div>
+
+  <div class="central-footer">
+    TradeCorp Brasil — Central de Trade © 2026 • Uso interno
+  </div>
+</div>
+
+<!-- ═══════════════════ TRADEFLOW APP ═══════════════════ -->
+<div id="tradeflow">
+  <nav class="tc-nav">
+    <div class="tc-nav-left">
+      <button class="back-btn" onclick="backToCentral()" title="Voltar à Central">←</button>
+      
+      <span>TradeFlow</span>
+    </div>
+    <div class="tc-nav-right">
+      <a href="#" onclick="downloadTemplate();return false">📥 Grade Modelo</a>
+      <a href="admin.html">Admin</a>
+    </div>
+  </nav>
+
+  <div class="tc-container">
+    <div class="tc-hero slide-up">
+      <h1>Formulário de Ajustes de Redes</h1>
+      <p>Solicite inclusão, exclusão ou ajuste de cluster de CNPJs. As solicitações são analisadas pela equipe comercial em até 3 dias úteis.</p>
+      <div class="quarter-tag">Q2 / 2026</div>
+    </div>
+
+    <!-- NOTIFICATION PANEL (shows when user has history) -->
+    <div id="notif-panel" class="notif-panel hide">
+      <h3>🔔 Suas notificações</h3>
+      <div id="notif-list"></div>
+    </div>
+
+    <form id="form" onsubmit="submitForm(event)">
+
+      <!-- 1. IDENTIFICATION -->
+      <div class="form-section slide-up" style="animation-delay:.1s">
+        <h2><span class="step">1</span> Identificação</h2>
+        <div class="row c2">
+          <div class="field">
+            <label>Nome do respondente <span class="req">*</span></label>
+            <input type="text" id="f_nome" required maxlength="120">
+          </div>
+          <div class="field">
+            <label>Email <span class="req">*</span></label>
+            <input type="email" id="f_email" required maxlength="150" placeholder="seu.email@exemplo.com" onblur="checkNotifications()">
+            <div class="help">Utilizado para retornar o status da solicitação.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. TIPO -->
+      <div class="form-section slide-up" style="animation-delay:.15s">
+        <h2><span class="step">2</span> Tipo de Ajuste</h2>
+        <div class="row">
+          <div class="field">
+            <label>Qual ajuste deseja solicitar? <span class="req">*</span></label>
+            <select id="f_tipo" required onchange="onTipoChange()">
+              <option value="">— selecione —</option>
+              <option value="INCLUSÃO DE CNPJ">Inclusão de CNPJ</option>
+              <option value="EXCLUSÃO DE CNPJ">Exclusão de CNPJ</option>
+              <option value="AJUSTE DE CLUSTER">Ajuste de Cluster</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. LOCALIZAÇÃO -->
+      <div class="form-section slide-up" style="animation-delay:.2s">
+        <h2><span class="step">3</span> Localização Comercial</h2>
+        <div class="row c2">
+          <div class="field">
+            <label>Gerência <span class="req">*</span></label>
+            <select id="f_gerencia" required onchange="onGerenciaChange()">
+              <option value="">— selecione —</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Distribuidor <span class="req">*</span></label>
+            <select id="f_distribuidor" required onchange="onDistribuidorChange()">
+              <option value="">— selecione a gerência —</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4A. INCLUSÃO -->
+      <div id="bloco-inclusao" class="form-section hide">
+        <h2><span class="step">4</span> Dados do Novo CNPJ</h2>
+        <div class="row c2">
+          <div class="field">
+            <label>CNPJ da nova loja <span class="req">*</span></label>
+            <input type="text" id="f_cnpj_novo" maxlength="18" oninput="maskCnpj(this)">
+          </div>
+          <div class="field">
+            <label>Nome da loja <span class="req">*</span></label>
+            <input type="text" id="f_nome_loja_novo" maxlength="150">
+          </div>
+        </div>
+        <div class="row c3">
+          <div class="field">
+            <label>Rede <span class="req">*</span></label>
+            <select id="f_rede_novo">
+              <option value="">— selecione —</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>UF <span class="req">*</span></label>
+            <select id="f_uf_novo">
+              <option value="">—</option>
+              <option>AC</option><option>AL</option><option>AM</option><option>AP</option><option>BA</option><option>CE</option><option>DF</option><option>ES</option><option>GO</option><option>MA</option><option>MG</option><option>MS</option><option>MT</option><option>PA</option><option>PB</option><option>PE</option><option>PI</option><option>PR</option><option>RJ</option><option>RN</option><option>RO</option><option>RR</option><option>RS</option><option>SC</option><option>SE</option><option>SP</option><option>TO</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Município</label>
+            <input type="text" id="f_municipio_novo" maxlength="120">
+          </div>
+        </div>
+        <div class="row c3">
+          <div class="field">
+            <label>Associação</label>
+            <select id="f_associacao"><option value="">Nenhuma</option><option>ABRAFARMA</option><option>SINDUPHAR</option><option>FEBRAFAR</option><option>CEBRAFARMA</option></select>
+          </div>
+          <div class="field">
+            <label>Ambiente de varejo</label>
+            <select id="f_ambiente"><option value="">—</option><option>Farmácias</option><option>Perfumaria</option><option>Supermercado</option><option>Atacado</option><option>Outro</option></select>
+          </div>
+          <div class="field">
+            <label>TradeFlow?</label>
+            <div class="radios"><label class="radio-opt"><input type="radio" name="f_top" value="Sim">Sim</label><label class="radio-opt"><input type="radio" name="f_top" value="Não">Não</label></div>
+          </div>
+        </div>
+        <div class="row c3">
+          <div class="field">
+            <label>Auditada Nielsen?</label>
+            <div class="radios"><label class="radio-opt"><input type="radio" name="f_nielsen" value="Sim">Sim</label><label class="radio-opt"><input type="radio" name="f_nielsen" value="Não">Não</label></div>
+          </div>
+          <div class="field">
+            <label>Auditada Scanntech?</label>
+            <div class="radios"><label class="radio-opt"><input type="radio" name="f_scanntech" value="Sim">Sim</label><label class="radio-opt"><input type="radio" name="f_scanntech" value="Não">Não</label></div>
+          </div>
+          <div class="field">
+            <label>Possui promotor?</label>
+            <div class="radios"><label class="radio-opt"><input type="radio" name="f_promotor" value="Sim">Sim</label><label class="radio-opt"><input type="radio" name="f_promotor" value="Não">Não</label></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4B. EXCLUSÃO / AJUSTE -->
+      <div id="bloco-existente" class="form-section hide">
+        <h2><span class="step">4</span> Seleção da Loja Existente</h2>
+        <div class="row">
+          <div class="field autocomp">
+            <label>Buscar CNPJ ou nome da loja <span class="req">*</span></label>
+            <input type="text" id="f_cnpj_busca" placeholder="Digite CNPJ, nome ou rede..." autocomplete="off" oninput="debounceSearch()" onblur="setTimeout(hideAuto,200)">
+            <div id="autocomp-list" class="autocomp-list"></div>
+            <div class="help">A busca filtra pela gerência e distribuidor selecionados. Selecione uma loja da lista.</div>
+          </div>
+        </div>
+        <div class="row c2">
+          <div class="field"><label>Nome da loja</label><input type="text" id="f_nome_loja_sel" readonly style="background:#f9fafb"></div>
+          <div class="field"><label>Rede</label><input type="text" id="f_rede_sel" readonly style="background:#f9fafb"></div>
+        </div>
+        <div class="row c3">
+          <div class="field"><label>UF</label><input type="text" id="f_uf_sel" readonly style="background:#f9fafb"></div>
+          <div class="field"><label>Município</label><input type="text" id="f_municipio_sel" readonly style="background:#f9fafb"></div>
+          <div class="field"><label>Ambiente atual</label><input type="text" id="f_ambiente_sel" readonly style="background:#f9fafb"></div>
+        </div>
+
+        <!-- motivo exclusão -->
+        <div id="bloco-exclusao" class="hide">
+          <div class="field" style="margin-top:8px">
+            <label>Motivo da exclusão <span class="req">*</span></label>
+            <textarea id="f_motivo_exc" maxlength="500" placeholder="Descreva o motivo da exclusão..."></textarea>
+          </div>
+        </div>
+
+        <!-- ajuste cluster -->
+        <div id="bloco-cluster" class="hide">
+          <div class="field" style="margin-top:8px">
+            <label>Novo ambiente de varejo <span class="req">*</span></label>
+            <select id="f_ambiente_novo">
+              <option value="">—</option>
+              <option>Farmácias</option><option>Perfumaria</option><option>Perfumaria Premium</option>
+              <option>Perfumaria Seletiva</option><option>Supermercado</option><option>Atacado</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. OBS -->
+      <div class="form-section slide-up" style="animation-delay:.25s">
+        <h2><span class="step">5</span> Observações</h2>
+        <div class="field">
+          <label>Observações adicionais</label>
+          <textarea id="f_obs" maxlength="1000" placeholder="Informações complementares (opcional)"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" onclick="resetForm()">Limpar</button>
+          <button type="submit" class="btn btn-pink" id="btn-submit">Enviar Solicitação →</button>
+        </div>
+      </div>
+
+    </form>
+
+    <div class="history-card">
+      <p>Já enviou uma solicitação? <a href="admin.html">Acompanhe o status no painel administrativo</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ SHARED UI ═══════════ -->
+<div id="toast" class="toast"></div>
+<div id="loader" class="loader-overlay">
+  <div class="loader-box"><div class="loader-spin"></div><div id="loader-text">Carregando...</div></div>
+</div>
+<div id="modal-ok" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-ok-icon">✓</div>
+    <h3>Solicitação Enviada!</h3>
+    <p>Seu pedido foi registrado sob o número <span id="modal-id" class="modal-id">#—</span> e será analisado pela equipe comercial em até <b>3 dias úteis</b>.</p>
+    <button class="btn btn-pink" onclick="resetForm();document.getElementById('modal-ok').classList.remove('active')">Nova Solicitação</button>
+  </div>
+</div>
+
+<script>
+// ════════════════════ CONFIG (MODO OFFLINE — DADOS FICTÍCIOS) ════════════════════
+const GATE_HASH = '';
+
+// Base de redes fictícia embutida localmente
+const BASE_OFFLINE = [
+  {id:1,gerencia:"CF1 - PERFUMARIA SP",distribuidor:"VITALE SP",rede:"TradeCorp Drog",cnpj:"11222333000181",nome_loja:"TradeCorp Drog Paulista",uf:"SP",municipio:"São Paulo",canal:"Perfumaria",cluster:"AS 01 a 04 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:2,gerencia:"CF1 - PERFUMARIA SP",distribuidor:"VITALE SP",rede:"TradeCorp Drog",cnpj:"11222333000262",nome_loja:"TradeCorp Drog Jardins",uf:"SP",municipio:"São Paulo",canal:"Perfumaria",cluster:"AS 01 a 04 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:3,gerencia:"CF1 - PERFUMARIA SP",distribuidor:"VITALE SP",rede:"Farma Vitale",cnpj:"22333444000173",nome_loja:"Farma Vitale Moema",uf:"SP",municipio:"São Paulo",canal:"Farmácias",cluster:"AS 05 a 09 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:4,gerencia:"CF1 - PERFUMARIA SP",distribuidor:"VITALE SP",rede:"Farma Vitale",cnpj:"22333444000254",nome_loja:"Farma Vitale Vila Madalena",uf:"SP",municipio:"São Paulo",canal:"Farmácias",cluster:"AS 05 a 09 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:36,gerencia:"CF1 - PERFUMARIA SP",distribuidor:"VITALE SP",rede:"Glam Store",cnpj:"70777888000188",nome_loja:"Glam Store Itaim",uf:"SP",municipio:"São Paulo",canal:"Perfumaria",cluster:"AS 01 a 04 PR",associacao:"",ativo:true},
+  {id:37,gerencia:"CF1 - PERFUMARIA SP",distribuidor:"VITALE SP",rede:"Glam Store",cnpj:"70777888000269",nome_loja:"Glam Store Higienópolis",uf:"SP",municipio:"São Paulo",canal:"Perfumaria",cluster:"AS 01 a 04 PR",associacao:"",ativo:true},
+  {id:8,gerencia:"CF2 - INTERIOR SP",distribuidor:"CENTRO-PAULISTA",rede:"Drogaria Horizonte",cnpj:"44555666000157",nome_loja:"Horizonte Santos",uf:"SP",municipio:"Santos",canal:"Farmácias",cluster:"AS 10 a 14 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:5,gerencia:"CF2 - INTERIOR SP",distribuidor:"CENTRO-PAULISTA",rede:"Rede Pharmax",cnpj:"33444555000165",nome_loja:"Pharmax Campinas Centro",uf:"SP",municipio:"Campinas",canal:"Farmácias",cluster:"AS 05 a 09 PR",associacao:"SINDUPHAR",ativo:true},
+  {id:6,gerencia:"CF2 - INTERIOR SP",distribuidor:"CENTRO-PAULISTA",rede:"Rede Pharmax",cnpj:"33444555000246",nome_loja:"Pharmax Ribeirão Preto",uf:"SP",municipio:"Ribeirão Preto",canal:"Farmácias",cluster:"AS 05 a 09 PR",associacao:"SINDUPHAR",ativo:true},
+  {id:7,gerencia:"CF2 - INTERIOR SP",distribuidor:"CENTRO-PAULISTA",rede:"Rede Pharmax",cnpj:"33444555000327",nome_loja:"Pharmax Sorocaba",uf:"SP",municipio:"Sorocaba",canal:"Farmácias",cluster:"AS 10 a 14 PR",associacao:"SINDUPHAR",ativo:true},
+  {id:12,gerencia:"CF3 - RJ",distribuidor:"CARIOCA RJ",rede:"TradeCorp Drog",cnpj:"66777888000212",nome_loja:"TradeCorp Drog Ipanema",uf:"RJ",municipio:"Rio de Janeiro",canal:"Perfumaria",cluster:"AS 01 a 04 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:13,gerencia:"CF3 - RJ",distribuidor:"CARIOCA RJ",rede:"TradeCorp Drog",cnpj:"66777888000395",nome_loja:"TradeCorp Drog Leblon",uf:"RJ",municipio:"Rio de Janeiro",canal:"Perfumaria",cluster:"AS 01 a 04 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:11,gerencia:"CF3 - RJ",distribuidor:"CARIOCA RJ",rede:"Farma Certa RJ",cnpj:"66777888000131",nome_loja:"Farma Certa Barra",uf:"RJ",municipio:"Rio de Janeiro",canal:"Farmácias",cluster:"AS 05 a 09 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:38,gerencia:"CF3 - RJ",distribuidor:"CARIOCA RJ",rede:"Glam Store",cnpj:"70777888000340",nome_loja:"Glam Store Rio Barra",uf:"RJ",municipio:"Rio de Janeiro",canal:"Perfumaria",cluster:"AS 01 a 04 PR",associacao:"",ativo:true},
+  {id:9,gerencia:"CF3 - RJ",distribuidor:"CARIOCA RJ",rede:"Qualivida Farma",cnpj:"55666777000149",nome_loja:"Qualivida Copacabana",uf:"RJ",municipio:"Rio de Janeiro",canal:"Farmácias",cluster:"AS 01 a 04 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:10,gerencia:"CF3 - RJ",distribuidor:"CARIOCA RJ",rede:"Qualivida Farma",cnpj:"55666777000220",nome_loja:"Qualivida Botafogo",uf:"RJ",municipio:"Rio de Janeiro",canal:"Farmácias",cluster:"AS 01 a 04 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:16,gerencia:"CF4 - SUL",distribuidor:"CATARINENSE",rede:"Pharma Sul",cnpj:"88999000000115",nome_loja:"Pharma Sul Florianópolis",uf:"SC",municipio:"Florianópolis",canal:"Farmácias",cluster:"AS 05 a 09 PR",associacao:"SINDUPHAR",ativo:true},
+  {id:14,gerencia:"CF4 - SUL",distribuidor:"GAUCHA PREMIUM",rede:"Farmácias do Sul",cnpj:"77888999000123",nome_loja:"Do Sul Porto Alegre Centro",uf:"RS",municipio:"Porto Alegre",canal:"Farmácias",cluster:"AS 01 a 04 PR",associacao:"SINDUPHAR",ativo:true},
+  {id:15,gerencia:"CF4 - SUL",distribuidor:"GAUCHA PREMIUM",rede:"Farmácias do Sul",cnpj:"77888999000204",nome_loja:"Do Sul Moinhos de Vento",uf:"RS",municipio:"Porto Alegre",canal:"Perfumaria",cluster:"AS 01 a 04 PR",associacao:"SINDUPHAR",ativo:true},
+  {id:17,gerencia:"CF4 - SUL",distribuidor:"PARANAENSE",rede:"Pharma Sul",cnpj:"88999000000196",nome_loja:"Pharma Sul Curitiba",uf:"PR",municipio:"Curitiba",canal:"Farmácias",cluster:"AS 05 a 09 PR",associacao:"SINDUPHAR",ativo:true},
+  {id:18,gerencia:"CF4 - SUL",distribuidor:"PARANAENSE",rede:"Rede Saúde Fácil",cnpj:"88999000000277",nome_loja:"Saúde Fácil Londrina",uf:"PR",municipio:"Londrina",canal:"Farmácias",cluster:"AS 10 a 14 PR",associacao:"SINDUPHAR",ativo:true},
+  {id:19,gerencia:"CF5 - MG",distribuidor:"MINEIRA PREMIUM",rede:"Minasfarma",cnpj:"99000111000107",nome_loja:"Minasfarma BH Savassi",uf:"MG",municipio:"Belo Horizonte",canal:"Farmácias",cluster:"AS 01 a 04 PR",associacao:"SINDUPHAR",ativo:true},
+  {id:20,gerencia:"CF5 - MG",distribuidor:"MINEIRA PREMIUM",rede:"Minasfarma",cnpj:"99000111000188",nome_loja:"Minasfarma BH Lourdes",uf:"MG",municipio:"Belo Horizonte",canal:"Farmácias",cluster:"AS 01 a 04 PR",associacao:"SINDUPHAR",ativo:true},
+  {id:39,gerencia:"CF5 - MG",distribuidor:"MINEIRA PREMIUM",rede:"Supermercado Minas",cnpj:"80888999000177",nome_loja:"SM Minas BH Buritis",uf:"MG",municipio:"Belo Horizonte",canal:"Supermercado",cluster:"AS 05 a 09 CK",associacao:"FEBRAFAR",ativo:true},
+  {id:21,gerencia:"CF5 - MG",distribuidor:"TRIÂNGULO MG",rede:"Minasfarma",cnpj:"99000111000269",nome_loja:"Minasfarma Uberlândia",uf:"MG",municipio:"Uberlândia",canal:"Farmácias",cluster:"AS 05 a 09 PR",associacao:"SINDUPHAR",ativo:true},
+  {id:27,gerencia:"CF6 - CASH/VAR N/NE",distribuidor:"ATACADO NE",rede:"Camino Atacarejo",cnpj:"30333444000172",nome_loja:"Camino Salvador",uf:"BA",municipio:"Salvador",canal:"Atacado",cluster:"AS 01 a 04 CK",associacao:"FEBRAFAR",ativo:true},
+  {id:28,gerencia:"CF6 - CASH/VAR N/NE",distribuidor:"ATACADO NE",rede:"Camino Atacarejo",cnpj:"30333444000253",nome_loja:"Camino Recife",uf:"PE",municipio:"Recife",canal:"Atacado",cluster:"AS 01 a 04 CK",associacao:"FEBRAFAR",ativo:true},
+  {id:22,gerencia:"CF6 - CASH/VAR N/NE",distribuidor:"NORDESTE BAIANO",rede:"DroPharma",cnpj:"10111222000199",nome_loja:"DroPharma Salvador Centro",uf:"BA",municipio:"Salvador",canal:"Farmácias",cluster:"AS 05 a 09 CK",associacao:"ABRAFARMA",ativo:true},
+  {id:24,gerencia:"CF6 - CASH/VAR N/NE",distribuidor:"NORDESTE CE",rede:"Vital Express",cnpj:"20222333000181",nome_loja:"Vital Express Fortaleza 01",uf:"CE",municipio:"Fortaleza",canal:"Farmácias",cluster:"AS 05 a 09 CK",associacao:"ABRAFARMA",ativo:true},
+  {id:25,gerencia:"CF6 - CASH/VAR N/NE",distribuidor:"NORDESTE CE",rede:"Vital Express",cnpj:"20222333000262",nome_loja:"Vital Express Aldeota",uf:"CE",municipio:"Fortaleza",canal:"Farmácias",cluster:"AS 05 a 09 CK",associacao:"ABRAFARMA",ativo:true},
+  {id:26,gerencia:"CF6 - CASH/VAR N/NE",distribuidor:"NORDESTE MA",rede:"Vital Express",cnpj:"20222333000343",nome_loja:"Vital Express São Luís",uf:"MA",municipio:"São Luís",canal:"Farmácias",cluster:"AS 10 a 14 CK",associacao:"ABRAFARMA",ativo:true},
+  {id:23,gerencia:"CF6 - CASH/VAR N/NE",distribuidor:"NORDESTE PE",rede:"DroPharma",cnpj:"10111222000270",nome_loja:"DroPharma Recife Boa Viagem",uf:"PE",municipio:"Recife",canal:"Farmácias",cluster:"AS 05 a 09 CK",associacao:"ABRAFARMA",ativo:true},
+  {id:29,gerencia:"CF7 - CENTRO-OESTE",distribuidor:"PLANALTO GO",rede:"FarmaCenter",cnpj:"40444555000144",nome_loja:"FarmaCenter Goiânia",uf:"GO",municipio:"Goiânia",canal:"Farmácias",cluster:"AS 05 a 09 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:30,gerencia:"CF7 - CENTRO-OESTE",distribuidor:"CAPITAL FEDERAL",rede:"FarmaCenter",cnpj:"40444555000225",nome_loja:"FarmaCenter Brasília Norte",uf:"DF",municipio:"Brasília",canal:"Farmácias",cluster:"AS 05 a 09 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:31,gerencia:"CF7 - CENTRO-OESTE",distribuidor:"CAPITAL FEDERAL",rede:"FarmaCenter",cnpj:"40444555000306",nome_loja:"FarmaCenter Brasília Sul",uf:"DF",municipio:"Brasília",canal:"Farmácias",cluster:"AS 01 a 04 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:32,gerencia:"CF7 - CENTRO-OESTE",distribuidor:"MATO-GROSSENSE",rede:"Rede Cerrado",cnpj:"50555666000199",nome_loja:"Cerrado Cuiabá",uf:"MT",municipio:"Cuiabá",canal:"Farmácias",cluster:"AS 10 a 14 PR",associacao:"CEBRAFARMA",ativo:true},
+  {id:33,gerencia:"CF7 - CENTRO-OESTE",distribuidor:"SUL-MATO",rede:"Rede Cerrado",cnpj:"50555666000270",nome_loja:"Cerrado Campo Grande",uf:"MS",municipio:"Campo Grande",canal:"Farmácias",cluster:"AS 10 a 14 PR",associacao:"CEBRAFARMA",ativo:true},
+  {id:34,gerencia:"CF8 - NORTE",distribuidor:"AMAZONAS",rede:"Farma Norte",cnpj:"60666777000133",nome_loja:"Farma Norte Manaus Centro",uf:"AM",municipio:"Manaus",canal:"Farmácias",cluster:"AS 05 a 09 CK",associacao:"FEBRAFAR",ativo:true},
+  {id:35,gerencia:"CF8 - NORTE",distribuidor:"PARAENSE",rede:"Farma Norte",cnpj:"60666777000214",nome_loja:"Farma Norte Belém",uf:"PA",municipio:"Belém",canal:"Farmácias",cluster:"AS 05 a 09 CK",associacao:"FEBRAFAR",ativo:true},
+];
+
+// Solicitações salvas localmente (simulação)
+let SOLICITACOES_LOCAL = JSON.parse(localStorage.getItem('tc_solicitacoes') || '[]');
+let nextId = Math.max(0, ...SOLICITACOES_LOCAL.map(s => s.id)) + 1;
+
+// ════════════════════ GATE ════════════════════
+async function sha256(s) {
+  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join('');
+}
+async function checkGate() {
+  const pw = document.getElementById('gate-pw').value;
+  const err = document.getElementById('gate-err');
+  if (!pw) { err.textContent = 'Acesso liberado em modo demo.'; return; }
+  if (await sha256(pw) === GATE_HASH) {
+    sessionStorage.setItem('tc_gate', '1');
+    openCentral();
+  } else { err.textContent = 'Senha incorreta.'; }
+}
+document.getElementById('gate-pw').addEventListener('keypress', e => { if (e.key === 'Enter') checkGate(); });
+
+function openCentral() {
+  document.getElementById('gate').classList.add('hidden');
+  document.getElementById('central').classList.add('active');
+  document.getElementById('tradeflow').classList.remove('active');
+}
+function openTradeFlow() {
+  document.getElementById('central').classList.remove('active');
+  document.getElementById('tradeflow').classList.add('active');
+  loadBase();
+}
+function backToCentral() {
+  document.getElementById('tradeflow').classList.remove('active');
+  document.getElementById('central').classList.add('active');
+}
+function doLogout() {
+  sessionStorage.clear();
+  location.reload();
+}
+
+// Auto-restore session
+if (sessionStorage.getItem('tc_gate') === '1') {
+  if (sessionStorage.getItem('tc_view') === 'tradeflow') openTradeFlowDirect();
+  else openCentral();
+}
+
+function openTradeFlowDirect() {
+  document.getElementById('gate').classList.add('hidden');
+  document.getElementById('tradeflow').classList.add('active');
+  loadBase();
+}
+
+// ════════════════════ LOAD BASE DATA (OFFLINE) ════════════════════
+let BASE = [];
+async function loadBase() {
+  if (BASE.length) return; // already loaded
+  showLoad('Carregando base de redes...');
+  BASE = BASE_OFFLINE.filter(r => r.ativo !== false);
+  // Populate gerências
+  const gers = [...new Set(BASE.map(r => r.gerencia).filter(Boolean))].sort();
+  const sel = document.getElementById('f_gerencia');
+  sel.innerHTML = '<option value="">— selecione —</option>' + gers.map(g => `<option>${g}</option>`).join('');
+  hideLoad();
+}
+
+// ════════════════════ CASCADING FILTERS ════════════════════
+function onGerenciaChange() {
+  const g = document.getElementById('f_gerencia').value;
+  const selDist = document.getElementById('f_distribuidor');
+  const selRede = document.getElementById('f_rede_novo');
+
+  if (!g) {
+    selDist.innerHTML = '<option value="">— selecione a gerência —</option>';
+    if (selRede) selRede.innerHTML = '<option value="">— selecione —</option>';
+    return;
+  }
+  const ds = [...new Set(BASE.filter(r => r.gerencia === g).map(r => r.distribuidor).filter(Boolean))].sort();
+  selDist.innerHTML = '<option value="">— selecione —</option>' + ds.map(d => `<option>${d}</option>`).join('');
+
+  // Reset rede
+  if (selRede) selRede.innerHTML = '<option value="">— selecione —</option>';
+}
+
+function onDistribuidorChange() {
+  const g = document.getElementById('f_gerencia').value;
+  const d = document.getElementById('f_distribuidor').value;
+  const selRede = document.getElementById('f_rede_novo');
+
+  if (!d || !g) {
+    if (selRede) selRede.innerHTML = '<option value="">— selecione —</option>';
+    return;
+  }
+  // Populate redes filtered by gerência + distribuidor
+  const redes = [...new Set(BASE.filter(r => r.gerencia === g && r.distribuidor === d).map(r => r.rede).filter(Boolean))].sort();
+  if (selRede) {
+    selRede.innerHTML = '<option value="">— selecione —</option>' + redes.map(r => `<option>${r}</option>`).join('');
+  }
+}
+
+// ════════════════════ TIPO CHANGE ════════════════════
+function onTipoChange() {
+  const t = document.getElementById('f_tipo').value;
+  document.getElementById('bloco-inclusao').classList.toggle('hide', t !== 'INCLUSÃO DE CNPJ');
+  document.getElementById('bloco-existente').classList.toggle('hide', !(t === 'EXCLUSÃO DE CNPJ' || t === 'AJUSTE DE CLUSTER'));
+  document.getElementById('bloco-exclusao').classList.toggle('hide', t !== 'EXCLUSÃO DE CNPJ');
+  document.getElementById('bloco-cluster').classList.toggle('hide', t !== 'AJUSTE DE CLUSTER');
+}
+
+// ════════════════════ CNPJ MASK ════════════════════
+function maskCnpj(el) {
+  let v = el.value.replace(/\D/g, '').slice(0, 14);
+  v = v.replace(/^(\d{2})(\d)/, '$1.$2').replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
+    .replace(/\.(\d{3})(\d)/, '.$1/$2').replace(/(\d{4})(\d)/, '$1-$2');
+  el.value = v;
+}
+
+// ════════════════════ AUTOCOMPLETE ════════════════════
+let searchTimer = null;
+function debounceSearch() { clearTimeout(searchTimer); searchTimer = setTimeout(doSearch, 280); }
+async function doSearch() {
+  const q = document.getElementById('f_cnpj_busca').value.trim();
+  if (q.length < 2) { hideAuto(); return; }
+
+  const g = document.getElementById('f_gerencia').value;
+  const d = document.getElementById('f_distribuidor').value;
+  const clean = q.replace(/\D/g, '');
+
+  // Filter from local BASE for speed + cascading
+  let results = BASE.filter(r => {
+    if (g && r.gerencia !== g) return false;
+    if (d && r.distribuidor !== d) return false;
+    const searchStr = `${r.cnpj} ${r.nome_loja} ${r.rede}`.toLowerCase();
+    return searchStr.includes(q.toLowerCase()) || (clean && r.cnpj && r.cnpj.includes(clean));
+  }).slice(0, 12);
+
+  renderAuto(results);
+}
+function renderAuto(rows) {
+  const list = document.getElementById('autocomp-list');
+  if (!rows.length) {
+    list.innerHTML = '<div class="autocomp-item" style="color:#999">Nenhum resultado encontrado</div>';
+    list.classList.add('active');
+    return;
+  }
+  list.innerHTML = rows.map(r => `
+    <div class="autocomp-item" onmousedown="selectLoja(${JSON.stringify(r).replace(/"/g, '&quot;')})">
+      <b>${fmtCnpj(r.cnpj)}</b> — ${esc(r.nome_loja)}
+      <small>${esc(r.rede)} • ${esc(r.uf)}/${esc(r.municipio)} • ${esc(r.canal || '—')}</small>
+    </div>`).join('');
+  list.classList.add('active');
+}
+function hideAuto() { document.getElementById('autocomp-list').classList.remove('active'); }
+function selectLoja(r) {
+  document.getElementById('f_cnpj_busca').value = fmtCnpj(r.cnpj) + ' — ' + r.nome_loja;
+  document.getElementById('f_nome_loja_sel').value = r.nome_loja || '';
+  document.getElementById('f_rede_sel').value = r.rede || '';
+  document.getElementById('f_uf_sel').value = r.uf || '';
+  document.getElementById('f_municipio_sel').value = r.municipio || '';
+  document.getElementById('f_ambiente_sel').value = r.canal || '';
+  window._sel = { cnpj: r.cnpj, nome: r.nome_loja, rede: r.rede, uf: r.uf, mun: r.municipio, amb: r.canal };
+  hideAuto();
+}
+
+// ════════════════════ NOTIFICATIONS (OFFLINE) ════════════════════
+async function checkNotifications() {
+  const email = document.getElementById('f_email').value.trim().toLowerCase();
+  if (!email) return;
+  const notifs = JSON.parse(localStorage.getItem('tc_notificacoes') || '[]');
+  const userNotifs = notifs.filter(n => n.email_destino === email).sort((a, b) => b.id - a.id).slice(0, 10);
+  if (userNotifs.length) {
+    const panel = document.getElementById('notif-panel');
+    const list = document.getElementById('notif-list');
+    list.innerHTML = userNotifs.map(n => `
+      <div class="notif-item ${n.lida ? 'read' : ''}">
+        <b>${esc(n.titulo)}</b><br>${esc(n.mensagem)}
+        <div class="notif-date">${fmtDate(n.created_at)}</div>
+      </div>`).join('');
+    panel.classList.remove('hide');
+    // Mark as read
+    const updated = notifs.map(n => userNotifs.find(u => u.id === n.id) ? { ...n, lida: true } : n);
+    localStorage.setItem('tc_notificacoes', JSON.stringify(updated));
+  }
+}
+
+// ════════════════════ SUBMIT ════════════════════
+async function submitForm(ev) {
+  ev.preventDefault();
+  const tipo = document.getElementById('f_tipo').value;
+  if (!tipo) { toast('Selecione o tipo de ajuste', 'error'); return; }
+
+  const payload = {
+    respondente: document.getElementById('f_nome').value.trim(),
+    email: document.getElementById('f_email').value.trim().toLowerCase(),
+    tipo_ajuste: tipo,
+    gerencia: document.getElementById('f_gerencia').value,
+    distribuidor: document.getElementById('f_distribuidor').value,
+    observacoes: document.getElementById('f_obs').value.trim(),
+    status: 'pendente',
+    quarter: 'Q2/2026'
+  };
+
+  if (tipo === 'INCLUSÃO DE CNPJ') {
+    const cnpj = document.getElementById('f_cnpj_novo').value.replace(/\D/g, '');
+    if (cnpj.length !== 14) { toast('CNPJ inválido (14 dígitos).', 'error'); return; }
+    payload.cnpj_loja = cnpj;
+    payload.nome_loja = document.getElementById('f_nome_loja_novo').value.trim();
+    payload.rede = document.getElementById('f_rede_novo').value;
+    payload.uf = document.getElementById('f_uf_novo').value;
+    payload.municipio = document.getElementById('f_municipio_novo').value.trim();
+    payload.associacao = document.getElementById('f_associacao').value;
+    payload.ambiente_varejo = document.getElementById('f_ambiente').value;
+    payload.top_redes = getRadio('f_top');
+    payload.auditada_nielsen = getRadio('f_nielsen');
+    payload.auditada_scanntech = getRadio('f_scanntech');
+    payload.tem_promotor = getRadio('f_promotor');
+    if (!payload.nome_loja || !payload.rede || !payload.uf) { toast('Preencha todos os campos obrigatórios.', 'error'); return; }
+  } else {
+    if (!window._sel) { toast('Selecione uma loja da busca.', 'error'); return; }
+    payload.cnpj_loja = window._sel.cnpj;
+    payload.nome_loja = window._sel.nome;
+    payload.rede = window._sel.rede;
+    payload.uf = window._sel.uf;
+    payload.municipio = window._sel.mun;
+    payload.ambiente_varejo = window._sel.amb;
+    if (tipo === 'EXCLUSÃO DE CNPJ') {
+      payload.motivo_exclusao = document.getElementById('f_motivo_exc').value.trim();
+      if (!payload.motivo_exclusao) { toast('Informe o motivo da exclusão.', 'error'); return; }
+    }
+    if (tipo === 'AJUSTE DE CLUSTER') {
+      payload.ambiente_varejo_novo = document.getElementById('f_ambiente_novo').value;
+      if (!payload.ambiente_varejo_novo) { toast('Selecione o novo ambiente.', 'error'); return; }
+    }
+  }
+
+  showLoad('Enviando solicitação...');
+  try {
+    // OFFLINE: save to localStorage
+    payload.id = nextId++;
+    payload.created_at = new Date().toISOString();
+    SOLICITACOES_LOCAL.push(payload);
+    localStorage.setItem('tc_solicitacoes', JSON.stringify(SOLICITACOES_LOCAL));
+    // Audit log
+    const auditLogs = JSON.parse(localStorage.getItem('tc_audit') || '[]');
+    auditLogs.push({ action: 'NEW_REQUEST', description: `Solicitação #${payload.id} (${tipo})`, user_email: payload.email, created_at: payload.created_at });
+    localStorage.setItem('tc_audit', JSON.stringify(auditLogs));
+    document.getElementById('modal-id').textContent = '#' + payload.id;
+    document.getElementById('modal-ok').classList.add('active');
+    sessionStorage.setItem('tc_view', 'tradeflow');
+  } catch (e) { toast('Erro ao enviar: ' + e.message, 'error'); }
+  hideLoad();
+}
+
+function resetForm() {
+  document.getElementById('form').reset();
+  document.getElementById('bloco-inclusao').classList.add('hide');
+  document.getElementById('bloco-existente').classList.add('hide');
+  document.getElementById('bloco-exclusao').classList.add('hide');
+  document.getElementById('bloco-cluster').classList.add('hide');
+  document.getElementById('notif-panel').classList.add('hide');
+  window._sel = null;
+  ['f_nome_loja_sel','f_rede_sel','f_uf_sel','f_municipio_sel','f_ambiente_sel'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+}
+
+// ════════════════════ GRADE MODELO ════════════════════
+function downloadTemplate() {
+  const header = ['Regional','Gerencia','CNPJ','Ativo?','Nome Loja','Rede','Associacao','Advantage','Categoria','UF','Canal','Divisao','Cluster','Municipio','Distribuidor'];
+  const example = [
+    ['CFB','CF1 - PERFUMARIA SP','11222333000181','ATIVO','TradeCorp Drog Paulista','TradeCorp Drog','ABRAFARMA','','PERFUMARIA','SP','A','PERFUMARIA','AS 01 a 04 PR','São Paulo','VITALE SP']
+  ];
+  const ws = XLSX.utils.aoa_to_sheet([header, ...example]);
+  ws['!cols'] = header.map(() => ({ wch: 18 }));
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Padrão');
+  XLSX.writeFile(wb, 'Grade_Modelo_TradeFlow_Q2-26.xlsx');
+}
+
+// ════════════════════ UTILS ════════════════════
+function getRadio(name) { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : ''; }
+function fmtCnpj(c) { return (c || '').replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5'); }
+function fmtDate(d) { if (!d) return '—'; return new Date(d).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' }); }
+function esc(s) { return (s == null || s === '') ? '' : String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+function toast(m, t = '') {
+  const e = document.getElementById('toast');
+  e.textContent = m; e.className = 'toast show ' + t;
+  setTimeout(() => e.classList.remove('show'), 3500);
+}
+function showLoad(m) { document.getElementById('loader-text').textContent = m || 'Carregando...'; document.getElementById('loader').classList.add('active'); }
+function hideLoad() { document.getElementById('loader').classList.remove('active'); }
+</script>
+<script>if(location.hash==='#preview'){addEventListener('load',function(){try{if(typeof openTradeFlowDirect==='function'){openTradeFlowDirect();}else{document.getElementById('gate').classList.add('hidden');if(typeof openCentral==='function')openCentral();}}catch(e){}});}</script>
+</body>
+</html>

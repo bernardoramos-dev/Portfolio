@@ -1,0 +1,941 @@
+/* ============================================================
+   MAINSTAGE V5 — Fan App Styles
+   Layout: sidebar rail + main content, mobile tabbar
+   ============================================================ */
+
+/* ── App Shell ── */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg-soft);
+}
+
+/* ── Sidebar Rail (desktop) ── */
+.app-rail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 220px;
+  background: var(--surface);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  padding: var(--sp-5) var(--sp-3);
+  z-index: var(--z-nav);
+  overflow-y: auto;
+}
+
+.app-rail__logo {
+  padding: var(--sp-2) var(--sp-3);
+  margin-bottom: var(--sp-6);
+}
+
+.app-rail__logo img {
+  height: 28px;
+  width: auto;
+}
+
+.app-rail__nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  flex: 1;
+}
+
+.app-rail__item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-lg);
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--ink-4);
+  transition: all var(--t-fast);
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+}
+
+.app-rail__item:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+.app-rail__item.active {
+  background: var(--red-tint);
+  color: var(--red-600);
+  font-weight: var(--fw-semibold);
+}
+
+.app-rail__item svg {
+  flex-shrink: 0;
+}
+
+.app-rail__level {
+  margin-top: auto;
+  padding: var(--sp-4);
+}
+
+.app-rail__logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-3);
+  border-radius: var(--r-lg);
+  color: var(--ink-5);
+  transition: all var(--t-fast);
+  margin-top: var(--sp-2);
+}
+
+.app-rail__logout:hover {
+  background: var(--surface-3);
+  color: var(--red-600);
+}
+
+/* ── Level Card (rail) ── */
+.rail-level {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  padding: var(--sp-4);
+}
+
+.rail-level__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+}
+
+.rail-level__pts {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  color: var(--ink);
+  margin-top: var(--sp-1);
+}
+
+.rail-level__bar {
+  height: 6px;
+  background: var(--surface-3);
+  border-radius: var(--r-full);
+  margin-top: var(--sp-3);
+  overflow: hidden;
+}
+
+.rail-level__fill {
+  height: 100%;
+  border-radius: var(--r-full);
+  transition: width var(--t-slow);
+}
+
+.rail-level__next {
+  font-size: var(--fs-2xs);
+  color: var(--ink-5);
+  margin-top: var(--sp-2);
+}
+
+/* ── Main Content ── */
+.app-main {
+  flex: 1;
+  margin-left: 220px;
+  padding: var(--sp-8);
+  padding-bottom: var(--sp-10);
+  max-width: 720px;
+  width: 100%;
+}
+
+.app-view {
+  animation: viewIn 0.35s var(--ease-out);
+}
+
+@keyframes viewIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.app-view__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-tight);
+  color: var(--ink);
+  margin-bottom: var(--sp-6);
+}
+
+.app-view__subtitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+  margin-top: var(--sp-8);
+  margin-bottom: var(--sp-4);
+}
+
+/* ── Post Card ── */
+.post-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  padding: var(--sp-5);
+  margin-bottom: var(--sp-4);
+  transition: box-shadow var(--t-norm), border-color var(--t-norm);
+}
+
+.post-card:hover {
+  box-shadow: var(--sh-md);
+  border-color: var(--line-2);
+}
+
+.post-card__head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+}
+
+.post-card__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-full);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.post-card__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.post-card__meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.post-card__author {
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+}
+
+.post-card__time {
+  font-size: var(--fs-xs);
+  color: var(--ink-5);
+}
+
+.post-card__body {
+  margin-bottom: var(--sp-4);
+}
+
+.post-card__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+  margin-bottom: var(--sp-2);
+}
+
+.post-card__text {
+  font-size: var(--fs-sm);
+  color: var(--ink-3);
+  line-height: var(--lh-normal);
+}
+
+.post-card__actions {
+  display: flex;
+  gap: var(--sp-4);
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--line);
+}
+
+.post-card__action {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-xs);
+  color: var(--ink-4);
+  cursor: pointer;
+  transition: color var(--t-fast);
+  border: none;
+  background: none;
+  padding: var(--sp-2) 0;
+  font-family: var(--font-body);
+}
+
+.post-card__action:hover {
+  color: var(--red-600);
+}
+
+.post-card__action--liked {
+  color: var(--red-600);
+  font-weight: var(--fw-semibold);
+}
+
+/* ── Survey Card ── */
+.survey-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  padding: var(--sp-5);
+  margin-bottom: var(--sp-4);
+  transition: box-shadow var(--t-norm), border-color var(--t-norm);
+}
+
+.survey-card:hover {
+  box-shadow: var(--sh-md);
+  border-color: var(--line-2);
+}
+
+.survey-card--done {
+  opacity: 0.7;
+}
+
+.survey-card__head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+}
+
+.survey-card__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-full);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.survey-card__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.survey-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.survey-card__artist {
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+}
+
+.survey-card__type {
+  font-size: var(--fs-xs);
+  color: var(--ink-4);
+}
+
+.survey-card__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+  margin-bottom: var(--sp-2);
+}
+
+.survey-card__desc {
+  font-size: var(--fs-sm);
+  color: var(--ink-3);
+  line-height: var(--lh-normal);
+  margin-bottom: var(--sp-4);
+}
+
+/* Runner bar */
+.survey-card__runner {
+  margin-bottom: var(--sp-4);
+}
+
+.survey-card__runner-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--fs-xs);
+  color: var(--ink-4);
+  margin-bottom: var(--sp-1);
+}
+
+.survey-card__runner-bar {
+  height: 6px;
+  background: var(--surface-3);
+  border-radius: var(--r-full);
+  overflow: hidden;
+}
+
+.survey-card__runner-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--red-600), var(--red-soft));
+  border-radius: var(--r-full);
+  transition: width var(--t-slow);
+}
+
+.survey-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--sp-4);
+}
+
+.survey-card__reward {
+  font-size: var(--fs-sm);
+  color: var(--ink-3);
+}
+
+.survey-card__points {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--red-600);
+}
+
+.survey-card__btn {
+  margin-top: var(--sp-2);
+}
+
+/* ── Survey Question (modal) ── */
+.survey-q {
+  margin-bottom: var(--sp-5);
+}
+
+.survey-q__text {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+  margin-bottom: var(--sp-3);
+}
+
+.survey-q__options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.survey-q__option {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: all var(--t-fast);
+  font-size: var(--fs-sm);
+}
+
+.survey-q__option:hover {
+  border-color: var(--red-tint-2);
+  background: var(--red-tint);
+}
+
+.survey-q__option input {
+  accent-color: var(--red);
+}
+
+.survey-q__rating {
+  display: flex;
+  gap: var(--sp-2);
+}
+
+.survey-q__star {
+  cursor: pointer;
+  font-size: var(--fs-xl);
+  color: var(--line-strong);
+  transition: color var(--t-fast);
+}
+
+.survey-q__star:hover span,
+.survey-q__star input:checked + span {
+  color: #F5A623;
+}
+
+.survey-q__star input {
+  display: none;
+}
+
+/* ── Activation Card ── */
+.act-card {
+  display: flex;
+  gap: var(--sp-4);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  padding: var(--sp-5);
+  margin-bottom: var(--sp-4);
+  transition: box-shadow var(--t-norm), border-color var(--t-norm);
+}
+
+.act-card:hover {
+  box-shadow: var(--sh-md);
+  border-color: var(--line-2);
+}
+
+.act-card--claimed {
+  opacity: 0.7;
+}
+
+.act-card__photo {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.act-card__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.act-card__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.act-card__top {
+  display: flex;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-2);
+}
+
+.act-card__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+  margin-bottom: var(--sp-1);
+}
+
+.act-card__artist {
+  font-size: var(--fs-sm);
+  color: var(--ink-4);
+  margin-bottom: var(--sp-3);
+}
+
+/* Stock bar */
+.act-card__stock {
+  margin-bottom: var(--sp-3);
+}
+
+.act-card__stock-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--fs-xs);
+  color: var(--ink-4);
+  margin-bottom: var(--sp-1);
+}
+
+.act-card__stock-bar {
+  height: 5px;
+  background: var(--surface-3);
+  border-radius: var(--r-full);
+  overflow: hidden;
+}
+
+.act-card__stock-fill {
+  height: 100%;
+  border-radius: var(--r-full);
+  transition: width var(--t-slow);
+}
+
+.act-card__rules {
+  font-size: var(--fs-xs);
+  color: var(--ink-5);
+  line-height: var(--lh-normal);
+  margin-bottom: var(--sp-3);
+}
+
+.act-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+}
+
+.act-card__expires {
+  font-size: var(--fs-xs);
+  color: var(--ink-4);
+}
+
+/* ── Wallet ── */
+.wallet-balance {
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  padding: var(--sp-8) var(--sp-5);
+  margin-bottom: var(--sp-6);
+}
+
+.wallet-balance__pts {
+  font-family: var(--font-display);
+  font-size: var(--fs-4xl);
+  font-weight: var(--fw-bold);
+  color: var(--ink);
+  letter-spacing: var(--ls-tight);
+}
+
+.wallet-balance__label {
+  font-size: var(--fs-sm);
+  color: var(--ink-4);
+  margin-top: var(--sp-1);
+}
+
+.wallet-balance__level {
+  margin-top: var(--sp-3);
+}
+
+.wallet-rules {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-6);
+}
+
+.wallet-rule {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: var(--sp-3) var(--sp-4);
+}
+
+.wallet-rule__icon {
+  font-size: var(--fs-lg);
+}
+
+.wallet-rule__label {
+  font-size: var(--fs-sm);
+  color: var(--ink-3);
+  flex: 1;
+}
+
+.wallet-rule__pts {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--red-600);
+}
+
+.wallet-empty {
+  text-align: center;
+  padding: var(--sp-8) var(--sp-4);
+  color: var(--ink-4);
+  font-size: var(--fs-sm);
+}
+
+.wallet-empty p {
+  margin-bottom: var(--sp-4);
+}
+
+/* Voucher Card */
+.voucher-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  padding: var(--sp-5);
+  margin-bottom: var(--sp-4);
+  overflow: hidden;
+}
+
+.voucher-card__punch {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--bg-soft);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.voucher-card__punch--left { left: -11px; }
+.voucher-card__punch--right { right: -11px; }
+
+.voucher-card__inner {
+  border-left: 2px dashed var(--line);
+  border-right: 2px dashed var(--line);
+  padding: 0 var(--sp-4);
+}
+
+.voucher-card__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+  margin-bottom: var(--sp-1);
+}
+
+.voucher-card__artist {
+  font-size: var(--fs-xs);
+  color: var(--ink-4);
+  margin-bottom: var(--sp-3);
+}
+
+.voucher-card__code {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  color: var(--red-600);
+  letter-spacing: var(--ls-wide);
+  background: var(--red-tint);
+  border-radius: var(--r-md);
+  padding: var(--sp-3);
+  cursor: pointer;
+  transition: background var(--t-fast);
+}
+
+.voucher-card__code:hover {
+  background: var(--red-tint-2);
+}
+
+/* ── Profile ── */
+.profile-card {
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  padding: var(--sp-8) var(--sp-5);
+  margin-bottom: var(--sp-4);
+}
+
+.profile-card__avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--r-full);
+  background: var(--red-tint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  color: var(--red-600);
+  margin: 0 auto var(--sp-4);
+}
+
+.profile-card__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-bold);
+  color: var(--ink);
+  margin-bottom: var(--sp-1);
+}
+
+.profile-card__genre {
+  font-size: var(--fs-sm);
+  color: var(--ink-4);
+}
+
+/* Level progress */
+.profile-level {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  padding: var(--sp-5);
+  margin-bottom: var(--sp-6);
+}
+
+.profile-level__header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--sp-2);
+}
+
+.profile-level__current {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+}
+
+.profile-level__next {
+  font-size: var(--fs-sm);
+  color: var(--ink-5);
+}
+
+.profile-level__bar {
+  height: 8px;
+  background: var(--surface-3);
+  border-radius: var(--r-full);
+  overflow: hidden;
+  margin-bottom: var(--sp-2);
+}
+
+.profile-level__fill {
+  height: 100%;
+  border-radius: var(--r-full);
+  transition: width var(--t-slow);
+}
+
+.profile-level__pts {
+  font-size: var(--fs-xs);
+  color: var(--ink-5);
+}
+
+/* Stat Grid */
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-6);
+}
+
+.profile-stat {
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: var(--sp-4) var(--sp-2);
+}
+
+.profile-stat__value {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-bold);
+  color: var(--ink);
+}
+
+.profile-stat__label {
+  font-size: var(--fs-2xs);
+  color: var(--ink-4);
+  margin-top: var(--sp-1);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wider);
+  font-family: var(--font-mono);
+}
+
+/* Followed artists */
+.profile-artists {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.profile-artist {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: var(--sp-3) var(--sp-4);
+}
+
+.profile-artist__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--r-full);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.profile-artist__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-artist__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-artist__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+}
+
+.profile-artist__genre {
+  font-size: var(--fs-xs);
+  color: var(--ink-4);
+}
+
+.profile-actions {
+  margin-top: var(--sp-8);
+}
+
+/* ── Mobile Tabbar ── */
+.app-tabbar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-nav);
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  padding: var(--sp-2) 0 var(--sp-3);
+  padding-bottom: calc(var(--sp-3) + env(safe-area-inset-bottom, 0px));
+}
+
+.app-tabbar__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--sp-1) var(--sp-3);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-medium);
+  color: var(--ink-4);
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: color var(--t-fast);
+  flex: 1;
+  font-family: var(--font-body);
+}
+
+.app-tabbar__item.active {
+  color: var(--red-600);
+}
+
+.app-tabbar__item svg {
+  flex-shrink: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .app-rail {
+    display: none;
+  }
+
+  .app-main {
+    margin-left: 0;
+    padding: var(--sp-5);
+    padding-bottom: 90px;
+    max-width: 100%;
+  }
+
+  .app-tabbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  .act-card {
+    flex-direction: column;
+  }
+
+  .act-card__photo {
+    width: 100%;
+    height: 140px;
+  }
+
+  .profile-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .wallet-rules {
+    grid-template-columns: 1fr;
+  }
+}

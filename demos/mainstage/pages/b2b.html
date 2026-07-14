@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAINSTAGE B2B — Inteligência de Fãs para Gravadoras</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles/tokens.css">
+<link rel="stylesheet" href="../styles/base.css">
+<link rel="stylesheet" href="../styles/components.css">
+<link rel="stylesheet" href="../styles/landing.css">
+<link rel="stylesheet" href="../styles/b2b.css">
+<link rel="icon" type="image/png" href="../assets/images/brand/logo.png">
+<script src="../../../scripts/core/form-accessibility.js?v=20260711-2" defer></script>
+</head>
+<body>
+
+  <!-- Grain -->
+  <div class="grain"></div>
+
+  <!-- Nav -->
+  <nav class="b2b-nav" id="b2b-nav">
+    <div class="b2b-nav__inner">
+      <a href="../index.html" class="b2b-nav__logo">
+        <img src="../assets/images/brand/logo.png" alt="MAINSTAGE">
+        <span>MAINSTAGE</span>
+      </a>
+      <div class="b2b-nav__links">
+        <a href="#problem" class="b2b-nav__link">Problema</a>
+        <a href="#modules" class="b2b-nav__link">Módulos</a>
+        <a href="#roi" class="b2b-nav__link">Resultados</a>
+        <a href="#testimonial" class="b2b-nav__link">Depoimentos</a>
+      </div>
+      <div class="b2b-nav__actions">
+        <a href="auth.html" class="btn btn--light btn--sm">Entrar</a>
+        <a href="#contact" class="btn btn--red btn--sm">Fale Conosco</a>
+      </div>
+      <button class="b2b-nav__hamburger" id="b2b-hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <!-- Mobile menu -->
+    <div class="b2b-nav__mobile" id="b2b-mobile-menu">
+      <a href="#problem">Problema</a>
+      <a href="#modules">Módulos</a>
+      <a href="#roi">Resultados</a>
+      <a href="#testimonial">Depoimentos</a>
+      <a href="auth.html" class="btn btn--light">Entrar</a>
+      <a href="#contact" class="btn btn--red">Fale Conosco</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="b2b-hero" id="b2b-hero">
+    <div class="b2b-hero__bg">
+      <img src="../assets/images/hero-bg.jpg" alt="">
+    </div>
+    <div class="b2b-hero__overlay"></div>
+    <div class="b2b-hero__grid"></div>
+    <div class="b2b-hero__orb b2b-hero__orb--1"></div>
+    <div class="b2b-hero__orb b2b-hero__orb--2"></div>
+
+    <div class="b2b-hero__content" data-reveal>
+      <div class="b2b-hero__label">
+        <span class="bdot" style="background:var(--red-soft);box-shadow:0 0 0 4px var(--red-glow)"></span>
+        Para Gravadoras & Artist Teams
+      </div>
+      <h1 class="b2b-hero__title">
+        Dados que transformam <span>fãs em resultado</span>
+      </h1>
+      <p class="b2b-hero__desc">
+        A plataforma de inteligência de fãs que entrega insights acionáveis, pesquisas inteligentes e ativações que geram engajamento real — tudo com dados consentidos.
+      </p>
+      <div class="b2b-hero__ctas">
+        <a href="#contact" class="btn btn--red btn--xl">Fale com nosso time</a>
+        <a href="#modules" class="btn btn--ghost btn--xl" style="border-color:rgba(255,255,255,0.2);color:#fff;">Ver módulos</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Laser Divider -->
+  <div class="silver-laser" style="--laser-dur:12s;--laser-delay:0s;border-top:1px solid var(--line-on-ink);"></div>
+
+  <!-- Problem / Solution -->
+  <section class="b2b-section b2b-section--dark" id="problem">
+    <div class="container">
+      <div class="b2b-section-header" data-reveal>
+        <span class="eyebrow eyebrow--red no-tick">O Problema</span>
+        <h2 class="b2b-section-title">Gravadoras operam no escuro</h2>
+        <p class="b2b-section-desc">Sem dados reais do fã, decisões são baseadas em intuição. O MAINSTAGE acende a luz.</p>
+      </div>
+
+      <div class="b2b-problem-grid" data-stagger>
+        <div class="b2b-problem-card">
+          <div class="b2b-problem-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <h3>Dados genéricos</h3>
+          <p>Streaming dá números, mas não diz quem é o fã, o que ele quer, nem como alcançá-lo.</p>
+        </div>
+        <div class="b2b-problem-card">
+          <div class="b2b-problem-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <h3>Engajamento superficial</h3>
+          <p>Redes sociais geram métricas vaidade. Sem profundidade, não há estratégia.</p>
+        </div>
+        <div class="b2b-problem-card">
+          <div class="b2b-problem-card__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          </div>
+          <h3>Ferramentas fragmentadas</h3>
+          <p>Pesquisas, CRM, ativações — tudo separado. Nenhuma visão unificada do fandom.</p>
+        </div>
+        <div class="b2b-problem-card b2b-problem-card--solution">
+          <div class="b2b-problem-card__icon b2b-problem-card__icon--red">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <h3>A Solução: MAINSTAGE</h3>
+          <p>Uma plataforma que coleta dados consentidos, gera insights acionáveis e ativa o fandom de ponta a ponta.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Laser Divider -->
+  <div class="silver-laser" style="--laser-dur:14s;--laser-delay:2s;border-top:1px solid var(--line-on-ink);"></div>
+
+  <!-- Product Modules -->
+  <section class="b2b-section b2b-section--dark" id="modules">
+    <div class="container">
+      <div class="b2b-section-header" data-reveal>
+        <span class="eyebrow eyebrow--red no-tick">Módulos</span>
+        <h2 class="b2b-section-title">Tudo que sua gravadora precisa</h2>
+        <p class="b2b-section-desc">Seis módulos integrados que cobrem todo o ciclo de inteligência de fãs, do insight à ativação.</p>
+      </div>
+    </div>
+    <div class="b2b-modules-grid" data-stagger>
+      <div class="b2b-module-card">
+        <div class="b2b-module-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3 class="b2b-module-card__title">Fan Intelligence</h3>
+        <p class="b2b-module-card__desc">Segmentação e perfil detalhado do fã com dados consentidos. Saiba quem são, onde estão e o que querem.</p>
+      </div>
+      <div class="b2b-module-card">
+        <div class="b2b-module-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <h3 class="b2b-module-card__title">Smart Surveys</h3>
+        <p class="b2b-module-card__desc">Pesquisas inteligentes com recompensas que geram taxas de resposta de 85%+. Dados reais, não estimativas.</p>
+      </div>
+      <div class="b2b-module-card">
+        <div class="b2b-module-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+        </div>
+        <h3 class="b2b-module-card__title">Activations</h3>
+        <p class="b2b-module-card__desc">Ativações e brindes que geram engajamento real. Merch, ingressos VIP, meet & greet — tudo rastreável.</p>
+      </div>
+      <div class="b2b-module-card">
+        <div class="b2b-module-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+        </div>
+        <h3 class="b2b-module-card__title">Analytics</h3>
+        <p class="b2b-module-card__desc">Dashboard com métricas de saúde do fandom, crescimento, geolocalização e insights preditivos.</p>
+      </div>
+      <div class="b2b-module-card">
+        <div class="b2b-module-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3 class="b2b-module-card__title">Ambassadors</h3>
+        <p class="b2b-module-card__desc">Programa de embaixadores com gamificação. Seus maiores fãs trazem novos fãs organicamente.</p>
+      </div>
+      <div class="b2b-module-card">
+        <div class="b2b-module-card__icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <h3 class="b2b-module-card__title">Wallet & Vouchers</h3>
+        <p class="b2b-module-card__desc">Carteira digital com vouchers, cupons e benefícios exclusivos que fortalecem o vínculo fã-artista.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Laser Divider -->
+  <div class="silver-laser" style="--laser-dur:16s;--laser-delay:1s;border-top:1px solid var(--line-on-ink);"></div>
+
+  <!-- ROI Stats -->
+  <section class="b2b-section b2b-section--dark" id="roi">
+    <div class="container">
+      <div class="b2b-section-header" data-reveal>
+        <span class="eyebrow eyebrow--red no-tick">Resultados</span>
+        <h2 class="b2b-section-title">Números que falam por si</h2>
+        <p class="b2b-section-desc">O impacto que o MAINSTAGE gera para gravadoras e artistas.</p>
+      </div>
+
+      <div class="b2b-roi-grid" data-stagger>
+        <div class="b2b-roi-card">
+          <div class="b2b-roi-card__value">3.4M+</div>
+          <div class="b2b-roi-card__label">Fãs mapeados com dados consentidos</div>
+        </div>
+        <div class="b2b-roi-card">
+          <div class="b2b-roi-card__value">85%</div>
+          <div class="b2b-roi-card__label">Taxa de resposta nas pesquisas</div>
+        </div>
+        <div class="b2b-roi-card">
+          <div class="b2b-roi-card__value">12x</div>
+          <div class="b2b-roi-card__label">Mais engajamento em ativações</div>
+        </div>
+        <div class="b2b-roi-card">
+          <div class="b2b-roi-card__value">48h</div>
+          <div class="b2b-roi-card__label">Setup completo para sua gravadora</div>
+        </div>
+        <div class="b2b-roi-card">
+          <div class="b2b-roi-card__value">89%</div>
+          <div class="b2b-roi-card__label">Taxa de retenção de fãs ativos</div>
+        </div>
+        <div class="b2b-roi-card">
+          <div class="b2b-roi-card__value">64k</div>
+          <div class="b2b-roi-card__label">Fãs cadastrados e engajados</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Laser Divider -->
+  <div class="silver-laser" style="--laser-dur:13s;--laser-delay:3s;border-top:1px solid var(--line-on-ink);"></div>
+
+  <!-- Testimonial -->
+  <section class="b2b-section b2b-section--dark" id="testimonial">
+    <div class="container">
+      <div class="b2b-testimonial" data-reveal>
+        <div class="b2b-testimonial__mark">"</div>
+        <blockquote class="b2b-testimonial__quote">
+          O MAINSTAGE transformou a forma como entendemos nosso público. Pela primeira vez, temos dados reais e consentidos que guiam decisões de marketing e lançamento. A taxa de resposta das pesquisas é impressionante.
+        </blockquote>
+        <div class="b2b-testimonial__author">Rafael Almeida</div>
+        <div class="b2b-testimonial__role">Head de Marketing Digital, Warner Music Brasil</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Laser Divider -->
+  <div class="silver-laser" style="--laser-dur:15s;--laser-delay:0.5s;border-top:1px solid var(--line-on-ink);"></div>
+
+  <!-- Contact CTA (NO PRICING) -->
+  <section class="b2b-cta" id="contact">
+    <div class="b2b-cta__glow"></div>
+    <div class="b2b-cta__grid"></div>
+    <div class="container">
+      <div class="b2b-cta__content" data-reveal>
+        <span class="eyebrow eyebrow--red no-tick" style="color:var(--red-soft);">Fale Conosco</span>
+        <h2 class="b2b-cta__title">Pronto para conhecer seus fãs de verdade?</h2>
+        <p class="b2b-cta__desc">
+          Agende uma demonstração com nosso time e descubra como o MAINSTAGE pode transformar a relação da sua gravadora com o fandom.
+        </p>
+        <div class="b2b-cta__form">
+          <div class="b2b-cta__form-row">
+            <input type="text" class="input" placeholder="Seu nome" id="cta-name">
+            <input type="email" class="input" placeholder="Seu e-mail corporativo" id="cta-email">
+          </div>
+          <input type="text" class="input" placeholder="Nome da gravadora / empresa" id="cta-company">
+          <textarea class="textarea" placeholder="Conte-nos sobre sua necessidade..." rows="3" id="cta-message"></textarea>
+          <button class="btn btn--red btn--xl btn--block" id="cta-submit">Agendar Demonstração</button>
+          <p class="b2b-cta__note">Sem compromisso · Demonstração gratuita · Setup em 48h</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="b2b-footer">
+    <div class="container">
+      <div class="b2b-footer__inner">
+        <div class="b2b-footer__brand">
+          <img src="../assets/images/brand/logo.png" alt="MAINSTAGE">
+          <p>Inteligência de fãs para gravadoras e artistas.</p>
+        </div>
+        <div class="b2b-footer__links">
+          <div>
+            <h4 class="b2b-footer__col-title">Produto</h4>
+            <a href="#modules">Módulos</a>
+            <a href="#roi">Resultados</a>
+            <a href="auth.html">Entrar</a>
+          </div>
+          <div>
+            <h4 class="b2b-footer__col-title">Empresa</h4>
+            <a href="../index.html">Site principal</a>
+            <a href="#contact">Contato</a>
+          </div>
+          <div>
+            <h4 class="b2b-footer__col-title">Legal</h4>
+            <a href="#">Termos de Uso</a>
+            <a href="#">Privacidade</a>
+            <a href="#">LGPD</a>
+          </div>
+        </div>
+      </div>
+      <div class="b2b-footer__bottom">
+        <span>© 2025 <strong>MAINSTAGE</strong>. Todos os direitos reservados.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../../../assets/vendor/gsap.min.js"></script>
+  <script src="../../../assets/vendor/ScrollTrigger.min.js"></script>
+  <script src="../../../assets/vendor/lenis.min.js"></script>
+  <script src="../scripts/data.js"></script>
+  <script src="../scripts/core.js"></script>
+  <script src="../scripts/motion.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Nav scroll
+      const nav = document.getElementById('b2b-nav');
+      if (nav) {
+        window.addEventListener('scroll', () => {
+          nav.classList.toggle('scrolled', window.scrollY > 50);
+        }, { passive: true });
+      }
+
+      // Hamburger
+      const hamburger = document.getElementById('b2b-hamburger');
+      const mobileMenu = document.getElementById('b2b-mobile-menu');
+      if (hamburger && mobileMenu) {
+        hamburger.addEventListener('click', () => {
+          hamburger.classList.toggle('open');
+          mobileMenu.classList.toggle('open');
+        });
+        mobileMenu.querySelectorAll('a').forEach(a => {
+          a.addEventListener('click', () => {
+            hamburger.classList.remove('open');
+            mobileMenu.classList.remove('open');
+          });
+        });
+      }
+
+      // CTA form submit (demo)
+      const ctaSubmit = document.getElementById('cta-submit');
+      if (ctaSubmit) {
+        ctaSubmit.addEventListener('click', () => {
+          const name = document.getElementById('cta-name');
+          const email = document.getElementById('cta-email');
+          if (name && !name.value.trim()) {
+            Toast.error('Insira seu nome');
+            return;
+          }
+          if (email && !email.value.trim()) {
+            Toast.error('Insira seu e-mail');
+            return;
+          }
+          Toast.success('Solicitação enviada! Entraremos em contato em breve.');
+          ctaSubmit.textContent = 'Enviado ✓';
+          ctaSubmit.disabled = true;
+          ctaSubmit.style.opacity = '0.6';
+        });
+      }
+    });
+  </script>
+</body>
+</html>

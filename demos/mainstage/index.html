@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAINSTAGE — Fan Intelligence para Gravadoras</title>
+<meta name="description" content="MAINSTAGE transforma comunidades de fãs em dados primários consentidos, pesquisas e inteligência acionável para gravadoras.">
+<meta property="og:title" content="MAINSTAGE — Fan Intelligence">
+<meta property="og:description" content="Dados primários consentidos de fãs. Pesquisas, segmentação e inteligência para gravadoras.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/base.css">
+<link rel="stylesheet" href="styles/components.css">
+<link rel="stylesheet" href="styles/landing.css">
+<link rel="icon" type="image/png" href="assets/images/brand/logo.png">
+</head>
+<body class="no-scroll">
+
+<!-- LOADER -->
+<div class="loader">
+  <div class="loader__inner">
+    <div class="loader__mark">
+      <img src="assets/images/brand/logo.png" alt="MAINSTAGE">
+      <div class="loader__mask"></div>
+    </div>
+    <div class="loader__bar"><div class="loader__fill"></div></div>
+    <div class="loader__pct">0%</div>
+  </div>
+</div>
+
+<div class="grain"></div>
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
+
+<!-- HEADER -->
+<header class="header">
+  <a href="index.html" class="header__logo" aria-label="MAINSTAGE"><img src="assets/images/brand/logo.png" alt="MAINSTAGE"></a>
+  <nav class="header__nav">
+    <a href="#intelligence">Intelligence</a>
+    <a href="#research">Research</a>
+    <a href="#segmentacao">Segmentação</a>
+    <a href="#comunidade">Comunidade</a>
+    <a href="pages/b2b.html">Para gravadoras</a>
+  </nav>
+  <div class="header__actions">
+    <a href="pages/auth.html" class="header__login" data-hover>
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 7.5a3 3 0 100-6 3 3 0 000 6zM2 13.5s0-3.5 5.5-3.5 5.5 3.5 5.5 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Entrar
+    </a>
+    <a href="admin/index.html" class="btn btn--red btn--sm btn--magnetic" data-magnetic="0.3">Ver dashboard</a>
+  </div>
+  <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+</header>
+
+<nav class="mobile-nav">
+  <a href="#intelligence">Intelligence</a>
+  <a href="#research">Research</a>
+  <a href="#segmentacao">Segmentação</a>
+  <a href="#comunidade">Comunidade</a>
+  <a href="pages/b2b.html">Para gravadoras</a>
+  <a href="admin/index.html" class="btn btn--red btn--lg">Ver dashboard</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero__bg">
+    <div class="hero__grid" data-parallax="0.04"></div>
+    <div class="hero__particles" id="hero-particles"></div>
+  </div>
+  <div class="aura aura--red" style="width:520px;height:520px;top:-120px;right:-80px"></div>
+  <div class="aura aura--blue" style="width:400px;height:400px;bottom:-80px;left:-60px"></div>
+  <div class="container hero__inner">
+    <div class="hero__copy">
+      <span class="pill pill--red hero__pill"><span class="dot"></span> Fan Intelligence proprietária</span>
+      <h1 class="hero__headline reveal-lines">
+        <span class="line"><span>Dados que sua</span></span>
+        <span class="line"><span>gravadora <span class="accent">nunca</span></span></span>
+        <span class="line"><span>teve.</span></span>
+      </h1>
+      <p class="hero__sub">A MAINSTAGE coleta dados primários consentidos de fãs, organiza pesquisas, segmenta audiências e entrega inteligência acionável para Universal, Sony, Warner e selos independentes.</p>
+      <div class="hero__cta">
+        <a href="admin/index.html" class="btn btn--red btn--lg btn--magnetic" data-magnetic="0.25">
+          Explorar dashboard
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="pages/app.html" class="btn btn--ghost btn--lg" data-hover>Ver app do fã</a>
+      </div>
+      <div class="hero__trust">
+        <span class="hero__trust-label">Confiam na plataforma</span>
+        <div class="hero__trust-logos"><span>Warner</span><span>Universal</span><span>Sony</span><span>Som Livre</span></div>
+      </div>
+    </div>
+
+    <div class="board" data-reveal="scale" id="hero-board">
+      <div class="board__bar">
+        <div class="board__dots"><i></i><i></i><i></i></div>
+        <span class="board__title">fan-intelligence / warner · Q2</span>
+        <span class="board__live"><i></i> Live data</span>
+      </div>
+      <div class="board__body">
+        <div class="board__kpis">
+          <div class="board__kpi"><span>Base consentida</span><strong data-count="47820">0</strong><small>+18% em 30d</small></div>
+          <div class="board__kpi"><span>Taxa de resposta</span><strong data-count="89" data-suffix="%">0</strong><small>Survey ativo</small></div>
+          <div class="board__kpi"><span>Community Health</span><strong data-count="8.7" data-dec="1">0</strong><small>Risco baixo</small></div>
+          <div class="board__kpi"><span>Superfãs</span><strong data-count="5412">0</strong><small>Segmento premium</small></div>
+        </div>
+        <div class="board__chart">
+          <div class="board__chart-h"><span>Participação por segmento</span><span>%</span></div>
+          <div class="barline"><b>Core fans</b><div class="track"><i style="--w:88%"></i></div></div>
+          <div class="barline"><b>Show intenders</b><div class="track"><i style="--w:64%"></i></div></div>
+          <div class="barline"><b>Merch buyers</b><div class="track"><i style="--w:46%"></i></div></div>
+          <div class="barline"><b>Casual</b><div class="track"><i style="--w:32%"></i></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero__scroll"><span>Scroll</span><i></i></div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="marquee__track">
+    <span class="marquee__item">Fandom redefinido</span><span class="marquee__star">✶</span>
+    <span class="marquee__item ghost">Dados consentidos</span><span class="marquee__star">✶</span>
+    <span class="marquee__item">Pesquisa proprietária</span><span class="marquee__star">✶</span>
+    <span class="marquee__item ghost">Superfã</span><span class="marquee__star">✶</span>
+    <span class="marquee__item">Inteligência acionável</span><span class="marquee__star">✶</span>
+    <span class="marquee__item ghost">LGPD nativo</span><span class="marquee__star">✶</span>
+    <span class="marquee__item">Fandom redefinido</span><span class="marquee__star">✶</span>
+    <span class="marquee__item ghost">Dados consentidos</span><span class="marquee__star">✶</span>
+    <span class="marquee__item">Pesquisa proprietária</span><span class="marquee__star">✶</span>
+    <span class="marquee__item ghost">Superfã</span><span class="marquee__star">✶</span>
+    <span class="marquee__item">Inteligência acionável</span><span class="marquee__star">✶</span>
+    <span class="marquee__item ghost">LGPD nativo</span><span class="marquee__star">✶</span>
+  </div>
+</div>
+
+<!-- INTELLIGENCE MODULES -->
+<section class="section silver-laser" style="--laser-delay:0s;--laser-dur:18s" id="intelligence">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow eyebrow--red">Plataforma B2B</span>
+      <h2 class="section-title">Da opinião do fã<br>ao plano de mercado.</h2>
+      <p class="section-sub">Seis módulos que transformam comunidades em painéis proprietários de pesquisa — com consentimento LGPD, segmentação operacional e relatórios prontos para decisão executiva.</p>
+    </div>
+    <div class="mods" data-stagger>
+      <article class="mod">
+        <span class="mod__n">01</span>
+        <div class="mod__icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16M4 12h10M4 19h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="18" cy="12" r="2.4" stroke="currentColor" stroke-width="1.7"/></svg></div>
+        <h3>Research Center</h3>
+        <p>Survey Builder, banco de perguntas, pesquisas quantitativas, entrevistas qualitativas e painéis de resultado por artista.</p>
+      </article>
+      <article class="mod">
+        <span class="mod__n">02</span>
+        <div class="mod__icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="9" r="5" stroke="currentColor" stroke-width="1.7"/><circle cx="16" cy="15" r="5" stroke="currentColor" stroke-width="1.7"/></svg></div>
+        <h3>Audience Segmentation</h3>
+        <p>Clusters por comportamento, localização, intenção de compra, histórico de resposta, superfãs e perfil de consumo.</p>
+      </article>
+      <article class="mod">
+        <span class="mod__n">03</span>
+        <div class="mod__icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.7"/><circle cx="16" cy="8" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M3 19c0-2.8 2.2-5 5-5s5 2.2 5 5M13 19c0-2.8 2.2-5 5-5 1 0 2 .3 3 .8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
+        <h3>Focus Groups</h3>
+        <p>Recrutamento de fãs qualificados para grupos focais, validação de campanha, setlist, merch e pré-lançamento.</p>
+      </article>
+      <article class="mod">
+        <span class="mod__n">04</span>
+        <div class="mod__icon"><svg viewBox="0 0 24 24" fill="none"><path d="M3 17l5-6 4 3 4-7 5 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="21" cy="11" r="1.6" fill="currentColor"/></svg></div>
+        <h3>Predictions</h3>
+        <p>Alertas de tendência, community health score, propensão de compra e recomendações de ativação por segmento.</p>
+      </article>
+      <article class="mod">
+        <span class="mod__n">05</span>
+        <div class="mod__icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
+        <h3>Artist Performance</h3>
+        <p>Fanbase size, engajamento, demografia, mapa geográfico, interesses, campanhas ativas e comparativos históricos.</p>
+      </article>
+      <article class="mod">
+        <span class="mod__n">06</span>
+        <div class="mod__icon"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
+        <h3>Executive Reports</h3>
+        <p>Relatórios para board com insights automáticos, benchmarks e recomendações acionáveis.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- HORIZONTAL SCROLL -->
+<section class="hscroll" data-horizontal id="research">
+  <div class="hscroll__track" data-horizontal-track>
+    <div class="hscroll__intro">
+      <span class="eyebrow">O fluxo MAINSTAGE</span>
+      <h2 class="section-title">Quatro etapas,<br>um ativo de dados.</h2>
+      <p class="section-sub">Role para a direita. Cada fã consentido percorre este caminho — e cada etapa vira inteligência para marketing, A&R, touring e CRM.</p>
+    </div>
+    <div class="hpanel"><div class="hpanel__glow" style="--g:radial-gradient(circle,#E5322B,transparent)"></div>
+      <span class="hpanel__n">01 / COLETA</span>
+      <div class="hpanel__stat">64k<small>fãs com consentimento explícito LGPD</small></div>
+      <div><h3>Coleta consentida</h3><p>Cadastro via embaixador ou convite. Cada dado tem finalidade declarada e pode ser revogado pelo fã.</p></div>
+    </div>
+    <div class="hpanel"><div class="hpanel__glow" style="--g:radial-gradient(circle,#1A5FD6,transparent)"></div>
+      <span class="hpanel__n">02 / PESQUISA</span>
+      <div class="hpanel__stat">89%<small>taxa média de resposta nas pesquisas</small></div>
+      <div><h3>Pesquisa ativa</h3><p>Surveys quantitativas e qualitativas direto na comunidade. Resposta em horas, não em semanas.</p></div>
+    </div>
+    <div class="hpanel"><div class="hpanel__glow" style="--g:radial-gradient(circle,#6B33C9,transparent)"></div>
+      <span class="hpanel__n">03 / SEGMENTAÇÃO</span>
+      <div class="hpanel__stat">5<small>clusters comportamentais acionáveis</small></div>
+      <div><h3>Segmentação viva</h3><p>De superfã a dormant. Cada cluster vem com a ação recomendada e o sinal que o disparou.</p></div>
+    </div>
+    <div class="hpanel"><div class="hpanel__glow" style="--g:radial-gradient(circle,#157A3C,transparent)"></div>
+      <span class="hpanel__n">04 / DECISÃO</span>
+      <div class="hpanel__stat">21%<small>uplift previsto com ativação por creator</small></div>
+      <div><h3>Decisão executiva</h3><p>Relatórios com insights automáticos e ROI. O fã deixa de ser alcance e vira unidade de inteligência.</p></div>
+    </div>
+  </div>
+  <div class="hscroll__bar"><i data-h-progress></i></div>
+  <div class="hscroll__hint">Role para explorar →</div>
+</section>
+
+<!-- SEGMENTATION -->
+<section class="section" id="segmentacao">
+  <div class="container seg">
+    <div data-reveal="left">
+      <span class="eyebrow eyebrow--red">Segmentação proprietária</span>
+      <h2 class="section-title">O fã deixa de ser alcance.<br>Vira inteligência.</h2>
+      <p class="section-sub">Cada interação consentida alimenta uma matriz de decisão. A gravadora vê o sinal e a ação recomendada — sem achismo.</p>
+      <a href="admin/analytics.html" class="btn btn--dark" data-hover style="margin-top:1.5rem">Ver segmentação completa
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+    <div class="seg__table" data-reveal="right">
+      <div class="seg__row seg__head"><span>Segmento</span><span>Sinal</span><span>Ação</span></div>
+      <div class="seg__row"><strong>Superfãs</strong><span class="sig">91% resposta</span><span class="act"><span class="badge badge--red"><span class="bdot"></span>Focus group</span></span></div>
+      <div class="seg__row"><strong>Show intenders</strong><span class="sig">Alta intenção</span><span class="act"><span class="badge badge--blue"><span class="bdot"></span>Pré-sale</span></span></div>
+      <div class="seg__row"><strong>Merch buyers</strong><span class="sig">3.2x conversão</span><span class="act"><span class="badge badge--purple"><span class="bdot"></span>Bundle drop</span></span></div>
+      <div class="seg__row"><strong>Casual</strong><span class="sig">Baixa recorrência</span><span class="act"><span class="badge badge--yellow"><span class="bdot"></span>Campanha local</span></span></div>
+      <div class="seg__row"><strong>Dormant</strong><span class="sig">+4% no mês</span><span class="act"><span class="badge badge--gray"><span class="bdot"></span>Reativação</span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="section--tight silver-laser" style="--laser-delay:6s;--laser-dur:20s">
+  <div class="container">
+    <div class="stats" data-stagger>
+      <div class="stat"><div class="stat__num"><span data-count="64" data-suffix="">0</span><span class="text-red">k</span></div><div class="stat__label">Fãs cadastrados</div></div>
+      <div class="stat"><div class="stat__num"><span data-count="4">0</span></div><div class="stat__label">Gravadoras parceiras</div></div>
+      <div class="stat"><div class="stat__num"><span data-count="89">0</span><span class="text-red">%</span></div><div class="stat__label">Taxa de resposta</div></div>
+      <div class="stat"><div class="stat__num"><span data-count="22" data-suffix="">0</span><span class="text-red">k</span></div><div class="stat__label">Superfãs ativos</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTISTS -->
+<section class="section" id="artistas">
+  <div class="container">
+    <div class="artists__head">
+      <div data-reveal>
+        <span class="eyebrow eyebrow--red">Comunidades</span>
+        <h2 class="section-title">Artistas na plataforma</h2>
+      </div>
+      <a href="pages/app.html" class="btn btn--ghost" data-hover>Ver todos</a>
+    </div>
+    <div class="artists__grid" id="artists-grid" data-stagger></div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section silver-laser" style="background:var(--bg-soft);--laser-delay:3s;--laser-dur:22s">
+  <div class="container">
+    <div class="section-head center" data-reveal>
+      <span class="eyebrow eyebrow--red no-tick">Para o fã</span>
+      <h2 class="section-title">Como funciona</h2>
+      <p class="section-sub">Da entrada na plataforma até virar Superfã, cada passo gera valor para você e para o artista.</p>
+    </div>
+    <div class="steps" data-stagger>
+      <div class="step"><div class="step__n">01</div>
+        <div class="step__icon"><svg viewBox="0 0 24 24" fill="none"><path d="M3 8a2 2 0 012-2h14a2 2 0 012 2v2a2 2 0 000 4v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2a2 2 0 000-4V8z" stroke="currentColor" stroke-width="1.6"/><path d="M14 6v12" stroke="currentColor" stroke-width="1.6" stroke-dasharray="2 2"/></svg></div>
+        <h3>Receba o convite</h3><p>Você é convidado por um Embaixador da sua comunidade — alguém de confiança no fandom.</p></div>
+      <div class="step"><div class="step__n">02</div>
+        <div class="step__icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20l4-1 9.5-9.5a2 2 0 000-3l-1-1a2 2 0 00-3 0L4 15l-1 4 1 1z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+        <h3>Crie seu perfil</h3><p>Cadastro rápido com gêneros favoritos, estado e preferências. Tudo com consentimento LGPD.</p></div>
+      <div class="step"><div class="step__n">03</div>
+        <div class="step__icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg></div>
+        <h3>Engaje de verdade</h3><p>Responda pesquisas, curta posts e descubra ativações exclusivas do seu artista favorito.</p></div>
+      <div class="step"><div class="step__n">04</div>
+        <div class="step__icon"><svg viewBox="0 0 24 24" fill="none"><path d="M8 21h8M12 17v4M5 4h14v3a7 7 0 01-14 0V4zM5 6H3v1a3 3 0 003 3M19 6h2v1a3 3 0 01-3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Torne-se Superfã</h3><p>Acumule pontos e ganhe meet & greet, ingressos VIP e brindes que ninguém mais tem.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUE PROPS -->
+<section class="section">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow eyebrow--red">Por que MAINSTAGE</span>
+      <h2 class="section-title">Experiências que nenhuma<br>plataforma oferece</h2>
+    </div>
+    <div class="vprops" data-stagger>
+      <div class="vprop"><div class="vprop__icon"><svg viewBox="0 0 24 24" fill="none"><path d="M20 12v9H4v-9M2 7h20v5H2V7zM12 7v14M12 7S9 2 6.5 4 9 7 12 7zM12 7s3-5 5.5-3S15 7 12 7z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></div><h3>Brindes exclusivos</h3><p>Camisetas de tour, ingressos VIP, laminados de backstage — custeados pela gravadora, reservados aos mais engajados.</p></div>
+      <div class="vprop"><div class="vprop__icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v2M12 19v2M5 12H3M21 12h-2M6 6l-1.5-1.5M18 6l1.5-1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/></svg></div><h3>Sua voz importa</h3><p>Pesquisas reais que chegam à mesa das gravadoras. Você não é dado — é parceiro de decisão.</p></div>
+      <div class="vprop"><div class="vprop__icon"><svg viewBox="0 0 24 24" fill="none"><path d="M16 11a4 4 0 10-8 0M3 20a6 6 0 0118 0M12 11v0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="7" r="3.2" stroke="currentColor" stroke-width="1.5"/></svg></div><h3>Meet & greet real</h3><p>Não é sorteio de rede social. Fãs engajados são selecionados com critério para experiências de verdade.</p></div>
+      <div class="vprop"><div class="vprop__icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6l7-3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>LGPD garantida</h3><p>Seus dados são seus. Consentimento explícito, transparência total e remoção a qualquer momento.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMUNITY -->
+<section class="section silver-laser" style="background:var(--bg-soft);--laser-delay:10s;--laser-dur:24s" id="comunidade">
+  <div class="container community">
+    <div class="phone" data-reveal="left" data-tilt>
+      <div class="phone__screen">
+        <div class="phone__top"><img src="assets/images/brand/logo.png" alt="MAINSTAGE"><span style="font-size:9px;color:var(--ink-4)">●●●</span></div>
+        <div class="phone__feed">
+          <div class="ppost">
+            <div class="ppost__head"><span class="ppost__av"><span class="avatar-fallback" style="--c:#E5322B">M</span></span><span class="ppost__name">Matuê <i>✓</i></span></div>
+            <p>333 chegando 🔥 Vocês da MAINSTAGE vão ser os primeiros a ouvir o snippet.</p>
+            <div class="ppost__meta"><span>♥ 1.2k</span><span>💬 182</span></div>
+          </div>
+          <div class="ppost ppost--act">
+            <div class="ppost__tag">✦ Ativação exclusiva</div>
+            <p style="font-weight:700;color:var(--ink);margin:.3rem 0 .1rem;font-size:11px">Camiseta Tour ARMY</p>
+            <p style="font-size:9px">7 restantes de 50</p>
+            <span class="ppost__cta">Resgatar voucher</span>
+          </div>
+          <div class="ppost">
+            <div class="ppost__head"><span class="ppost__av"><span class="avatar-fallback" style="--c:#D41F26">A</span></span><span class="ppost__name">Anitta <i>✓</i></span></div>
+            <p>Pesquisa: setlist da turnê. Responde e concorre a meet & greet 🎤</p>
+            <div class="ppost__meta"><span>♥ 934</span><span>💬 120</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div data-reveal="right">
+      <span class="eyebrow eyebrow--red">Comunidade</span>
+      <h2 class="section-title">Seu fandom,<br>amplificado</h2>
+      <p class="section-sub" style="max-width:100%">A MAINSTAGE não é mais uma rede social. É o lugar onde seu amor pelo artista gera oportunidades reais — e onde você é reconhecido pelo engajamento de verdade.</p>
+      <ul class="checks">
+        <li><span class="ck"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Feed exclusivo com posts dos artistas</li>
+        <li><span class="ck"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Pesquisas que influenciam decisões reais</li>
+        <li><span class="ck"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Wallet com seus vouchers e histórico</li>
+        <li><span class="ck"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Três níveis: Casual → Engajado → Superfã</li>
+      </ul>
+      <a href="pages/app.html" class="btn btn--red btn--lg btn--magnetic" data-magnetic="0.25" style="margin-top:2rem">Entrar no app do fã
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- AMBASSADORS -->
+<section class="section">
+  <div class="container">
+    <div class="section-head center" data-reveal>
+      <span class="eyebrow eyebrow--red no-tick">Fan to Pro</span>
+      <h2 class="section-title">Transforme sua paixão<br>em propósito</h2>
+      <p class="section-sub">Seja um Embaixador MAINSTAGE. Traga sua comunidade para a plataforma e ganhe reconhecimento por isso.</p>
+    </div>
+    <div class="amb-grid" id="amb-grid" data-stagger></div>
+    <div style="text-align:center;margin-top:2.5rem" data-reveal>
+      <a href="pages/auth.html" class="btn btn--outline btn--lg" data-hover>Quero ser Embaixador</a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section silver-laser" style="background:var(--bg-soft);--laser-delay:14s;--laser-dur:26s">
+  <div class="container">
+    <div class="section-head center" data-reveal>
+      <span class="eyebrow eyebrow--red no-tick">Dúvidas frequentes</span>
+      <h2 class="section-title">Perguntas e respostas</h2>
+    </div>
+    <div class="faq" data-reveal>
+      <div class="faq__item"><button class="faq__q">Como me cadastro na plataforma?<span class="faq__ic"></span></button><div class="faq__a"><div class="faq__a-inner">O cadastro é feito pelo convite de um Embaixador da sua comunidade ou diretamente pelo site. Basta criar seu perfil com email, senha e seus gêneros musicais favoritos. Todo o processo leva menos de 2 minutos.</div></div></div>
+      <div class="faq__item"><button class="faq__q">É gratuito para os fãs?<span class="faq__ic"></span></button><div class="faq__a"><div class="faq__a-inner">Sim, 100% gratuito para fãs. A plataforma é financiada pelas gravadoras parceiras, interessadas em entender e recompensar suas comunidades.</div></div></div>
+      <div class="faq__item"><button class="faq__q">O que acontece com meus dados?<span class="faq__ic"></span></button><div class="faq__a"><div class="faq__a-inner">Seus dados são coletados com consentimento explícito, em total conformidade com a LGPD. Você sabe exatamente quais dados forneceu, para qual finalidade, e pode solicitar exclusão a qualquer momento.</div></div></div>
+      <div class="faq__item"><button class="faq__q">Como funciona o sistema de brindes?<span class="faq__ic"></span></button><div class="faq__a"><div class="faq__a-inner">As gravadoras disponibilizam brindes exclusivos — camisetas de tour, ingressos VIP, meet & greet — para fãs cadastrados. Cada ativação tem estoque limitado e regras de elegibilidade. Ao resgatar, você recebe um voucher exclusivo.</div></div></div>
+      <div class="faq__item"><button class="faq__q">Como me torno Superfã?<span class="faq__ic"></span></button><div class="faq__a"><div class="faq__a-inner">Acumule pontos engajando: cada pesquisa respondida vale 25pts, cada brinde resgatado 10pts, cada curtida 5pts e cada comentário 3pts. Com 60+ pontos você atinge o nível Superfã.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section">
+  <div class="container">
+    <div class="cta" data-reveal="scale">
+      <div class="cta__inner">
+        <span class="pill pill--red"><span class="dot"></span> Comece agora</span>
+        <h2 class="cta__title">Seu fandom<br>te espera</h2>
+        <p class="cta__sub">Junte-se aos fãs que já transformaram engajamento em experiências que nenhuma outra plataforma oferece.</p>
+        <div class="cta__actions">
+          <a href="pages/auth.html" class="btn btn--red btn--xl btn--magnetic" data-magnetic="0.25">Criar conta grátis
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 8h14M9 2l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a href="pages/b2b.html" class="btn btn--light btn--xl" data-hover>Sou gravadora</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="bigmark">MAINSTAGE</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <img src="assets/images/brand/logo.png" alt="MAINSTAGE">
+        <p class="footer__desc">O primeiro hub brasileiro de dados primários de fãs musicais. Desenvolvido para gravadoras, vivido pelos fãs.</p>
+      </div>
+      <div><div class="footer__col-title">Plataforma</div><div class="footer__links"><a href="pages/auth.html">Criar conta</a><a href="pages/app.html">App do fã</a><a href="#intelligence">Como funciona</a></div></div>
+      <div><div class="footer__col-title">Empresa</div><div class="footer__links"><a href="pages/b2b.html">Para gravadoras</a><a href="admin/index.html">Dashboard</a><a href="#">FAQ</a></div></div>
+      <div><div class="footer__col-title">Legal</div><div class="footer__links"><a href="#">Termos de uso</a><a href="#">Privacidade</a><a href="#">LGPD</a></div></div>
+    </div>
+    <div class="footer__bottom"><span>© 2026 MAINSTAGE. Todos os direitos reservados.</span><span>Feito no Brasil 🇧🇷</span></div>
+  </div>
+</footer>
+
+<script src="../../assets/vendor/gsap.min.js"></script>
+<script src="../../assets/vendor/ScrollTrigger.min.js"></script>
+<script src="../../assets/vendor/lenis.min.js"></script>
+<script src="scripts/data.js"></script>
+<script src="scripts/core.js"></script>
+<script src="scripts/landing.js"></script>
+<script src="scripts/motion.js"></script>
+</body>
+</html>

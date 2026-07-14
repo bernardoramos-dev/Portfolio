@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TradeFlow | Painel Administrativo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<!-- Supabase removed — offline mode -->
+<style>
+:root {
+  --tc-pink: #E91E8C;
+  --tc-pink-dark: #C4177A;
+  --tc-pink-light: #FCE4F3;
+  --tc-pink-soft: #FFF0F8;
+  --tc-gradient: linear-gradient(135deg, #E91E8C 0%, #FF6BB5 100%);
+  --sidebar-bg: #0f0f1a;
+  --sidebar-hover: rgba(233,30,140,.08);
+  --sidebar-active: rgba(233,30,140,.15);
+  --text: #1a1a2e;
+  --text-2: #6b7280;
+  --text-3: #9ca3af;
+  --bg: #f5f6fa;
+  --card: #ffffff;
+  --border: #e5e7eb;
+  --border-light: #f3f4f6;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.04);
+  --shadow: 0 2px 12px rgba(0,0,0,.06);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,.1);
+  --shadow-xl: 0 20px 50px rgba(0,0,0,.15);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-xs: 6px;
+  --green: #10b981; --green-soft: #d1fae5; --green-text: #065f46;
+  --red: #ef4444; --red-soft: #fee2e2; --red-text: #991b1b;
+  --amber: #f59e0b; --amber-soft: #fef3c7; --amber-text: #92400e;
+  --blue: #3b82f6; --blue-soft: #dbeafe; --blue-text: #1e40af;
+  --purple: #8b5cf6; --purple-soft: #ede9fe; --purple-text: #5b21b6;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideIn { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: scale(1); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+.fade-in { animation: fadeIn .4s ease-out both; }
+
+/* ═══════════════════ GATE ═══════════════════ */
+.gate {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--sidebar-bg);
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity .4s, visibility .4s;
+}
+.gate.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.gate-box {
+  background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08);
+  border-radius: 20px; padding: 44px; width: 92%; max-width: 400px;
+  text-align: center; backdrop-filter: blur(20px);
+}
+.gate-logo {
+  font-size: 12px; font-weight: 700; color: var(--tc-pink);
+  letter-spacing: 4px; text-transform: uppercase; margin-bottom: 32px;
+}
+.gate-title { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.gate-hint { font-size: 13px; color: rgba(255,255,255,.4); margin-bottom: 24px; }
+.gate input {
+  width: 100%; padding: 14px 16px; background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1); border-radius: 10px;
+  color: #fff; font-size: 14px; font-family: inherit;
+  outline: none; margin-bottom: 12px; transition: border .2s;
+}
+.gate input::placeholder { color: rgba(255,255,255,.25); }
+.gate input:focus { border-color: var(--tc-pink); }
+.gate button {
+  width: 100%; padding: 14px; background: var(--tc-gradient);
+  color: #fff; border: none; border-radius: 10px;
+  font-size: 14px; font-weight: 600; font-family: inherit;
+  cursor: pointer; transition: opacity .2s;
+}
+.gate button:hover { opacity: .9; }
+.gate-err { color: #ff6b6b; font-size: 12px; margin-top: 12px; min-height: 16px; font-weight: 500; }
+
+/* ═══════════════════ SHELL LAYOUT ═══════════════════ */
+.shell { display: flex; min-height: 100vh; }
+.hide { display: none !important; }
+
+/* SIDEBAR */
+.sidebar {
+  width: 260px; background: var(--sidebar-bg); color: #fff;
+  flex-shrink: 0; display: flex; flex-direction: column;
+  border-right: 1px solid rgba(255,255,255,.04);
+}
+.sb-brand {
+  padding: 24px 24px 20px; border-bottom: 1px solid rgba(255,255,255,.06);
+  display: flex; align-items: center; gap: 12px;
+}
+.sb-brand-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--tc-gradient); flex-shrink: 0;
+}
+.sb-brand span {
+  font-size: 14px; font-weight: 700; letter-spacing: 1px;
+  color: rgba(255,255,255,.9);
+}
+.sb-brand small {
+  display: block; font-size: 10px; color: rgba(255,255,255,.3);
+  letter-spacing: .5px; margin-top: 2px; font-weight: 500;
+}
+.sb-nav { flex: 1; padding: 16px 0; }
+.sb-section {
+  font-size: 10px; font-weight: 600; color: rgba(255,255,255,.25);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 12px 24px 6px;
+}
+.sb-item {
+  padding: 10px 24px; cursor: pointer; font-size: 13px; font-weight: 500;
+  display: flex; align-items: center; gap: 12px;
+  color: rgba(255,255,255,.5); transition: all .2s;
+  border-left: 3px solid transparent; margin: 1px 0;
+}
+.sb-item:hover { background: var(--sidebar-hover); color: rgba(255,255,255,.8); }
+.sb-item.active {
+  background: var(--sidebar-active); color: #fff;
+  border-left-color: var(--tc-pink);
+}
+.sb-item .icon { font-size: 16px; width: 20px; text-align: center; }
+.sb-item .badge-count {
+  margin-left: auto; background: var(--tc-pink);
+  color: #fff; font-size: 10px; font-weight: 700;
+  padding: 2px 7px; border-radius: 10px;
+}
+.sb-foot {
+  padding: 16px 24px; border-top: 1px solid rgba(255,255,255,.06);
+}
+.sb-foot a {
+  display: flex; align-items: center; gap: 8px;
+  color: rgba(255,255,255,.4); font-size: 12px; font-weight: 500;
+  padding: 6px 0; text-decoration: none; transition: color .2s;
+}
+.sb-foot a:hover { color: var(--tc-pink); }
+.sb-version {
+  font-size: 10px; color: rgba(255,255,255,.15);
+  margin-top: 8px;
+}
+
+/* MAIN AREA */
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.topbar {
+  background: #fff; padding: 0 32px; height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.topbar h1 { font-size: 18px; font-weight: 700; }
+.topbar-right {
+  display: flex; align-items: center; gap: 16px;
+}
+.topbar-user {
+  display: flex; align-items: center; gap: 10px;
+}
+.topbar-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--tc-gradient); display: flex;
+  align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #fff;
+}
+.topbar-name { font-size: 13px; font-weight: 600; }
+.topbar-email { font-size: 11px; color: var(--text-3); }
+
+.content { padding: 24px 28px; flex: 1; overflow-y: auto; }
+
+/* ═══════════════════ COMPONENTS ═══════════════════ */
+.card {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border-light);
+  padding: 24px; margin-bottom: 20px;
+}
+.card-title {
+  font-size: 15px; font-weight: 700; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.card-title .ic { font-size: 18px; }
+
+/* Stats */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px; margin-bottom: 24px;
+}
+.stat-card {
+  background: var(--card); border-radius: 14px; padding: 18px 20px;
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border-light);
+  position: relative; overflow: hidden;
+}
+.stat-card::after {
+  content: ''; position: absolute; top: 0; left: 0; bottom: 0;
+  width: 4px; border-radius: 14px 0 0 14px;
+}
+.stat-card.pink::after { background: var(--tc-pink); }
+.stat-card.green::after { background: var(--green); }
+.stat-card.red::after { background: var(--red); }
+.stat-card.amber::after { background: var(--amber); }
+.stat-card.blue::after { background: var(--blue); }
+.stat-card.purple::after { background: var(--purple); }
+.stat-label {
+  font-size: 11px; font-weight: 600; color: var(--text-3);
+  text-transform: uppercase; letter-spacing: .5px;
+}
+.stat-value { font-size: 28px; font-weight: 800; margin-top: 4px; }
+.stat-card.pink .stat-value { color: var(--tc-pink); }
+.stat-card.green .stat-value { color: var(--green); }
+.stat-card.red .stat-value { color: var(--red); }
+.stat-card.amber .stat-value { color: var(--amber); }
+.stat-card.blue .stat-value { color: var(--blue); }
+.stat-card.purple .stat-value { color: var(--purple); }
+
+/* Filters */
+.filters-bar {
+  display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;
+  align-items: center;
+}
+.filter-input, .filter-select {
+  padding: 9px 14px; border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); font-size: 13px;
+  font-family: inherit; background: #fff; outline: none;
+  transition: border .2s;
+}
+.filter-input:focus, .filter-select:focus { border-color: var(--tc-pink); }
+.filter-input { min-width: 240px; }
+
+/* Tables */
+.tbl-wrap { overflow-x: auto; border-radius: var(--radius-sm); }
+table { width: 100%; border-collapse: collapse; }
+th {
+  text-align: left; padding: 10px 14px; font-size: 11px;
+  font-weight: 700; color: var(--text-3); text-transform: uppercase;
+  letter-spacing: .5px; border-bottom: 2px solid var(--border);
+  background: #fafbfc; white-space: nowrap;
+}
+td {
+  padding: 10px 14px; font-size: 13px; border-bottom: 1px solid var(--border-light);
+  vertical-align: middle;
+}
+tr:hover td { background: #fafbfd; }
+tr.archived td { opacity: .5; text-decoration: line-through; }
+
+/* Badges */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; letter-spacing: .3px;
+}
+.b-pendente { background: var(--amber-soft); color: var(--amber-text); }
+.b-aprovado { background: var(--green-soft); color: var(--green-text); }
+.b-rejeitado { background: var(--red-soft); color: var(--red-text); }
+.b-processado { background: var(--blue-soft); color: var(--blue-text); }
+.b-inclusao { background: var(--green-soft); color: var(--green-text); }
+.b-exclusao { background: var(--red-soft); color: var(--red-text); }
+.b-cluster { background: var(--purple-soft); color: var(--purple-text); }
+
+/* Buttons */
+.btn {
+  padding: 8px 16px; border: none; border-radius: var(--radius-xs);
+  font-size: 13px; font-weight: 600; font-family: inherit;
+  cursor: pointer; transition: all .2s; display: inline-flex;
+  align-items: center; gap: 6px; white-space: nowrap;
+}
+.btn-pink { background: var(--tc-gradient); color: #fff; }
+.btn-pink:hover { opacity: .9; }
+.btn-green { background: var(--green); color: #fff; }
+.btn-green:hover { background: #059669; }
+.btn-red { background: var(--red); color: #fff; }
+.btn-red:hover { background: #dc2626; }
+.btn-blue { background: var(--blue); color: #fff; }
+.btn-outline {
+  background: #fff; color: var(--text); border: 1.5px solid var(--border);
+}
+.btn-outline:hover { border-color: var(--tc-pink); color: var(--tc-pink); }
+.btn-sm { padding: 5px 10px; font-size: 12px; }
+.btn-icon {
+  padding: 6px 8px; background: #fff; border: 1px solid var(--border);
+  border-radius: var(--radius-xs); cursor: pointer; font-size: 14px;
+  transition: all .15s; display: inline-flex; align-items: center;
+}
+.btn-icon:hover { background: var(--tc-pink-soft); border-color: var(--tc-pink); }
+
+/* Pager */
+.pager {
+  display: flex; justify-content: center; gap: 6px;
+  padding: 14px 0; align-items: center;
+}
+.pager button {
+  padding: 6px 12px; background: #fff; border: 1px solid var(--border);
+  border-radius: var(--radius-xs); cursor: pointer; font-size: 12px;
+  font-family: inherit; transition: all .15s;
+}
+.pager button.active { background: var(--tc-pink); color: #fff; border-color: var(--tc-pink); }
+.pager button:disabled { opacity: .3; cursor: not-allowed; }
+.pager-info { margin-left: 12px; color: var(--text-3); font-size: 12px; }
+
+/* Upload */
+.drop-zone {
+  border: 2px dashed var(--border); border-radius: var(--radius);
+  padding: 48px 24px; text-align: center; background: #fafbfc;
+  cursor: pointer; transition: all .2s;
+}
+.drop-zone:hover, .drop-zone.dragover {
+  border-color: var(--tc-pink); background: var(--tc-pink-soft);
+}
+.drop-zone .dz-icon { font-size: 40px; margin-bottom: 8px; }
+.drop-zone h3 { font-size: 14px; margin-bottom: 4px; }
+.drop-zone p { font-size: 12px; color: var(--text-3); }
+.drop-zone input { display: none; }
+
+/* Modal */
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,.5); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+.modal.active { display: flex; }
+.modal-box {
+  background: #fff; border-radius: var(--radius); max-width: 720px;
+  width: 100%; max-height: 90vh; overflow: auto;
+  animation: slideIn .3s ease-out;
+}
+.modal-head {
+  padding: 20px 24px; border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.modal-head h3 { font-size: 16px; font-weight: 700; }
+.modal-close {
+  background: none; border: none; font-size: 20px;
+  cursor: pointer; color: var(--text-3); transition: color .2s;
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-close:hover { color: var(--red); background: var(--red-soft); }
+.modal-body { padding: 24px; }
+.detail-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px 24px;
+}
+.detail-grid .dk {
+  font-size: 11px; color: var(--text-3); font-weight: 600;
+  text-transform: uppercase; letter-spacing: .5px;
+}
+.detail-grid .dv {
+  font-size: 14px; font-weight: 500; margin-top: 2px;
+}
+.detail-obs {
+  margin-top: 16px; background: #f9fafb; padding: 12px 16px;
+  border-radius: var(--radius-sm); font-size: 13px; line-height: 1.5;
+}
+.modal-actions {
+  padding: 16px 24px; border-top: 1px solid var(--border);
+  display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap;
+}
+
+/* Base search */
+.base-search-wrap {
+  position: relative; margin-bottom: 16px;
+}
+.base-search {
+  width: 100%; padding: 12px 16px 12px 40px;
+  border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  font-size: 14px; font-family: inherit; outline: none;
+  transition: border .2s; background: #fff;
+}
+.base-search:focus { border-color: var(--tc-pink); }
+.base-search-icon {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  font-size: 16px; color: var(--text-3);
+}
+
+/* Toast/Loader */
+.toast {
+  position: fixed; top: 20px; right: 20px; background: var(--text);
+  color: #fff; padding: 12px 20px; border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg); z-index: 1200;
+  transform: translateX(120%); transition: transform .3s cubic-bezier(.25,.8,.25,1);
+  font-size: 13px; font-weight: 500; max-width: 380px;
+}
+.toast.show { transform: translateX(0); }
+.toast.success { background: var(--green); }
+.toast.error { background: var(--red); }
+.loader { position: fixed; inset: 0; background: rgba(0,0,0,.3); backdrop-filter: blur(3px); display: none; align-items: center; justify-content: center; z-index: 1100; }
+.loader.active { display: flex; }
+.loader-box { background: #fff; padding: 24px 36px; border-radius: var(--radius); text-align: center; font-weight: 500; font-size: 14px; box-shadow: var(--shadow-xl); }
+.loader-spin { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--tc-pink); border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 12px; }
+
+.empty { text-align: center; padding: 36px; color: var(--text-3); font-size: 13px; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .content { padding: 16px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .detail-grid { grid-template-columns: 1fr; }
+}
+</style>
+<script src="../../scripts/core/form-accessibility.js?v=20260711-2" defer></script>
+</head>
+<body>
+
+<!-- ═══════════ GATE 1: Demo bypass ═══════════ -->
+<div id="gate1" class="gate hidden" aria-hidden="true">
+  <div class="gate-box">
+    <div class="gate-logo">TradeFlow • Admin</div>
+    <div class="gate-title">Acesso liberado</div>
+    <div class="gate-hint">Modo demonstração</div>
+    <input type="hidden" id="g1-pw" value="">
+    <button onclick="checkGate1()">Continuar</button>
+    <div id="g1-err" class="gate-err"></div>
+  </div>
+</div>
+
+<!-- ═══════════ GATE 2: Login admin ═══════════ -->
+<div id="gate2" class="gate hidden" aria-hidden="true">
+  <div class="gate-box">
+    <div class="gate-logo">Painel Administrativo</div>
+    <div class="gate-title">Demo admin</div>
+    <div class="gate-hint">Acesso automático</div>
+    <input type="hidden" id="g2-email" value="demo@tradeflow.app">
+    <input type="hidden" id="g2-pw" value="">
+    <button onclick="checkGate2()">Acessar Painel</button>
+    <div id="g2-err" class="gate-err"></div>
+  </div>
+</div>
+
+<!-- ═══════════ MAIN SHELL ═══════════ -->
+<div id="shell" class="shell hide">
+
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <div class="sb-brand-dot"></div>
+      <div>
+        <span>TRADEFLOW</span>
+        <small>Painel Admin</small>
+      </div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-section">Principal</div>
+      <div class="sb-item active" data-tab="dashboard" onclick="openTab('dashboard')">
+        <span class="icon">📊</span> Dashboard
+      </div>
+      <div class="sb-item" data-tab="solicitacoes" onclick="openTab('solicitacoes')">
+        <span class="icon">📋</span> Solicitações
+        <span class="badge-count" id="pending-badge" style="display:none">0</span>
+      </div>
+      <div class="sb-section">Dados</div>
+      <div class="sb-item" data-tab="base" onclick="openTab('base')">
+        <span class="icon">🗂️</span> Base de Redes
+      </div>
+      <div class="sb-item" data-tab="exportar" onclick="openTab('exportar')">
+        <span class="icon">📤</span> Exportar
+      </div>
+      <div class="sb-section">Sistema</div>
+      <div class="sb-item" data-tab="audit" onclick="openTab('audit')">
+        <span class="icon">📝</span> Auditoria
+      </div>
+    </nav>
+    <div class="sb-foot">
+      <a href="index.html">← Central de Trade</a>
+      <a href="#" onclick="logout();return false">Sair</a>
+      <div class="sb-version">v4.0 — Supabase + GitHub Pages</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <h1 id="tab-title">Dashboard</h1>
+      <div class="topbar-right">
+        <div class="topbar-user">
+          <div class="topbar-avatar" id="user-avatar">?</div>
+          <div>
+            <div class="topbar-name" id="user-name">Admin</div>
+            <div class="topbar-email" id="user-email">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ═══════════ DASHBOARD ═══════════ -->
+      <section id="tab-dashboard" class="tab fade-in">
+        <div class="stats-grid">
+          <div class="stat-card pink"><div class="stat-label">Total</div><div class="stat-value" id="s-total">—</div></div>
+          <div class="stat-card green"><div class="stat-label">Inclusões</div><div class="stat-value" id="s-inc">—</div></div>
+          <div class="stat-card red"><div class="stat-label">Exclusões</div><div class="stat-value" id="s-exc">—</div></div>
+          <div class="stat-card purple"><div class="stat-label">Cluster</div><div class="stat-value" id="s-clu">—</div></div>
+          <div class="stat-card amber"><div class="stat-label">Pendentes</div><div class="stat-value" id="s-pend">—</div></div>
+          <div class="stat-card blue"><div class="stat-label">Hoje</div><div class="stat-value" id="s-hoje">—</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="ic">⚡</span> Últimas Solicitações</div>
+          <div class="tbl-wrap">
+            <table id="tbl-recent"><thead><tr><th>#</th><th>Data</th><th>Respondente</th><th>Tipo</th><th>CNPJ</th><th>Status</th><th></th></tr></thead><tbody></tbody></table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════ SOLICITAÇÕES ═══════════ -->
+      <section id="tab-solicitacoes" class="tab hide">
+        <div class="card">
+          <div class="filters-bar">
+            <input class="filter-input" type="text" id="f-q" placeholder="🔍 Buscar nome, CNPJ, rede, email..." oninput="debFilter()">
+            <select class="filter-select" id="f-tipo" onchange="loadSols()">
+              <option value="">Todos tipos</option>
+              <option>INCLUSÃO DE CNPJ</option><option>EXCLUSÃO DE CNPJ</option><option>AJUSTE DE CLUSTER</option>
+            </select>
+            <select class="filter-select" id="f-status" onchange="loadSols()">
+              <option value="">Todos status</option>
+              <option value="pendente">Pendente</option><option value="aprovado">Aprovado</option>
+              <option value="rejeitado">Rejeitado</option><option value="processado">Processado</option>
+            </select>
+          </div>
+          <div class="tbl-wrap">
+            <table id="tbl-sols"><thead><tr><th>#</th><th>Data</th><th>Respondente</th><th>Email</th><th>Tipo</th><th>Gerência</th><th>CNPJ</th><th>Rede</th><th>Status</th><th></th></tr></thead><tbody></tbody></table>
+          </div>
+          <div class="pager" id="pager"></div>
+        </div>
+      </section>
+
+      <!-- ═══════════ BASE DE REDES ═══════════ -->
+      <section id="tab-base" class="tab hide">
+        <div class="card">
+          <div class="card-title"><span class="ic">📥</span> Upload da Base de Redes</div>
+          <p style="color:var(--text-3);font-size:13px;margin-bottom:14px">Envie a planilha no formato da <a href="#" onclick="downloadTemplate();return false" style="color:var(--tc-pink);font-weight:600">grade modelo</a>. A base atual será substituída.</p>
+          <label class="drop-zone" id="drop-zone">
+            <div class="dz-icon">📊</div>
+            <h3>Clique ou arraste o arquivo .xlsx</h3>
+            <p>Aceita planilhas no formato oficial</p>
+            <input type="file" id="file-input" accept=".xlsx,.xls" onchange="handleFile(this.files[0])">
+          </label>
+          <div id="upload-preview" class="hide" style="margin-top:20px">
+            <h4 style="margin-bottom:10px;font-size:14px">Preview:</h4>
+            <div class="tbl-wrap" id="preview-tbl"></div>
+            <div style="margin-top:14px;display:flex;gap:10px">
+              <button class="btn btn-pink" onclick="confirmUpload()">Confirmar Upload</button>
+              <button class="btn btn-outline" onclick="cancelUpload()">Cancelar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span class="ic">🗂️</span> Base Atual — <span id="base-count" style="color:var(--tc-pink)">0</span> registros</div>
+          <div class="base-search-wrap">
+            <span class="base-search-icon">🔍</span>
+            <input class="base-search" id="base-q" type="text" placeholder="Buscar por CNPJ, nome, rede, gerência..." oninput="debBaseSearch()">
+          </div>
+          <div class="tbl-wrap" style="max-height:500px;overflow:auto">
+            <table id="tbl-base"><thead><tr><th>CNPJ</th><th>Nome</th><th>Rede</th><th>Gerência</th><th>Distribuidor</th><th>UF/Mun</th><th>Canal</th><th>Cluster</th><th>Status</th></tr></thead><tbody></tbody></table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span class="ic">📜</span> Histórico de Uploads</div>
+          <div class="tbl-wrap"><table id="tbl-uploads"><thead><tr><th>Data</th><th>Arquivo</th><th>Tamanho</th><th>Registros</th><th>Por</th></tr></thead><tbody></tbody></table></div>
+        </div>
+      </section>
+
+      <!-- ═══════════ EXPORTAR ═══════════ -->
+      <section id="tab-exportar" class="tab hide">
+        <div class="card">
+          <div class="card-title"><span class="ic">📤</span> Exportar Solicitações</div>
+          <p style="color:var(--text-3);font-size:13px;margin-bottom:16px">Exporte em CSV (compatível com Excel, UTF-8 BOM).</p>
+          <div class="filters-bar">
+            <select class="filter-select" id="ex-tipo"><option value="">Todos tipos</option><option>INCLUSÃO DE CNPJ</option><option>EXCLUSÃO DE CNPJ</option><option>AJUSTE DE CLUSTER</option></select>
+            <select class="filter-select" id="ex-status"><option value="">Todos status</option><option value="pendente">Pendente</option><option value="aprovado">Aprovado</option><option value="rejeitado">Rejeitado</option><option value="processado">Processado</option></select>
+            <button class="btn btn-pink" onclick="doExport()">📥 Exportar CSV</button>
+            <button class="btn btn-green" onclick="doExportAprovados()">✓ Só Aprovados</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="ic">🗂️</span> Exportar Base de Redes</div>
+          <button class="btn btn-blue" onclick="doExportBase()">📥 Exportar Base Completa</button>
+        </div>
+      </section>
+
+      <!-- ═══════════ AUDITORIA ═══════════ -->
+      <section id="tab-audit" class="tab hide">
+        <div class="card">
+          <div class="card-title"><span class="ic">📝</span> Log de Auditoria (últimos 100)</div>
+          <div class="tbl-wrap"><table id="tbl-audit"><thead><tr><th>Data/Hora</th><th>Ação</th><th>Descrição</th><th>Usuário</th></tr></thead><tbody></tbody></table></div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- ═══════════ MODAL DETALHE ═══════════ -->
+<div id="modal-det" class="modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>Solicitação <span id="mod-id" style="color:var(--tc-pink)"></span></h3>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body" id="mod-body"></div>
+    <div class="modal-actions" id="mod-actions"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+<div id="loader" class="loader"><div class="loader-box"><div class="loader-spin"></div><div id="loader-text">Carregando...</div></div></div>
+
+<script>
+// ════════════════════ CONFIG (OFFLINE MODE) ════════════════════
+const GATE_HASH = '';
+
+// Admin users (offline)
+const ADMIN_USERS_OFFLINE = [
+  { email: 'demo@tradeflow.app', name: 'Demo Admin', password_hash: '' },
+  { email: 'operacao@tradeflow.app', name: 'Operacao Demo', password_hash: '' },
+  { email: 'auditoria@tradeflow.app', name: 'Auditoria Demo', password_hash: '' }
+];
+
+// Offline base de redes (persists in localStorage; seed from embedded data on first load)
+const BASE_SEED = [
+  {id:1,gerencia:"CF1 - PERFUMARIA SP",distribuidor:"VITALE SP",rede:"TradeCorp Drog",cnpj:"11222333000181",nome_loja:"TradeCorp Drog Paulista",uf:"SP",municipio:"São Paulo",canal:"A",cluster:"AS 01 a 04 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:2,gerencia:"CF1 - PERFUMARIA SP",distribuidor:"VITALE SP",rede:"Farma Vitale",cnpj:"22333444000192",nome_loja:"Farma Vitale Central",uf:"SP",municipio:"São Paulo",canal:"A",cluster:"AS 01 a 04 PR",associacao:"",ativo:true},
+  {id:3,gerencia:"CF1 - PERFUMARIA SP",distribuidor:"PAULISTA DIST",rede:"Qualivida",cnpj:"33444555000103",nome_loja:"Qualivida Paulista",uf:"SP",municipio:"São Paulo",canal:"A",cluster:"AS 01 a 04 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:4,gerencia:"CF1 - PERFUMARIA SP",distribuidor:"PAULISTA DIST",rede:"Drogaria Horizonte",cnpj:"44555666000114",nome_loja:"Drogaria Horizonte Augusta",uf:"SP",municipio:"São Paulo",canal:"A",cluster:"AS 01 a 04 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:5,gerencia:"CF2 - PERFUMARIA RJ",distribuidor:"CARIOCA RJ",rede:"Farma Certa",cnpj:"55666777000125",nome_loja:"Farma Certa Centro",uf:"RJ",municipio:"Rio de Janeiro",canal:"A",cluster:"AS 01 a 04 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:6,gerencia:"CF2 - PERFUMARIA RJ",distribuidor:"CARIOCA RJ",rede:"Farma Certa",cnpj:"66777888000136",nome_loja:"Farma Certa Ipanema",uf:"RJ",municipio:"Rio de Janeiro",canal:"A",cluster:"AS 01 a 04 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:7,gerencia:"CF2 - PERFUMARIA RJ",distribuidor:"CARIOCA RJ",rede:"Qualivida",cnpj:"77888999000147",nome_loja:"Qualivida Copacabana",uf:"RJ",municipio:"Rio de Janeiro",canal:"A",cluster:"AS 01 a 04 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:8,gerencia:"CF3 - PERFUMARIA MG",distribuidor:"MINAS DIST",rede:"Drogaria Serrana",cnpj:"88999000000158",nome_loja:"Drogaria Serrana Centro BH",uf:"MG",municipio:"Belo Horizonte",canal:"B",cluster:"BS 05 a 09 PR",associacao:"",ativo:true},
+  {id:9,gerencia:"CF3 - PERFUMARIA MG",distribuidor:"MINAS DIST",rede:"Drogaria Serrana",cnpj:"99000111000169",nome_loja:"Drogaria Serrana Savassi",uf:"MG",municipio:"Belo Horizonte",canal:"B",cluster:"BS 05 a 09 PR",associacao:"",ativo:true},
+  {id:10,gerencia:"CF3 - PERFUMARIA MG",distribuidor:"MINAS DIST",rede:"Drogaria Alvorada",cnpj:"10111222000170",nome_loja:"Drogaria Alvorada BH",uf:"MG",municipio:"Belo Horizonte",canal:"B",cluster:"BS 05 a 09 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:11,gerencia:"CF4 - PERFUMARIA RS",distribuidor:"SUL DIST",rede:"FarmaSul",cnpj:"11222333000281",nome_loja:"FarmaSul Porto Alegre",uf:"RS",municipio:"Porto Alegre",canal:"A",cluster:"AS 01 a 04 PR",associacao:"",ativo:true},
+  {id:12,gerencia:"CF4 - PERFUMARIA RS",distribuidor:"SUL DIST",rede:"FarmaSul",cnpj:"22333444000292",nome_loja:"FarmaSul Moinhos",uf:"RS",municipio:"Porto Alegre",canal:"A",cluster:"AS 01 a 04 PR",associacao:"",ativo:true},
+  {id:13,gerencia:"CF4 - PERFUMARIA RS",distribuidor:"SUL DIST",rede:"Farma Aurora",cnpj:"33444555000203",nome_loja:"Farma Aurora POA",uf:"RS",municipio:"Porto Alegre",canal:"B",cluster:"BS 05 a 09 PR",associacao:"",ativo:true},
+  {id:14,gerencia:"CF5 - PERFUMARIA PR",distribuidor:"PARANA DIST",rede:"Araucária",cnpj:"44555666000214",nome_loja:"Araucária Curitiba Centro",uf:"PR",municipio:"Curitiba",canal:"B",cluster:"BS 05 a 09 PR",associacao:"",ativo:true},
+  {id:15,gerencia:"CF5 - PERFUMARIA PR",distribuidor:"PARANA DIST",rede:"Araucária",cnpj:"55666777000225",nome_loja:"Araucária Batel",uf:"PR",municipio:"Curitiba",canal:"B",cluster:"BS 05 a 09 PR",associacao:"",ativo:true},
+  {id:16,gerencia:"CF5 - PERFUMARIA PR",distribuidor:"PARANA DIST",rede:"Drogaria Horizonte",cnpj:"66777888000236",nome_loja:"Drogaria Horizonte Curitiba",uf:"PR",municipio:"Curitiba",canal:"A",cluster:"AS 01 a 04 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:17,gerencia:"CF6 - PERFUMARIA NE",distribuidor:"NORDESTE DIST",rede:"DroPharma",cnpj:"77888999000247",nome_loja:"DroPharma Fortaleza",uf:"CE",municipio:"Fortaleza",canal:"B",cluster:"BS 05 a 09 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:18,gerencia:"CF6 - PERFUMARIA NE",distribuidor:"NORDESTE DIST",rede:"DroPharma",cnpj:"88999000000258",nome_loja:"DroPharma Recife",uf:"PE",municipio:"Recife",canal:"B",cluster:"BS 05 a 09 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:19,gerencia:"CF6 - PERFUMARIA NE",distribuidor:"NORDESTE DIST",rede:"DroPharma",cnpj:"99000111000269",nome_loja:"DroPharma Salvador",uf:"BA",municipio:"Salvador",canal:"B",cluster:"BS 05 a 09 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:20,gerencia:"CF7 - PERFUMARIA CO",distribuidor:"CENTRO DIST",rede:"Big Farma",cnpj:"10111222000270",nome_loja:"Big Farma Brasília",uf:"DF",municipio:"Brasília",canal:"C",cluster:"CS 10+ PR",associacao:"",ativo:true},
+  {id:21,gerencia:"CF7 - PERFUMARIA CO",distribuidor:"CENTRO DIST",rede:"Big Farma",cnpj:"11222333000381",nome_loja:"Big Farma Goiânia",uf:"GO",municipio:"Goiânia",canal:"C",cluster:"CS 10+ PR",associacao:"",ativo:true},
+  {id:22,gerencia:"CF8 - PERFUMARIA AM",distribuidor:"AMAZON DIST",rede:"Farma Norte",cnpj:"22333444000392",nome_loja:"Farma Norte Manaus",uf:"AM",municipio:"Manaus",canal:"C",cluster:"CS 10+ PR",associacao:"",ativo:true},
+  {id:23,gerencia:"CF1 - PERFUMARIA SP",distribuidor:"VITALE SP",rede:"Qualivida",cnpj:"33444555000403",nome_loja:"Qualivida Vila Madalena",uf:"SP",municipio:"São Paulo",canal:"A",cluster:"AS 01 a 04 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:24,gerencia:"CF1 - PERFUMARIA SP",distribuidor:"PAULISTA DIST",rede:"Drogaria Horizonte",cnpj:"44555666000414",nome_loja:"Drogaria Horizonte Jardins",uf:"SP",municipio:"São Paulo",canal:"A",cluster:"AS 01 a 04 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:25,gerencia:"CF2 - PERFUMARIA RJ",distribuidor:"CARIOCA RJ",rede:"Farma Vitale",cnpj:"55666777000425",nome_loja:"Farma Vitale RJ",uf:"RJ",municipio:"Rio de Janeiro",canal:"A",cluster:"AS 01 a 04 PR",associacao:"",ativo:true},
+  {id:26,gerencia:"CF3 - PERFUMARIA MG",distribuidor:"MINAS DIST",rede:"Drogaria Alvorada",cnpj:"66777888000436",nome_loja:"Alvorada Contagem",uf:"MG",municipio:"Contagem",canal:"B",cluster:"BS 05 a 09 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:27,gerencia:"CF4 - PERFUMARIA RS",distribuidor:"SUL DIST",rede:"FarmaSul",cnpj:"77888999000447",nome_loja:"FarmaSul Gramado",uf:"RS",municipio:"Gramado",canal:"B",cluster:"BS 05 a 09 PR",associacao:"",ativo:true},
+  {id:28,gerencia:"CF5 - PERFUMARIA PR",distribuidor:"PARANA DIST",rede:"Araucária",cnpj:"88999000000458",nome_loja:"Araucária Londrina",uf:"PR",municipio:"Londrina",canal:"C",cluster:"CS 10+ PR",associacao:"",ativo:true},
+  {id:29,gerencia:"CF6 - PERFUMARIA NE",distribuidor:"NORDESTE DIST",rede:"DroPharma",cnpj:"99000111000469",nome_loja:"DroPharma Maceió",uf:"AL",municipio:"Maceió",canal:"C",cluster:"CS 10+ PR",associacao:"ABRAFARMA",ativo:true},
+  {id:30,gerencia:"CF7 - PERFUMARIA CO",distribuidor:"CENTRO DIST",rede:"Big Farma",cnpj:"10111222000470",nome_loja:"Big Farma Campo Grande",uf:"MS",municipio:"Campo Grande",canal:"C",cluster:"CS 10+ PR",associacao:"",ativo:true},
+  {id:31,gerencia:"CF1 - PERFUMARIA SP",distribuidor:"VITALE SP",rede:"TradeCorp Drog",cnpj:"11222333000481",nome_loja:"TradeCorp Drog Moema",uf:"SP",municipio:"São Paulo",canal:"A",cluster:"AS 01 a 04 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:32,gerencia:"CF1 - PERFUMARIA SP",distribuidor:"VITALE SP",rede:"Farma Vitale",cnpj:"22333444000492",nome_loja:"Farma Vitale ABC",uf:"SP",municipio:"Santo André",canal:"A",cluster:"AS 01 a 04 PR",associacao:"",ativo:true},
+  {id:33,gerencia:"CF2 - PERFUMARIA RJ",distribuidor:"CARIOCA RJ",rede:"Farma Certa",cnpj:"33444555000503",nome_loja:"Farma Certa Barra",uf:"RJ",municipio:"Rio de Janeiro",canal:"A",cluster:"AS 01 a 04 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:34,gerencia:"CF3 - PERFUMARIA MG",distribuidor:"MINAS DIST",rede:"Drogaria Serrana",cnpj:"44555666000514",nome_loja:"Serrana Uberlândia",uf:"MG",municipio:"Uberlândia",canal:"B",cluster:"BS 05 a 09 PR",associacao:"",ativo:true},
+  {id:35,gerencia:"CF4 - PERFUMARIA RS",distribuidor:"SUL DIST",rede:"Farma Aurora",cnpj:"55666777000525",nome_loja:"Farma Aurora Caxias",uf:"RS",municipio:"Caxias do Sul",canal:"B",cluster:"BS 05 a 09 PR",associacao:"",ativo:true},
+  {id:36,gerencia:"CF5 - PERFUMARIA PR",distribuidor:"PARANA DIST",rede:"Drogaria Horizonte",cnpj:"66777888000536",nome_loja:"Drogaria Horizonte Maringá",uf:"PR",municipio:"Maringá",canal:"B",cluster:"BS 05 a 09 PR",associacao:"ABRAFARMA",ativo:true},
+  {id:37,gerencia:"CF6 - PERFUMARIA NE",distribuidor:"NORDESTE DIST",rede:"DroPharma",cnpj:"77888999000547",nome_loja:"DroPharma Natal",uf:"RN",municipio:"Natal",canal:"C",cluster:"CS 10+ PR",associacao:"ABRAFARMA",ativo:true},
+  {id:38,gerencia:"CF7 - PERFUMARIA CO",distribuidor:"CENTRO DIST",rede:"Big Farma",cnpj:"88999000000558",nome_loja:"Big Farma Cuiabá",uf:"MT",municipio:"Cuiabá",canal:"C",cluster:"CS 10+ PR",associacao:"",ativo:true},
+  {id:39,gerencia:"CF8 - PERFUMARIA AM",distribuidor:"AMAZON DIST",rede:"Farma Norte",cnpj:"99000111000569",nome_loja:"Farma Norte Belém",uf:"PA",municipio:"Belém",canal:"C",cluster:"CS 10+ PR",associacao:"",ativo:true},
+  {id:40,gerencia:"CF1 - PERFUMARIA SP",distribuidor:"PAULISTA DIST",rede:"Qualivida",cnpj:"10111222000570",nome_loja:"Qualivida Pinheiros",uf:"SP",municipio:"São Paulo",canal:"A",cluster:"AS 01 a 04 PR",associacao:"ABRAFARMA",ativo:true}
+];
+
+// Initialize localStorage if empty
+if (!localStorage.getItem('tc_base_redes')) {
+  localStorage.setItem('tc_base_redes', JSON.stringify(BASE_SEED));
+}
+if (!localStorage.getItem('tc_solicitacoes')) {
+  localStorage.setItem('tc_solicitacoes', JSON.stringify([]));
+}
+if (!localStorage.getItem('tc_notificacoes')) {
+  localStorage.setItem('tc_notificacoes', JSON.stringify([]));
+}
+if (!localStorage.getItem('tc_audit')) {
+  localStorage.setItem('tc_audit', JSON.stringify([]));
+}
+if (!localStorage.getItem('tc_uploads')) {
+  localStorage.setItem('tc_uploads', JSON.stringify([]));
+}
+
+function getBase() { return JSON.parse(localStorage.getItem('tc_base_redes') || '[]'); }
+function getSols() { return JSON.parse(localStorage.getItem('tc_solicitacoes') || '[]'); }
+function getNotifs() { return JSON.parse(localStorage.getItem('tc_notificacoes') || '[]'); }
+function getAudit() { return JSON.parse(localStorage.getItem('tc_audit') || '[]'); }
+function getUploads() { return JSON.parse(localStorage.getItem('tc_uploads') || '[]'); }
+
+function addAudit(action, description, user_email) {
+  const logs = getAudit();
+  logs.unshift({ id: Date.now(), action, description, user_email, logged_at: new Date().toISOString() });
+  localStorage.setItem('tc_audit', JSON.stringify(logs));
+}
+function addNotif(solicitacao_id, email_destino, tipo, titulo, mensagem) {
+  const notifs = getNotifs();
+  notifs.unshift({ id: Date.now(), solicitacao_id, email_destino, tipo, titulo, mensagem, lida: false, created_at: new Date().toISOString() });
+  localStorage.setItem('tc_notificacoes', JSON.stringify(notifs));
+}
+
+let ADMIN_USER = null;
+
+// ════════════════════ AUTH GATES ════════════════════
+async function sha256(s) {
+  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join('');
+}
+
+async function checkGate1() {
+  const pw = document.getElementById('g1-pw').value;
+  const err = document.getElementById('g1-err');
+  if (!pw) { err.textContent = 'Acesso liberado em modo demo.'; return; }
+  if (await sha256(pw) === GATE_HASH) {
+    sessionStorage.setItem('tc_gate', '1');
+    document.getElementById('gate1').classList.add('hidden');
+    document.getElementById('gate2').classList.remove('hidden');
+    document.getElementById('g2-email').focus();
+  } else { err.textContent = 'Senha incorreta.'; }
+}
+
+async function checkGate2() {
+  const em = document.getElementById('g2-email').value.trim().toLowerCase();
+  const pw = document.getElementById('g2-pw').value;
+  const err = document.getElementById('g2-err');
+  if (!em || !pw) { err.textContent = 'Preencha email e senha.'; return; }
+
+  // OFFLINE: check against embedded admin list
+  const data = ADMIN_USERS_OFFLINE.find(u => u.email === em);
+  if (!data) { err.textContent = 'Email não encontrado.'; return; }
+  if (data.password_hash !== pw) { err.textContent = 'Senha incorreta.'; return; }
+
+  ADMIN_USER = data;
+  sessionStorage.setItem('tc_admin', JSON.stringify({ email: data.email, name: data.name }));
+  enterAdmin(data);
+}
+
+function enterAdmin(user) {
+  document.getElementById('gate1').classList.add('hidden');
+  document.getElementById('gate2').classList.add('hidden');
+  document.getElementById('shell').classList.remove('hide');
+
+  // Set user info
+  document.getElementById('user-name').textContent = user.name || user.email;
+  document.getElementById('user-email').textContent = user.email;
+  document.getElementById('user-avatar').textContent = (user.name || user.email).charAt(0).toUpperCase();
+
+  addAudit('LOGIN', 'Login no painel admin', user.email);
+  loadDashboard();
+}
+
+// Enter key listeners
+document.getElementById('g1-pw').addEventListener('keypress', e => { if (e.key === 'Enter') checkGate1(); });
+document.getElementById('g2-pw').addEventListener('keypress', e => { if (e.key === 'Enter') checkGate2(); });
+
+// Session restore
+(function restoreSession() {
+  const saved = sessionStorage.getItem('tc_admin');
+  if (saved) {
+    try {
+      const user = JSON.parse(saved);
+      ADMIN_USER = user;
+      enterAdmin(user);
+    } catch (e) {}
+  } else if (sessionStorage.getItem('tc_gate') === '1') {
+    document.getElementById('gate1').classList.add('hidden');
+    document.getElementById('gate2').classList.remove('hidden');
+  }
+})();
+
+function logout() { sessionStorage.clear(); location.reload(); }
+function getAdminEmail() { return ADMIN_USER?.email || 'admin'; }
+function closeModal() { document.getElementById('modal-det').classList.remove('active'); }
+
+// ════════════════════ TABS ════════════════════
+function openTab(t) {
+  document.querySelectorAll('.sb-item').forEach(e => e.classList.toggle('active', e.dataset.tab === t));
+  document.querySelectorAll('.tab').forEach(e => e.classList.add('hide'));
+  const el = document.getElementById('tab-' + t);
+  if (el) { el.classList.remove('hide'); el.classList.add('fade-in'); }
+  const titles = { dashboard: 'Dashboard', solicitacoes: 'Solicitações', base: 'Base de Redes', exportar: 'Exportar', audit: 'Auditoria' };
+  document.getElementById('tab-title').textContent = titles[t] || t;
+  if (t === 'dashboard') loadDashboard();
+  else if (t === 'solicitacoes') loadSols();
+  else if (t === 'base') loadBase();
+  else if (t === 'audit') loadAudit();
+}
+
+// ════════════════════ DASHBOARD (OFFLINE) ════════════════════
+async function loadDashboard() {
+  const today = new Date().toISOString().slice(0, 10);
+  const sols = getSols();
+  const total = sols.length;
+  const inc = sols.filter(r => r.tipo_ajuste === 'INCLUSÃO DE CNPJ').length;
+  const exc = sols.filter(r => r.tipo_ajuste === 'EXCLUSÃO DE CNPJ').length;
+  const clu = sols.filter(r => r.tipo_ajuste === 'AJUSTE DE CLUSTER').length;
+  const pend = sols.filter(r => r.status === 'pendente').length;
+  const hoje = sols.filter(r => r.created_at && r.created_at.startsWith(today)).length;
+  const recent = [...sols].sort((a, b) => (b.created_at || '').localeCompare(a.created_at || '')).slice(0, 10);
+
+  document.getElementById('s-total').textContent = total;
+  document.getElementById('s-inc').textContent = inc;
+  document.getElementById('s-exc').textContent = exc;
+  document.getElementById('s-clu').textContent = clu;
+  document.getElementById('s-pend').textContent = pend;
+  document.getElementById('s-hoje').textContent = hoje;
+
+  const pendBadge = document.getElementById('pending-badge');
+  if (pend > 0) { pendBadge.textContent = pend; pendBadge.style.display = ''; }
+  else pendBadge.style.display = 'none';
+
+  const tb = document.querySelector('#tbl-recent tbody');
+  tb.innerHTML = recent.map(r => `<tr>
+    <td><b>#${r.id}</b></td><td>${fmtDate(r.created_at)}</td><td>${esc(r.respondente)}</td>
+    <td>${tipoBadge(r.tipo_ajuste)}</td><td style="font-family:monospace;font-size:12px">${fmtCnpj(r.cnpj_loja)}</td>
+    <td>${statusBadge(r.status)}</td>
+    <td><button class="btn-icon" onclick="openDetail(${r.id})" title="Ver detalhes">👁</button></td>
+  </tr>`).join('') || '<tr><td colspan="7" class="empty">Sem solicitações</td></tr>';
+}
+
+// ════════════════════ SOLICITAÇÕES ════════════════════
+let SOLS = [], PAGE = 1; const PER = 15;
+let filterTimer = null;
+function debFilter() { clearTimeout(filterTimer); filterTimer = setTimeout(loadSols, 250); }
+
+async function loadSols() {
+  PAGE = 1;
+  const tipo = document.getElementById('f-tipo').value;
+  const status = document.getElementById('f-status').value;
+  const qv = document.getElementById('f-q').value.trim().toLowerCase();
+  let data = [...getSols()].sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''));
+  if (tipo) data = data.filter(r => r.tipo_ajuste === tipo);
+  if (status) data = data.filter(r => r.status === status);
+  if (qv) {
+    const clean = qv.replace(/\D/g, '');
+    data = data.filter(r => {
+      const s = `${r.respondente} ${r.email} ${r.cnpj_loja} ${r.nome_loja} ${r.rede}`.toLowerCase();
+      return s.includes(qv) || (clean && r.cnpj_loja && r.cnpj_loja.includes(clean));
+    });
+  }
+  SOLS = data;
+  renderSols();
+}
+
+function renderSols() {
+  const start = (PAGE - 1) * PER, slice = SOLS.slice(start, start + PER);
+  const tb = document.querySelector('#tbl-sols tbody');
+  tb.innerHTML = slice.map(r => `<tr>
+    <td><b>#${r.id}</b></td><td>${fmtDate(r.created_at)}</td>
+    <td>${esc(r.respondente)}</td><td style="font-size:12px;color:var(--text-3)">${esc(r.email)}</td>
+    <td>${tipoBadge(r.tipo_ajuste)}</td><td style="font-size:12px">${esc(r.gerencia || '—')}</td>
+    <td style="font-family:monospace;font-size:12px">${fmtCnpj(r.cnpj_loja)}</td><td>${esc(r.rede || '—')}</td>
+    <td>${statusBadge(r.status)}</td>
+    <td><button class="btn-icon" onclick="openDetail(${r.id})">👁</button></td>
+  </tr>`).join('') || '<tr><td colspan="10" class="empty">Nenhuma solicitação</td></tr>';
+  renderPager();
+}
+
+function renderPager() {
+  const total = Math.ceil(SOLS.length / PER) || 1;
+  const p = document.getElementById('pager');
+  let html = `<button onclick="goPage(${PAGE - 1})" ${PAGE === 1 ? 'disabled' : ''}>‹</button>`;
+  for (let i = 1; i <= total; i++) {
+    if (i === 1 || i === total || Math.abs(i - PAGE) <= 1)
+      html += `<button class="${i === PAGE ? 'active' : ''}" onclick="goPage(${i})">${i}</button>`;
+    else if (Math.abs(i - PAGE) === 2) html += '<span style="color:var(--text-3)">…</span>';
+  }
+  html += `<button onclick="goPage(${PAGE + 1})" ${PAGE === total ? 'disabled' : ''}>›</button>`;
+  html += `<span class="pager-info">${SOLS.length} registros</span>`;
+  p.innerHTML = html;
+}
+function goPage(p) { const t = Math.ceil(SOLS.length / PER); if (p < 1 || p > t) return; PAGE = p; renderSols(); }
+
+// ════════════════════ DETAIL MODAL (OFFLINE) ════════════════════
+async function openDetail(id) {
+  const r = getSols().find(s => s.id === id);
+  if (!r) return;
+  document.getElementById('mod-id').textContent = '#' + r.id;
+  const fields = [
+    ['Data/Hora', fmtDate(r.created_at)], ['Status', statusBadge(r.status)],
+    ['Tipo', tipoBadge(r.tipo_ajuste)], ['Quarter', esc(r.quarter)],
+    ['Respondente', esc(r.respondente)], ['Email', esc(r.email)],
+    ['Gerência', esc(r.gerencia)], ['Distribuidor', esc(r.distribuidor)],
+    ['Rede', esc(r.rede)], ['CNPJ', `<span style="font-family:monospace">${fmtCnpj(r.cnpj_loja)}</span>`],
+    ['Nome da Loja', esc(r.nome_loja)], ['UF / Município', `${esc(r.uf)} / ${esc(r.municipio)}`],
+    ['Associação', esc(r.associacao)], ['Ambiente Varejo', esc(r.ambiente_varejo)],
+    ['Auditada Nielsen', esc(r.auditada_nielsen)], ['Auditada Scanntech', esc(r.auditada_scanntech)],
+    ['TradeFlow', esc(r.top_redes)], ['Possui Promotor', esc(r.tem_promotor)],
+    ['Motivo Exclusão', esc(r.motivo_exclusao)], ['Novo Ambiente', esc(r.ambiente_varejo_novo)]
+  ];
+
+  document.getElementById('mod-body').innerHTML =
+    `<div class="detail-grid">${fields.map(([k, v]) => `<div><div class="dk">${k}</div><div class="dv">${v || '—'}</div></div>`).join('')}</div>` +
+    (r.observacoes ? `<div class="detail-obs"><b style="font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.5px">Observações</b><div style="margin-top:6px">${esc(r.observacoes)}</div></div>` : '');
+
+  const acts = document.getElementById('mod-actions');
+  if (r.status === 'pendente') {
+    acts.innerHTML = `
+      <button class="btn btn-green" onclick="approveRequest(${r.id},'${r.tipo_ajuste}','${esc(r.cnpj_loja)}','${esc(r.email)}')">✓ Aprovar</button>
+      <button class="btn btn-red btn-sm" onclick="updSt(${r.id},'rejeitado','${esc(r.email)}')">✗ Rejeitar</button>
+      <button class="btn btn-blue btn-sm" onclick="updSt(${r.id},'processado','${esc(r.email)}')">⭐ Processado</button>
+      <button class="btn btn-outline btn-sm" onclick="closeModal()">Fechar</button>`;
+  } else {
+    acts.innerHTML = `
+      <button class="btn btn-outline btn-sm" onclick="updSt(${r.id},'pendente','${esc(r.email)}')">↩ Voltar a pendente</button>
+      <button class="btn btn-outline btn-sm" onclick="closeModal()">Fechar</button>`;
+  }
+  document.getElementById('modal-det').classList.add('active');
+}
+
+// ════════════════════ APPROVE WITH REAL ACTIONS (OFFLINE) ════════════════════
+async function approveRequest(id, tipo, cnpj, email) {
+  showLoad('Processando aprovação...');
+  try {
+    // 1. Update status in localStorage
+    const sols = getSols();
+    const idx = sols.findIndex(s => s.id === id);
+    if (idx > -1) { sols[idx].status = 'aprovado'; localStorage.setItem('tc_solicitacoes', JSON.stringify(sols)); }
+
+    // 2. Execute real action based on type
+    const base = getBase();
+    if (tipo === 'EXCLUSÃO DE CNPJ' && cnpj) {
+      const bi = base.findIndex(r => r.cnpj === cnpj);
+      if (bi > -1) { base[bi].ativo = false; localStorage.setItem('tc_base_redes', JSON.stringify(base)); }
+      addAudit('EXCLUSION_APPLIED', `CNPJ ${fmtCnpj(cnpj)} removido da base ativa (Solicitação #${id})`, getAdminEmail());
+    }
+
+    if (tipo === 'INCLUSÃO DE CNPJ') {
+      const req = sols.find(s => s.id === id);
+      if (req) {
+        const newRec = { id: Date.now(), gerencia: req.gerencia, distribuidor: req.distribuidor, rede: req.rede, cnpj: req.cnpj_loja, nome_loja: req.nome_loja, uf: req.uf, municipio: req.municipio, canal: req.ambiente_varejo, cluster: '', associacao: req.associacao, ativo: true };
+        base.push(newRec);
+        localStorage.setItem('tc_base_redes', JSON.stringify(base));
+        addAudit('INCLUSION_APPLIED', `CNPJ ${fmtCnpj(req.cnpj_loja)} adicionado à base (Solicitação #${id})`, getAdminEmail());
+      }
+    }
+
+    if (tipo === 'AJUSTE DE CLUSTER' && cnpj) {
+      const req = sols.find(s => s.id === id);
+      if (req && req.ambiente_varejo_novo) {
+        const bi = base.findIndex(r => r.cnpj === cnpj);
+        if (bi > -1) { base[bi].canal = req.ambiente_varejo_novo; localStorage.setItem('tc_base_redes', JSON.stringify(base)); }
+        addAudit('CLUSTER_APPLIED', `CNPJ ${fmtCnpj(cnpj)} — ambiente atualizado para "${req.ambiente_varejo_novo}" (Solicitação #${id})`, getAdminEmail());
+      }
+    }
+
+    // 3. Log the approval
+    addAudit('APPROVED', `Solicitação #${id} aprovada (${tipo})`, getAdminEmail());
+
+    // 4. Create notification for the requester
+    const tipoLabel = tipo === 'INCLUSÃO DE CNPJ' ? 'inclusão' : tipo === 'EXCLUSÃO DE CNPJ' ? 'exclusão' : 'ajuste de cluster';
+    addNotif(id, email, 'APROVADO', `Solicitação #${id} aprovada`, `Sua solicitação de ${tipoLabel} foi aprovada e processada pela equipe.`);
+
+    hideLoad();
+    toast('Solicitação aprovada e processada!', 'success');
+    closeModal();
+    loadDashboard();
+    loadSols();
+  } catch (e) { hideLoad(); toast('Erro: ' + e.message, 'error'); }
+}
+
+async function updSt(id, st, email) {
+  showLoad('Atualizando...');
+  try {
+    // OFFLINE: update status in localStorage
+    const sols = getSols();
+    const idx = sols.findIndex(s => s.id === id);
+    if (idx > -1) { sols[idx].status = st; localStorage.setItem('tc_solicitacoes', JSON.stringify(sols)); }
+    addAudit('STATUS', `Solicitação #${id} → ${st}`, getAdminEmail());
+
+    if (st === 'rejeitado') {
+      addNotif(id, email, 'REJEITADO', `Solicitação #${id} rejeitada`, 'Sua solicitação foi rejeitada pela equipe. Entre em contato para mais informações.');
+    } else if (st === 'processado') {
+      addNotif(id, email, 'PROCESSADO', `Solicitação #${id} processada`, 'Sua solicitação foi processada com sucesso.');
+    }
+
+    hideLoad();
+    toast(`Status → "${st}"`, 'success');
+    closeModal();
+    loadDashboard();
+    loadSols();
+  } catch (e) { hideLoad(); toast('Erro: ' + e.message, 'error'); }
+}
+
+// ════════════════════ BASE DE REDES ════════════════════
+let BASE_ALL = [];
+let baseSearchTimer = null;
+function debBaseSearch() { clearTimeout(baseSearchTimer); baseSearchTimer = setTimeout(renderBaseFiltered, 250); }
+
+async function loadBase() {
+  // OFFLINE: load from localStorage
+  BASE_ALL = getBase().sort((a, b) => (a.gerencia || '').localeCompare(b.gerencia || ''));
+  document.getElementById('base-count').textContent = BASE_ALL.length;
+  renderBaseFiltered();
+
+  // Uploads history
+  const ups = getUploads();
+  document.querySelector('#tbl-uploads tbody').innerHTML = ups.map(u => `<tr>
+    <td>${fmtDate(u.uploaded_at)}</td><td>${esc(u.filename)}</td>
+    <td>${((u.size_bytes || 0) / 1024).toFixed(1)} KB</td><td><b>${u.rows_count || 0}</b></td>
+    <td>${esc(u.uploaded_by)}</td>
+  </tr>`).join('') || '<tr><td colspan="5" class="empty">Nenhum upload</td></tr>';
+}
+
+function renderBaseFiltered() {
+  const q = (document.getElementById('base-q').value || '').trim().toLowerCase();
+  let filtered = BASE_ALL;
+  if (q) {
+    const clean = q.replace(/\D/g, '');
+    filtered = BASE_ALL.filter(r => {
+      const s = `${r.cnpj} ${r.nome_loja} ${r.rede} ${r.gerencia} ${r.distribuidor} ${r.uf} ${r.municipio}`.toLowerCase();
+      return s.includes(q) || (clean && r.cnpj && r.cnpj.includes(clean));
+    });
+  }
+  const tb = document.querySelector('#tbl-base tbody');
+  tb.innerHTML = filtered.slice(0, 200).map(r => `<tr${r.ativo === false ? ' class="archived"' : ''}>
+    <td style="font-family:monospace;font-size:12px">${fmtCnpj(r.cnpj)}</td>
+    <td>${esc(r.nome_loja)}</td><td>${esc(r.rede)}</td>
+    <td style="font-size:12px">${esc(r.gerencia)}</td>
+    <td style="font-size:12px">${esc(r.distribuidor)}</td>
+    <td>${esc(r.uf)}/${esc(r.municipio)}</td>
+    <td>${esc(r.canal)}</td><td style="font-size:11px">${esc(r.cluster)}</td>
+    <td>${r.ativo !== false ? '<span class="badge b-aprovado">Ativo</span>' : '<span class="badge b-rejeitado">Inativo</span>'}</td>
+  </tr>`).join('') || '<tr><td colspan="9" class="empty">Nenhum registro</td></tr>';
+}
+
+// ════════════════════ UPLOAD ════════════════════
+let uploadData = null;
+const dz = document.getElementById('drop-zone');
+['dragover', 'dragenter'].forEach(e => dz.addEventListener(e, ev => { ev.preventDefault(); dz.classList.add('dragover'); }));
+['dragleave', 'drop'].forEach(e => dz.addEventListener(e, ev => { ev.preventDefault(); dz.classList.remove('dragover'); }));
+dz.addEventListener('drop', ev => { const f = ev.dataTransfer.files[0]; if (f) handleFile(f); });
+
+function handleFile(f) {
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      const wb = XLSX.read(e.target.result, { type: 'array' });
+      let sn = wb.SheetNames.find(n => /padr/i.test(n)) || wb.SheetNames[0];
+      const ws = wb.Sheets[sn];
+      const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+      uploadData = { name: f.name, size: f.size, data: rows };
+      showPreview(rows);
+    } catch (err) { toast('Erro: ' + err.message, 'error'); }
+  };
+  r.readAsArrayBuffer(f);
+}
+
+function showPreview(rows) {
+  const head = rows[0] || [], body = rows.slice(1, 6);
+  document.getElementById('preview-tbl').innerHTML =
+    '<table><thead><tr>' + head.map(h => `<th>${esc(h)}</th>`).join('') + '</tr></thead><tbody>' +
+    body.map(r => '<tr>' + r.map(c => `<td>${esc(c)}</td>`).join('') + '</tr>').join('') + '</tbody></table>';
+  document.getElementById('upload-preview').classList.remove('hide');
+}
+function cancelUpload() { uploadData = null; document.getElementById('upload-preview').classList.add('hide'); document.getElementById('file-input').value = ''; }
+
+async function confirmUpload() {
+  if (!uploadData) return;
+  showLoad('Processando planilha...');
+  const rows = uploadData.data;
+  const header = rows[0].map(h => String(h || '').toLowerCase().trim());
+  const col = keys => header.findIndex(h => keys.some(k => h.includes(k)));
+  const idx = {
+    gerencia: col(['gerên', 'gerenc']), distribuidor: col(['distrib']), rede: col(['rede']),
+    cnpj: col(['cnpj']), nome_loja: col(['nome loja', 'nome_loja', 'nome da loja']),
+    uf: col(['uf']), municipio: col(['munic']), canal: col(['canal']),
+    cluster: col(['cluster']), associacao: col(['assoc']), ativo: col(['ativo'])
+  };
+  const recs = rows.slice(1).filter(r => r.some(c => c != null && c !== '')).map(r => ({
+    gerencia: r[idx.gerencia] ? String(r[idx.gerencia]) : null,
+    distribuidor: r[idx.distribuidor] ? String(r[idx.distribuidor]) : null,
+    rede: r[idx.rede] ? String(r[idx.rede]) : null,
+    cnpj: String(r[idx.cnpj] || '').replace(/\D/g, ''),
+    nome_loja: r[idx.nome_loja] ? String(r[idx.nome_loja]) : null,
+    uf: r[idx.uf] ? String(r[idx.uf]) : null,
+    municipio: r[idx.municipio] ? String(r[idx.municipio]) : null,
+    canal: r[idx.canal] ? String(r[idx.canal]) : null,
+    cluster: r[idx.cluster] ? String(r[idx.cluster]) : null,
+    associacao: r[idx.associacao] ? String(r[idx.associacao]) : null,
+    ativo: idx.ativo < 0 ? true : !/não|nao|inativo|false|0/i.test(String(r[idx.ativo] || ''))
+  })).filter(r => r.cnpj || r.nome_loja);
+
+  try {
+    // OFFLINE: replace base in localStorage
+    localStorage.setItem('tc_base_redes', JSON.stringify(recs));
+    const ups = getUploads();
+    ups.unshift({ id: Date.now(), filename: uploadData.name, size_bytes: uploadData.size, rows_count: recs.length, uploaded_by: getAdminEmail(), uploaded_at: new Date().toISOString() });
+    localStorage.setItem('tc_uploads', JSON.stringify(ups));
+    addAudit('UPLOAD', `Base atualizada: ${recs.length} registros de "${uploadData.name}"`, getAdminEmail());
+    hideLoad();
+    toast(`Base atualizada: ${recs.length} registros`, 'success');
+    cancelUpload();
+    loadBase();
+  } catch (e) { hideLoad(); toast('Erro: ' + e.message, 'error'); }
+}
+
+function downloadTemplate() {
+  const header = ['Regional', 'Gerencia', 'CNPJ', 'Ativo?', 'Nome Loja', 'Rede', 'Associacao', 'Advantage', 'Categoria', 'UF', 'Canal', 'Divisao', 'Cluster', 'Municipio', 'Distribuidor'];
+  const ex = [['CFB', 'CF1 - PERFUMARIA SP', '11222333000181', 'ATIVO', 'TradeCorp Drog Paulista', 'TradeCorp Drog', 'ABRAFARMA', '', 'PERFUMARIA', 'SP', 'A', 'PERFUMARIA', 'AS 01 a 04 PR', 'São Paulo', 'VITALE SP']];
+  const ws = XLSX.utils.aoa_to_sheet([header, ...ex]);
+  ws['!cols'] = header.map(() => ({ wch: 18 }));
+  const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Padrão');
+  XLSX.writeFile(wb, 'Grade_Modelo_TradeFlow_Q2-26.xlsx');
+}
+
+// ════════════════════ EXPORT ════════════════════
+async function doExport() { await exportCSV(document.getElementById('ex-tipo').value, document.getElementById('ex-status').value); }
+async function doExportAprovados() { await exportCSV('', 'aprovado'); }
+
+async function exportCSV(tipo, status) {
+  showLoad('Gerando CSV...');
+  let data = [...getSols()].sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''));
+  if (tipo) data = data.filter(r => r.tipo_ajuste === tipo);
+  if (status) data = data.filter(r => r.status === status);
+  const headers = ['ID', 'Data', 'Respondente', 'Email', 'Tipo', 'Gerencia', 'Distribuidor', 'Rede', 'CNPJ', 'Nome Loja', 'Associacao', 'Nielsen', 'Scanntech', 'TradeFlow', 'UF', 'Municipio', 'Ambiente', 'Promotor', 'Motivo Exclusao', 'Novo Ambiente', 'Observacoes', 'Status', 'Quarter'];
+  const rows = data.map(r => [r.id, fmtDate(r.created_at), r.respondente, r.email, r.tipo_ajuste, r.gerencia, r.distribuidor, r.rede, fmtCnpj(r.cnpj_loja), r.nome_loja, r.associacao, r.auditada_nielsen, r.auditada_scanntech, r.top_redes, r.uf, r.municipio, r.ambiente_varejo, r.tem_promotor, r.motivo_exclusao, r.ambiente_varejo_novo, r.observacoes, r.status, r.quarter].map(v => `"${String(v || '').replace(/"/g, '""')}"`).join(','));
+  const csv = '\uFEFF' + [headers.join(','), ...rows].join('\n');
+  downloadBlob(csv, `tradeflow_${new Date().toISOString().slice(0, 10)}.csv`, 'text/csv;charset=utf-8');
+  addAudit('EXPORT', `CSV exportado: ${data.length} registros`, getAdminEmail());
+  hideLoad(); toast('CSV exportado!', 'success');
+}
+
+async function doExportBase() {
+  showLoad('Exportando base...');
+  const data = getBase().sort((a, b) => (a.gerencia || '').localeCompare(b.gerencia || ''));
+  const headers = ['CNPJ', 'Nome', 'Rede', 'Gerência', 'Distribuidor', 'UF', 'Município', 'Canal', 'Cluster', 'Associação', 'Ativo'];
+  const rows = data.map(r => [r.cnpj, r.nome_loja, r.rede, r.gerencia, r.distribuidor, r.uf, r.municipio, r.canal, r.cluster, r.associacao, r.ativo ? 'Sim' : 'Não'].map(v => `"${String(v || '').replace(/"/g, '""')}"`).join(','));
+  const csv = '\uFEFF' + [headers.join(','), ...rows].join('\n');
+  downloadBlob(csv, `base_redes_${new Date().toISOString().slice(0, 10)}.csv`, 'text/csv;charset=utf-8');
+  hideLoad(); toast('Base exportada!', 'success');
+}
+
+function downloadBlob(content, filename, type) {
+  const blob = new Blob([content], { type });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+// ════════════════════ AUDIT (OFFLINE) ════════════════════
+async function loadAudit() {
+  const data = getAudit().slice(0, 100);
+  document.querySelector('#tbl-audit tbody').innerHTML = data.map(a => `<tr>
+    <td style="font-size:12px;white-space:nowrap">${fmtDate(a.logged_at)}</td>
+    <td><b style="font-size:12px">${esc(a.action)}</b></td>
+    <td style="font-size:12px">${esc(a.description)}</td>
+    <td style="font-size:12px;color:var(--text-3)">${esc(a.user_email)}</td>
+  </tr>`).join('') || '<tr><td colspan="4" class="empty">Sem registros</td></tr>';
+}
+
+// ════════════════════ UTILS ════════════════════
+function fmtDate(d) { if (!d) return '—'; return new Date(d).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' }); }
+function fmtCnpj(c) { return (c || '').replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5') || (c || '—'); }
+function esc(s) { return (s == null || s === '') ? '—' : String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function statusBadge(s) {
+  const m = { pendente: 'b-pendente', aprovado: 'b-aprovado', rejeitado: 'b-rejeitado', processado: 'b-processado' };
+  return `<span class="badge ${m[s] || 'b-pendente'}">${s || '—'}</span>`;
+}
+function tipoBadge(t) {
+  if (!t) return '—';
+  if (t.includes('INCLUSÃO')) return '<span class="badge b-inclusao">Inclusão</span>';
+  if (t.includes('EXCLUSÃO')) return '<span class="badge b-exclusao">Exclusão</span>';
+  return '<span class="badge b-cluster">Cluster</span>';
+}
+function toast(m, t = '') { const e = document.getElementById('toast'); e.textContent = m; e.className = 'toast show ' + t; setTimeout(() => e.classList.remove('show'), 3500); }
+function showLoad(m) { document.getElementById('loader-text').textContent = m || 'Carregando...'; document.getElementById('loader').classList.add('active'); }
+function hideLoad() { document.getElementById('loader').classList.remove('active'); }
+</script>
+<script>addEventListener('load',function(){try{var u=(typeof ADMIN_USERS_OFFLINE!=='undefined'&&ADMIN_USERS_OFFLINE[0])||{email:'demo@tradeflow.app',name:'Demo'};enterAdmin(u);}catch(e){}});</script>
+</body>
+</html>

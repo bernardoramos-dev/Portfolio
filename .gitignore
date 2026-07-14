@@ -1,0 +1,21 @@
+node_modules/
+npm-debug.log*
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
+
+# Skills are installed per-agent and should not ship in the public build.
+.agents/
+
+# Local audit output and generated build directories.
+dist/
+build/
+screenshots/
+RELATORIO_AUDITORIA_LANCAMENTO.md
+RELATORIO_RELEASE.md
+RELATORIO_DIAGNOSTICO_CLAUDE.md
+
+# Stray source render already baked into assets/video/cta-loop.mp4 — not
+# needed in version control (8.6MB, duplicate of a tracked, used asset).
+/Gen-4_Turbo_-_Animate_this_image_into_a_seamless_12-second_cinematic_loop_(1920x1080,_60fps)__Preser.mp4

@@ -1,0 +1,16 @@
+{
+  "type": "module",
+  "scripts": {
+    "dev": "python servidor.py 8078",
+    "audit": "node scripts/audit.mjs",
+    "build": "node scripts/build.mjs",
+    "preview": "python -m http.server 4173 --directory dist",
+    "smoke": "node scripts/smoke-http.mjs"
+  },
+  "dependencies": {
+    "@react-spring/web": "^10.1.2",
+    "animejs": "^4.5.0",
+    "gsap": "^3.15.0",
+    "motion": "^12.42.2"
+  }
+}

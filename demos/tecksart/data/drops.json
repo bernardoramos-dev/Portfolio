@@ -1,0 +1,43 @@
+{
+ "drops": [
+ {
+ "id": "void",
+ "number": "DROP_001",
+ "name": "VOID",
+ "tagline": "O silêncio tem forma.",
+ "description": "Uma coleção construída em torno do vazio. Formas que existem pelo que não está presente — espaço, ausência, intenção deliberada.",
+ "manifesto": "VOID não é ausência. É presença deliberada. O espaço ao redor do objeto é parte do design.",
+ "status": "active",
+ "releaseDate": "2025-05-18",
+ "totalPieces": 6,
+ "colorCode": "#0A0A0A",
+ "productIds": ["vaso-obsidiana-01", "bowl-prata-01", "baleia-forma-01", "elefante-matt-01"]
+ },
+ {
+ "id": "signal",
+ "number": "DROP_002",
+ "name": "SIGNAL",
+ "tagline": "Luz como linguagem.",
+ "description": "Iluminação que comunica. Objetos que definem ambiente através da presença da luz e da ausência de ornamento.",
+ "manifesto": "SIGNAL é o ponto onde a técnica encontra o belo. Luz que não ilumina — que define.",
+ "status": "active",
+ "releaseDate": "2025-05-18",
+ "totalPieces": 2,
+ "colorCode": "#1A1A2E",
+ "productIds": ["lampada-chrome-01", "luminaria-chrome-01"]
+ },
+ {
+ "id": "mono",
+ "number": "DROP_003",
+ "name": "MONO",
+ "tagline": "Uma forma. Uma função. Uma peça.",
+ "description": "A série mais minimalista da Tecksart. Um objeto por drop. Uma edição definitiva.",
+ "manifesto": "MONO. Em breve.",
+ "status": "teaser",
+ "releaseDate": "2025-09-01",
+ "totalPieces": 1,
+ "colorCode": "#0D0D0D",
+ "productIds": []
+ }
+ ]
+}

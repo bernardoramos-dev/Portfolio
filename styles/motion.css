@@ -1,0 +1,37 @@
+/* ============================================================
+   motion.css — motion-only rules and reduced-motion policy
+   ============================================================ */
+
+/* elements animated by the hero timeline start hidden only
+   when JS is running (html.js) — no-JS users see everything */
+html.js .hero__name .line-inner { transform: translateY(112%); }
+html.js .hero [data-hero-fade] { opacity: 0; }
+html.js .hero .rail-card { opacity: 0; }
+html.js .site-header[data-hero-fade] { opacity: 0; }
+
+html.js.is-booted .hero__name .line-inner { transform: none; }
+html.js.is-booted .hero [data-hero-fade],
+html.js.is-booted .hero .rail-card,
+html.js.is-booted .site-header[data-hero-fade] {
+  opacity: 1;
+}
+
+/* content-visibility for below-the-fold sections */
+.section--cv {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
+html.reduce-motion.js .hero__name .line-inner,
+html.reduce-motion.js .hero [data-hero-fade],
+html.reduce-motion.js .hero .rail-card,
+html.reduce-motion.js .site-header[data-hero-fade] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+html.reduce-motion [data-reveal] { opacity: 1 !important; transform: none !important; }
+html.reduce-motion .line-mask > .line-inner { transform: none !important; }
+html.reduce-motion .media-reveal { clip-path: inset(0 0) !important; transform: none !important; }
+html.reduce-motion .loader { display: none !important; }
+html.reduce-motion .hero__scroll-cue i::after { animation: none; }
+html.reduce-motion .header-status i { animation: none; }

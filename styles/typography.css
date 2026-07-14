@@ -1,0 +1,73 @@
+/* ============================================================
+   typography.css — display scale, editorial hierarchy
+   ============================================================ */
+
+.t-display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 0.92;
+  text-wrap: balance;
+}
+
+.t-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(30px, 4.6vw, 64px);
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.t-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+
+.t-label--ink { color: var(--silver); }
+
+.t-lead {
+  font-size: clamp(16px, 1.75vw, 20px);
+  line-height: 1.65;
+  color: var(--silver);
+  max-width: 58ch;
+}
+
+.t-body-s { font-size: 14px; line-height: 1.7; color: var(--silver); }
+
+.t-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--silver);
+}
+.t-eyebrow::before {
+  content: "";
+  width: 36px;
+  height: 1px;
+  background: var(--gray);
+}
+
+/* split-text masks (built by core/text-split.js) */
+.line-mask { display: block; overflow: hidden; }
+.line-mask > .line-inner {
+  display: block;
+  transform: translateY(112%);
+  transition: transform 1.1s var(--ease-out-expo);
+  transition-delay: var(--line-delay, 0ms);
+  will-change: transform;
+}
+.is-revealed .line-mask > .line-inner,
+.line-mask.in > .line-inner { transform: none; }
+
+em { font-style: italic; }
+strong, b { font-weight: 600; color: var(--white); }

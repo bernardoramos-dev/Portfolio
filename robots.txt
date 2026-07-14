@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /demos/tradeflow/
+Disallow: /demos/*/admin/
+Disallow: /demos/tradeflow/admin.html
+Disallow: /demos/mainstage/admin/
+Disallow: /demos/tecksart/admin/
+Disallow: /demos/vant/admin.html
+
+Sitemap: https://bernardoramos.example/sitemap.xml

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Vant - Gerador de apresentações com IA</title>
+<meta name="description" content="Vant transforma um briefing em apresentações HTML navegáveis, bonitas e prontas para apresentar." />
+<link rel="icon" href="static/img/favicon.svg" />
+<link rel="stylesheet" href="../../assets/vendor/inter.css">
+<link rel="stylesheet" href="static/css/vant.css" />
+<script src="../../scripts/core/form-accessibility.js?v=20260711-2" defer></script>
+</head>
+<body>
+<main>
+  <section class="hero hero-vant wrap">
+    <div class="hero-layout">
+      <div class="hero-copy reveal-up">
+        <div class="eyebrow">Produto 01 / Apresentações inteligentes</div>
+        <h1 class="display">Do briefing aos<br><span class="grad">slides prontos</span></h1>
+        <p class="lead">O <b>Vant</b> organiza a narrativa, aplica uma identidade visual e entrega uma apresentação HTML navegável, editável e pronta para mostrar.</p>
+        <div class="actions">
+          <a class="btn btn-accent btn-lg" href="chat.html">Criar apresentação</a>
+          <a class="btn btn-ghost btn-lg" href="galeria.html">Ver exemplos</a>
+        </div>
+        <div class="proof-line">
+          <span><b>12-15</b> slides por deck</span>
+          <span><b>10</b> identidades visuais</span>
+          <span><b>100</b> pontos no cadastro</span>
+        </div>
+      </div>
+
+      <div class="hero-preview reveal-up">
+        <div class="blueprint-card">
+          <div class="blueprint-head">
+            <span>Vant Deck Engine</span>
+            <b>ONLINE</b>
+          </div>
+          <div class="hero-demo hero-demo-feature" id="heroDemo">
+            <div class="demo-bar"><i></i><i></i><i></i></div>
+            <iframe src="exemplos/03-plano-de-marketing-2026.html" title="Exemplo de apresentação Vant" loading="lazy"></iframe>
+          </div>
+          <div class="deck-specs">
+            <span>Roteiro validado</span>
+            <span>Design responsivo</span>
+            <span>Export em HTML</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap section">
+    <div class="stats-band glass reveal-up">
+      <div class="stat-item"><b data-count="1280">0</b><span>apresentações geradas</span></div>
+      <div class="stat-item"><b data-count="11">0</b><span>estilos prontos</span></div>
+      <div class="stat-item"><b data-count="7">0</b><span>minutos até o primeiro rascunho</span></div>
+      <div class="stat-item"><b data-count="100">0</b><span>pontos no cadastro</span></div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head center reveal-up">
+      <div class="eyebrow">Fluxo</div>
+      <h2 class="h2">Uma linha reta entre ideia e apresentação.</h2>
+    </div>
+    <div class="steps grid-3">
+      <div class="step glass reveal-up"><div class="n">1</div><h3>Conte o tema</h3><p>Digite o assunto, o público, o objetivo e a vibe. O agente transforma isso em uma estrutura clara.</p></div>
+      <div class="step glass reveal-up"><div class="n">2</div><h3>Aprove o roteiro</h3><p>O Vant escreve o arco, seleciona fontes e aplica uma identidade visual coerente para o deck.</p></div>
+      <div class="step glass reveal-up"><div class="n">3</div><h3>Apresente ou baixe</h3><p>Navegue pelos slides no browser, edite textos e exporte um arquivo único para usar offline.</p></div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head center reveal-up">
+      <div class="eyebrow">Por que Vant</div>
+      <h2 class="h2">Decks com cara de produto, não de template.</h2>
+      <p class="lead">A experiência mistura escrita, estratégia e linguagem visual para cada apresentação parecer feita sob medida.</p>
+    </div>
+    <div class="features grid-3">
+      <article class="feature glass reveal-up"><div class="ico">AI</div><h3>Agente de roteiro</h3><p>Converte briefing solto em narrativa de apresentação com tensão, prova e fechamento.</p></article>
+      <article class="feature glass reveal-up"><div class="ico">UI</div><h3>Design navegável</h3><p>Slides em HTML com transições, escala responsiva e leitura boa em tela cheia ou janela.</p></article>
+      <article class="feature glass reveal-up"><div class="ico">ID</div><h3>Identidades visuais</h3><p>Skins com tipografia, cor, ritmo e componentes próprios para diferentes tipos de projeto.</p></article>
+      <article class="feature glass reveal-up"><div class="ico">ED</div><h3>Edição direta</h3><p>Textos podem ser ajustados no próprio deck antes da apresentação final.</p></article>
+      <article class="feature glass reveal-up"><div class="ico">1F</div><h3>Arquivo único</h3><p>O resultado abre no navegador e pode ser compartilhado como uma peça fechada.</p></article>
+      <article class="feature glass reveal-up"><div class="ico">CR</div><h3>Sistema de pontos</h3><p>O produto já tem camada de créditos, convites e upgrades para evoluir como SaaS.</p></article>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head reveal-up">
+      <div><div class="eyebrow">Galeria</div><h2 class="h2">Exemplos reais do motor.</h2></div>
+      <p class="lead">Decks navegáveis de verdade. Clique para abrir em tela cheia.</p>
+    </div>
+    <div class="gallery-grid" id="galeriaPrev"></div>
+    <div class="center" style="margin-top:34px"><a class="btn btn-ghost btn-lg" href="galeria.html">Ver galeria completa</a></div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head center reveal-up">
+      <div class="eyebrow">Identidades</div>
+      <h2 class="h2">A mesma IA, varias linguagens visuais.</h2>
+      <p class="lead">Cada skin tem tipografia, contraste, fundo e ritmo próprios.</p>
+    </div>
+    <div class="skins-strip" id="skinsStrip"></div>
+  </section>
+
+  <section class="section wrap">
+    <div class="cta-card glass reveal-up">
+      <div class="eyebrow" style="margin:0 auto 14px">Comece grátis</div>
+      <h2 class="h2"><span data-count="100">0</span> pontos no cadastro. Sem cartao.</h2>
+      <p class="lead" style="margin:0 auto 26px;max-width:46ch">Crie sua primeira apresentação hoje e evolua o plano quando precisar de mais volume.</p>
+      <div class="actions" style="justify-content:center">
+        <a class="btn btn-accent btn-lg" href="criar-conta.html">Criar conta</a>
+        <a class="btn btn-ghost btn-lg" href="precos.html">Ver planos</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap faq" id="faq">
+    <div class="section-head center reveal-up">
+      <div class="eyebrow">Dúvidas</div>
+      <h2 class="h2">Perguntas rápidas.</h2>
+    </div>
+    <details class="glass reveal-up"><summary>O Vant gera arquivos de PowerPoint?</summary><p>Esta demo gera apresentações HTML navegáveis. O caminho de produto pode incluir export para PPTX em uma etapa posterior.</p></details>
+    <details class="glass reveal-up"><summary>Os slides funcionam no celular?</summary><p>Sim. Os decks usam escala responsiva para manter proporção, controles e leitura em mobile, tablet, notebook e tela cheia.</p></details>
+    <details class="glass reveal-up"><summary>Dá para editar depois?</summary><p>Sim. A proposta é permitir ajustes de texto antes de apresentar ou baixar a peça final.</p></details>
+  </section>
+</main>
+
+<script src="../../assets/vendor/gsap.min.js"></script>
+<script src="../../assets/vendor/ScrollTrigger.min.js"></script>
+<script src="../../assets/vendor/lenis.min.js"></script>
+<script src="static/js/vant.js"></script>
+<script>
+const SKINS = [
+  ["Horizon Blue", "#1060FF", "Corporativo e fintech"],
+  ["Pulse", "#06B6D4", "IA, dados e tecnologia"],
+  ["Cartaz", "#FF5A1F", "Marketing e lancamentos"],
+  ["Vita", "#059669", "Impacto e saúde"],
+  ["Nebula", "#7C3AED", "Estrategia e consultoria"],
+  ["Maison", "#C8005A", "Luxo e beleza"],
+  ["Editorial", "#A8721B", "Aulas e conteúdo"],
+  ["Estrito", "#E2E8F0", "Board e resultados"],
+  ["Midnight", "#C9A84C", "Executivo global"],
+  ["Terra", "#C2703E", "Comunidade e impacto"]
+];
+function hexToRgb(hex){
+  const v = parseInt(hex.slice(1), 16);
+  return [(v >> 16) & 255, (v >> 8) & 255, v & 255].join(",");
+}
+async function montarGaleria(){
+  const el = document.getElementById("galeriaPrev");
+  const { ok, data } = await Vant.api("/api/galeria");
+  const fallback = await fetch("exemplos/index.json").then(r => r.json());
+  const itens = ok && Array.isArray(data?.itens) ? data.itens : fallback;
+  el.innerHTML = itens.slice(0, 4).map((it, idx) => `
+    <a class="deck-card glass reveal-up" href="exemplos/${Vant.esc(it.arquivo)}" target="_blank" rel="noopener" style="--a:${Vant.esc(it.accent || '#1060FF')};--delay:${idx * 60}ms">
+      <div class="deck-thumb">
+        <iframe src="exemplos/${Vant.esc(it.arquivo)}" tabindex="-1" loading="lazy"></iframe>
+        <span class="deck-badge">${Vant.esc(it.categoria || 'Deck')}</span>
+      </div>
+      <div class="deck-meta">
+        <h3>${Vant.esc(it.titulo)}</h3>
+        <p>${Vant.esc(it.descricao || '')}</p>
+        <div class="deck-line"><span>${Vant.esc(it.cor_nome || 'Vant')}</span><span>${it.n_slides || 12} slides</span></div>
+      </div>
+    </a>
+  `).join("");
+}
+function montarSkins(){
+  const el = document.getElementById("skinsStrip");
+  el.innerHTML = SKINS.map(s => `<div class="skin-chip reveal-up" style="--chip-accent:${s[1]};--chip-glow:${hexToRgb(s[1])};--chip-border:${s[1]}55"><div class="sw"></div><h4>${s[0]}</h4><p>${s[2]}</p></div>`).join("");
+}
+(async function(){
+  Vant.initPagina();
+  await montarGaleria();
+  montarSkins();
+  Vant.revelar();
+})();
+</script>
+</body>
+</html>
