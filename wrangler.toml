@@ -1,0 +1,16 @@
+name = "portfolio"
+type = "javascript"
+
+[build]
+command = "npm run build"
+cwd = "./"
+watch_paths = ["src/**/*.js", "src/**/*.css", "assets/**/*"]
+
+[env.production]
+name = "portfolio"
+routes = [
+  { pattern = "bernardoramos.dev", zone_name = "bernardoramos.dev" }
+]
+
+[build.upload]
+format = "service-worker"
