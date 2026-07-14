@@ -197,9 +197,14 @@ export function initLabReel() {
   }
   function seekToProgress(progress) {
     const idx = Math.round(Math.max(0, Math.min(1, progress)) * (faceCount - 1));
+    /* after minutes of idle auto-rotation state.rotation can have drifted to
+       thousands of degrees — always seek along the SHORTEST angular path,
+       never let it sweep multiple full laps (that read as a broken freeze) */
+    const target = (-idx * step) - state.scrollRot;
+    const shortest = (((target - state.rotation) % 360) + 540) % 360 - 180;
     state.seeking = true;
     state.seekFrom = state.rotation;
-    state.seekTo = (-idx * step) - state.scrollRot;
+    state.seekTo = state.rotation + shortest;
     state.seekStart = performance.now();
     state.velocity = 0;
     cyl.classList.add("is-seeking");
@@ -250,7 +255,10 @@ export function initLabReel() {
     if (!state.dragging) return;
     const dx = event.clientX - state.lastX;
     state.lastX = event.clientX;
-    if (Math.abs(event.clientX - state.startX) > 6) state.moved = true;
+    /* a real drag moves tens of pixels; a click on a trackpad or mouse
+       commonly jitters a few px between down/up — 6px was swallowing
+       those as "drags" and silently blocking the open-video click */
+    if (Math.abs(event.clientX - state.startX) > 14) state.moved = true;
     const delta = dx * 0.34;
     state.rotation += delta;
     state.velocity = delta;

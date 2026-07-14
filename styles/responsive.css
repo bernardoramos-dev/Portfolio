@@ -40,7 +40,8 @@
     backdrop-filter: blur(0);
     justify-content: space-between;
   }
-  /* scrolled → same premium floating capsule as desktop, shrunk + centered */
+  /* scrolled → same premium floating capsule as desktop, shrunk + centered,
+     with the brand and menu button visibly gathering in toward the middle */
   .site-header.is-scrolled .site-header__inner {
     width: max-content;
     max-width: calc(100vw - 32px);
@@ -51,12 +52,20 @@
     background: rgba(7, 7, 7, 0.84);
     box-shadow:
       0 18px 46px -10px rgba(0, 0, 0, 0.7),
+      0 0 26px 0 rgba(255, 255, 255, 0.05),
       inset 0 1px 0 rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(24px) saturate(1.3);
     justify-content: center;
     gap: 16px;
+    animation: capsulePulse 0.6s var(--ease-out-expo), capsuleGlow 1.1s ease-out;
   }
-  .site-header.is-scrolled .brand-mark { gap: 10px; }
+  .site-header.is-scrolled .site-header__inner::before {
+    animation: glassShineSweep 0.9s var(--ease-out-expo) 0.06s;
+  }
+  .site-header.is-scrolled .brand-mark {
+    gap: 10px;
+    animation: navGatherLeft 0.5s var(--ease-out-expo);
+  }
   .site-header.is-scrolled .brand-mark svg { width: 24px; height: 24px; }
   .site-header.is-scrolled .brand-mark span {
     opacity: 1;
@@ -64,7 +73,24 @@
     max-width: 180px;
     font-size: 10px;
   }
-  .site-header.is-scrolled .menu-button { min-height: 34px; }
+  .site-header.is-scrolled .menu-button {
+    min-height: 34px;
+    animation: navGatherRight 0.5s var(--ease-out-expo);
+  }
+
+  @keyframes navGatherLeft {
+    from { transform: translateX(-14px); opacity: 0.4; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  @keyframes navGatherRight {
+    from { transform: translateX(14px); opacity: 0.4; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  @keyframes capsuleGlow {
+    0% { box-shadow: 0 18px 46px -10px rgba(0,0,0,0.7), 0 0 0 0 rgba(255,255,255,0.14), inset 0 1px 0 rgba(255,255,255,0.08); }
+    35% { box-shadow: 0 18px 46px -10px rgba(0,0,0,0.7), 0 0 34px 4px rgba(255,255,255,0.16), inset 0 1px 0 rgba(255,255,255,0.08); }
+    100% { box-shadow: 0 18px 46px -10px rgba(0,0,0,0.7), 0 0 26px 0 rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.08); }
+  }
 
   .hero {
     justify-content: flex-end;
@@ -224,6 +250,14 @@
   .process-step { grid-template-columns: 54px minmax(0, 1fr); }
 
   .about__layout { grid-template-columns: 1fr; gap: 40px; }
+
+  /* narrower viewport needs a closer "camera" to read as a real 3D barrel
+     instead of a flat sliding row — same geometry, more foreshortening */
+  .lab-cylinder {
+    perspective: 620px;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  }
 
   .lab__reel {
     overflow-x: auto;
