@@ -74,5 +74,6 @@ function closeDeck(){ $('#modal').classList.remove('show'); $('#modal').setAttri
 $('#modalClose').onclick = closeDeck; $('#modalClose2').onclick = closeDeck; $('#modal').onclick = e => { if(e.target.id === 'modal') closeDeck(); }; addEventListener('keydown', e => { if(e.key === 'Escape') closeDeck(); });
 (async()=>{ Vant.initPagina(); examples = await fetch('exemplos/index.json').then(r=>r.json()); renderFilters(); renderCards(); Vant.montarFooter(); })();
 </script>
+<script src="/scripts/demo-back-button.js" defer></script>
 </body>
 </html>

@@ -61,7 +61,7 @@ const filter = (source) => {
   if (parts.includes("node_modules") || parts.includes(".agents") || parts.includes("screenshots")) return false;
   if (excludedRelative.has(normalized)) return false;
   if (path.basename(source) === "atmosphere.png" && normalized.startsWith("assets/projects/")) return false;
-  if (normalized.startsWith("assets/brand/") && normalized !== "assets/brand/favicon.svg") return false;
+  if (normalized.startsWith("assets/brand/") && normalized !== "assets/brand/favicon.svg" && normalized !== "assets/brand/og-cover.jpg") return false;
   return !excludedNames.has(path.basename(source));
 };
 

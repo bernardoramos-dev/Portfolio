@@ -30,5 +30,6 @@ async function enviar(){ const text=ta.value.trim(); if(!text) return; $('#hello
 ta.addEventListener('input',()=>{ ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight,160)+'px'; }); ta.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); enviar(); }}); send.onclick=enviar; document.querySelectorAll('.quick').forEach(b=>b.onclick=()=>{ ta.value=b.dataset.q; enviar(); });
 (async()=>{ Vant.montarBg(); await Vant.montarNav(); examples=await fetch('exemplos/index.json').then(r=>r.json()); })();
 </script>
+<script src="/scripts/demo-back-button.js" defer></script>
 </body>
 </html>
