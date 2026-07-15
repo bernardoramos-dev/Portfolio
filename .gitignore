@@ -8,6 +8,11 @@ __pycache__/
 # Skills are installed per-agent and should not ship in the public build.
 .agents/
 
+# Environment secrets — never commit credentials
+.env
+.env.local
+.env.*.local
+
 # Local audit output and generated build directories.
 dist/
 build/

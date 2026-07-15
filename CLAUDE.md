@@ -97,7 +97,31 @@ O site **ignora deliberadamente** o flag `prefers-reduced-motion` do SO — o ca
 Se precisar testar com reduced-motion ligado, use a query string: `?motion=reduce`
 
 ### Cloudflare Credentials
-Token e Account ID já estão configurados nas variáveis de ambiente — o comando `npx wrangler pages deploy` os lê automaticamente.
+
+**Setup (one-time):**
+1. Copy `.env.example` to `.env.local`
+2. Fill in your Cloudflare credentials (never commit `.env.local` — it's gitignored)
+
+**Then, before deploying:**
+```bash
+# Load credentials from .env.local
+export $(cat .env.local | xargs)
+
+# Deploy
+npx wrangler pages deploy dist --project-name=bernardoramos --branch=main
+```
+
+On Windows PowerShell:
+```powershell
+# Load .env.local
+$env:CLOUDFLARE_API_TOKEN = (Select-String -Path .env.local -Pattern 'CLOUDFLARE_API_TOKEN=(.*)' -AllMatches).Matches[0].Groups[1].Value
+$env:CLOUDFLARE_ACCOUNT_ID = (Select-String -Path .env.local -Pattern 'CLOUDFLARE_ACCOUNT_ID=(.*)' -AllMatches).Matches[0].Groups[1].Value
+
+# Deploy
+npx wrangler pages deploy dist --project-name=bernardoramos --branch=main
+```
+
+`.env.local` is gitignored — credentials NEVER go to GitHub.
 
 ### iOS Safari Video Controls
 Todos os vídeos do Lab têm `controlsList="nofullscreen nodownload"` para suprimir controles nativos que o iOS renderiza involuntariamente.
